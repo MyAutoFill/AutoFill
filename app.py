@@ -1,4 +1,6 @@
 import base64
+import json
+
 from flask import Flask, render_template, request
 
 from DrissionPage import ChromiumPage, ChromiumOptions
@@ -7,17 +9,17 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():  # put application's code here
+def hello_world():
     return render_template('index.html')
 
 
 @app.route('/input')
-def input_data():  # put application's code here
+def input_data():
     return render_template('input.html')
 
 
 @app.route('/dashboard')
-def dashboard():  # put application's code here
+def dashboard():
     return render_template('dashboard.html')
 
 
@@ -80,7 +82,6 @@ def new_api():
     return {}
 
 
-
 @app.route('/data')
 def data():
     co = ChromiumOptions().auto_port()
@@ -90,30 +91,60 @@ def data():
     page2 = ChromiumPage(co)
     page2.set.window.size(100, 100)
     page2.get('http://127.0.0.1:5000/button?address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
-        # tab.ele('@name=' + 'c1_3_4')
-
-    # chrome_options = Options()
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--disable-web-security")
-    # chrome_options.add_experimental_option('detach', True)
-    # driver = webdriver.WebDriver(options=chrome_options)
-    # driver.get('http://127.0.0.1:5000/dashboard')
-    # tik_tok = 0
-    # while tik_tok < 300:
-    #     print(tik_tok)
-    #     tik_tok += 1
-    #     sleep(1)
-    #     handler = driver.current_window_handle
-    #     print(driver.current_url)
-    #     print(handler.title())
-    #     try:
-    #         for item in config:
-    #             cur_element = driver.find_element(By.NAME, item.get('name'))
-    #             print(cur_element)
-    #             # cur_element.send_keys(item.get('value'))
-    #     except NoSuchElementException:
-    #         continue
     return {}
+
+
+@app.route('/save')
+def save():
+    print(request.args.get('name'))
+    print(request.args.get('value'))
+    name = request.args.get('name')
+    value = request.args.get('value')
+    save_user_input('page_config', "1", [{"name": name, "value": value}])
+    return {}
+
+
+@app.route('/load')
+def load():
+    return json.dumps(load_config('page_config'))
+
+
+def load_config(table_name):
+    with open('data.json', 'r') as f:
+        return json.load(f).get(table_name, {})
+
+
+def save_user_input(table_name, system_id, value):
+    """
+    把前端返回的键值对保存到配置表中
+    :param table_name: 表名，一般为page_config
+    :param system_id: 对接系统的id，page_config的id字段
+    :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
+    :return:
+    """
+    value_map = dict()
+    for item in value:
+        value_map[item.get('name')] = item.get('value')
+    with open('data.json', 'r') as f:
+        total_config = json.load(f)
+    print(total_config)
+    config_list = total_config.get(table_name, [])
+    for item in config_list:
+        if item.get('id') != system_id:
+            continue
+        cur_config = item.get('config')
+        for config_item in cur_config:
+            if config_item['name'] not in value_map:
+                continue
+            config_item['value'] = value_map[config_item['name']]
+        item.update({'config': cur_config})
+    print(config_list)
+    print(json.dumps(total_config))
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(total_config))
+
+
+
 
 
 if __name__ == '__main__':
