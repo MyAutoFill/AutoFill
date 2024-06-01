@@ -93,6 +93,11 @@ def data():
     return {}
 
 
+@app.route('/config_page')
+def config_page():
+    return render_template('page_config.html')
+
+
 @app.route('/save')
 def save():
     name = request.args.get('name')
