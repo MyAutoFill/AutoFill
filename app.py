@@ -67,7 +67,6 @@ config = [
 def button():
     addr = request.args.get('address')
     new_addr = base64.urlsafe_b64decode(addr).decode('utf-8')
-    print(new_addr)
     return render_template('button.html', address=new_addr)
 
 
@@ -87,7 +86,6 @@ def data():
     co = ChromiumOptions().auto_port()
     page = ChromiumPage(co)
     page.get('http://127.0.0.1:5000/dashboard')
-    print(page.latest_tab.tab_id)
     page2 = ChromiumPage(co)
     page2.set.window.size(100, 100)
     page2.get('http://127.0.0.1:5000/button?address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
@@ -96,8 +94,6 @@ def data():
 
 @app.route('/save')
 def save():
-    print(request.args.get('name'))
-    print(request.args.get('value'))
     name = request.args.get('name')
     value = request.args.get('value')
     save_user_input('page_config', "1", [{"name": name, "value": value}])
@@ -127,7 +123,6 @@ def save_user_input(table_name, system_id, value):
         value_map[item.get('name')] = item.get('value')
     with open('data.json', 'r') as f:
         total_config = json.load(f)
-    print(total_config)
     config_list = total_config.get(table_name, [])
     for item in config_list:
         if item.get('id') != system_id:
@@ -138,8 +133,6 @@ def save_user_input(table_name, system_id, value):
                 continue
             config_item['value'] = value_map[config_item['name']]
         item.update({'config': cur_config})
-    print(config_list)
-    print(json.dumps(total_config))
     with open('data.json', 'w') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
