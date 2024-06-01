@@ -141,7 +141,7 @@ def save_user_input(table_name, system_id, value):
     print(config_list)
     print(json.dumps(total_config))
     with open('data.json', 'w') as f:
-        f.write(json.dumps(total_config))
+        f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
 
 
