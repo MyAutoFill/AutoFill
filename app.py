@@ -87,7 +87,8 @@ def data():
     page = ChromiumPage(co)
     page.get('http://127.0.0.1:5000/dashboard')
     page2 = ChromiumPage(co)
-    page2.set.window.size(100, 100)
+    page2.set.window.size(100, 200)
+    page2.set.window.location(200, 0)
     page2.get('http://127.0.0.1:5000/button?address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
     return {}
 
