@@ -1,10 +1,516 @@
-<!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
+
+    <script type="text/javascript">var ACT_URL = "http://zb.stats-sd.gov.cn/dr/jsp/report/rlist.jsp";</script>
+    <!-- dr_16801 W_fTmB9Jtc8pG1DZl-MvmHBg6fI36YWT1J701pwAGpln3BFBVGCr!1821254211!1482366735!1717241913161 -->
+    <script type="text/javascript" src="/dr/js/common/common.js?v=1685980800000"></script>
+    <script type="text/javascript">var ROOT_PATH = "/dr/";</script>
+    <script type="text/javascript" src="/dr/js/common/moduleclose.js?v=1685980800000"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="../../js/data/gatherlist.js?v=1685980800000"></script>
+    <script type="text/javascript" src="../../js/jquery.min.js?v=1685980800000"></script>
+    <link type="text/css" rel="stylesheet" href="../../css/common/common.css">
+    <title>统计联网直报平台</title>
+    <script type="text/javascript">
+        var quickReport = false;
+
+    </script>
 </head>
-<body>
-<a href="/input" target="_blank">打开input页</a>
+
+<body topmargin="0" leftmargin="0" onLoad="checkCompatibility();queryAllDataStatus();">
+    <div id='divBlind' class='dblind'></div>
+    <iframe id='dsaving' src='../process.jsp' frameborder='0' class='dsaving'></iframe>
+    <form name="drTableListForm" method="post" action="/dr/gather/fillTableList.do">
+        <div><input type="hidden" name="org.apache.struts.taglib.html.TOKEN" value="6418e5180446808886ba8c2552ddf57d">
+        </div>
+        <table width="1003" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="1003">
+
+
+
+
+                    <script type="text/javascript" language="javascript"
+                        src="../../js/menu.js?v=1685980800000"></script>
+
+                    <script type="text/javascript" language="javascript"
+                        src="../../js/common/top.js?v=1685980800000"></script>
+                    <table width="1003" border="0" cellspacing="0" cellpadding="0" align="center">
+                        <tr>
+                            <td height='66' background='../../images/wwtop.gif'>
+                                <table width="1003" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="705" height="66">
+                                            &nbsp;
+                                        </td>
+                                        <td width="299" valign="top">
+                                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td width="7%" align="left" valign="middle">
+                                                        <img src="../../images/mdpwd.gif" width="16" height="16">
+                                                    </td>
+                                                    <td width="23%" align="left" valign="middle" class="dyg">
+                                                        <a href="../../user/toModifyUserContact.do"
+                                                            style="cursor: hand;">个人设置</a>
+                                                    </td>
+                                                    <td width="8%" valign="middle">
+                                                        <img src="../../images/wwtoppag.gif" width="21" height="17">
+                                                    </td>
+                                                    <td width="23%" valign="middle" class="dyg">
+                                                        <a name="to_home" href="../main/main.jsp">返回首页</a>
+                                                    </td>
+                                                    <td width="7%" align="left" valign="middle">
+                                                        <img src="../../images/wwtopout.gif" width="16" height="16">
+                                                    </td>
+                                                    <td width="23%" align="left" valign="middle" class="dyg">
+                                                        <a onclick="signOff();" style="cursor: hand;">退出系统</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="1003" height="31" background="../../images/wwmenu2.gif">
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="110">
+                                            &nbsp;
+                                        </td>
+                                        <td width="668" height="27">
+                                            <table width="668" height="27" border="0" cellpadding="0" cellspacing="0"
+                                                class="unnamed2">
+                                                <tr align="center">
+                                                    <td width="72" height="13" align="center" class="dyg">
+                                                        <div id="menu6"
+                                                            style="position: absolute; width: 92px; height: 22px; z-index: 20; visibility: visible; left: 290px; top: 70px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+
+
+                                                                        <a
+                                                                            href="../../user/queryExUserSubList.do">子用户管理</a>
+
+
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+
+
+                                                    <td width="72" height="13" align="center" class="dyg">
+                                                        <div id="menu1"
+                                                            style="position: absolute; width: 92px; height: 22px; z-index: 20; visibility: visible; left: 375px; top: 70px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+
+
+                                                                        <a href="../../gather/fillTableList.do">报表报送</a>
+
+
+
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                    <td width="96" height="13" align="center" class="dyg">
+                                                        <div id="menu2"
+                                                            style="position: absolute; width: 101px; height: 28px; z-index: 28; visibility: visible; left: 465px; top: 69px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+                                                                        <a
+                                                                            href="../../query/query.do?m=query_main">数据查询</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                    <!-- 								<td width="87" align="center" class="dyg">
+									<div id="menu3"
+										style="position: absolute; width: 100px; height: 28px; z-index: 28; left: 555px; top: 69px; visibility: visible;">
+										<table width="95" height="27" border="0" cellpadding="0"
+											cellspacing="0">
+											<tr>
+												<td width="95" height="13" align="center" valign="middle">
+													<a href="../../query/queryPrintTableList.do">打印空表</a>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</td>
+ -->
+                                                    <td width="71" align="center" class="dyg">
+                                                        <div id="menu8"
+                                                            style="position: absolute; width: 100px; height: 28px; z-index: 28; visibility: visible; left: 555px; top: 69px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+                                                                        <a href="#" onclick="return false;"
+                                                                            onMouseOver="MM_timelineStop('Timeline4');MM_showHideLayers('child4','','show')"
+                                                                            onMouseOut="MM_timelinePlay('Timeline4');MM_timelineGoto('Timeline4','1')">消息管理</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                    <td width="71" align="center" class="dyg">
+                                                        <div id="menu9"
+                                                            style="position: absolute; width: 100px; height: 28px; z-index: 28; visibility: visible; left: 645px; top: 69px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+                                                                        <a href="../../notedoc/noteDocList.do">填表说明</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                    <td width="71" align="center" class="dyg">
+                                                        <div id="menu9"
+                                                            style="position: absolute; width: 100px; height: 28px; z-index: 28; visibility: visible; left: 735px; top: 69px;">
+                                                            <table width="95" height="27" border="0" cellpadding="0"
+                                                                cellspacing="0">
+                                                                <tr>
+                                                                    <td width="95" height="13" align="center"
+                                                                        valign="middle">
+                                                                        <a href="../../contactinfo/corpContactInfoList.do"
+                                                                            target="_blank">联系电话</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </tr>
+                        <tr>
+                            <td height="0" background="">
+                                <div id="child4"
+                                    style="position: absolute; width: 95px; height: 137px; z-index: 25; left: 555px; top: 100px; visibility: hidden;">
+                                    <table width="92" border="0" cellspacing="1" cellpadding="3" height="50"
+                                        bgcolor="#8D9089" align="center"
+                                        onMouseOver="MM_timelineStop('Timeline4');MM_showHideLayers('child4','','show')"
+                                        onMouseOut="MM_timelinePlay('Timeline4');MM_timelineGoto('Timeline4','1')">
+
+
+                                        <tr>
+                                            <td height="25" bgcolor="#F9F9F9" class="dyg">
+                                                <div align="center">
+                                                    <a href="../../message/tosendmessage.do">发送新消息</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td height="25" bgcolor="#F9F9F9" class="dyg">
+                                                <div align="center">
+                                                    <a href="../../message/queryRecMessageList.do">已接收消息</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="25" bgcolor="#F9F9F9" class="dyg">
+                                                <div align="center">
+                                                    <a href="../../message/querySendMessageList.do">已发送消息</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table width="1003" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="220" rowspan="2" valign="top">
+
+
+
+                    <table width="232" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="223" valign="top">
+                                <table width="223" height="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td height="5" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="50" colspan="2" align="center" valign="bottom"
+                                            background="../../images/wwleftlogin.gif">
+                                            <table width="189" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+
+                                                    <td width="189" class="wenzi1" height="60">
+
+                                                        613752141，欢迎您使用统计联网直报平台！
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="6" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="0%" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="6" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="6%" colspan="2" align="right"
+                                            background="../../images/wwleftgg.gif">
+                                            <table width="166" height="15" border="0" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td width="166" height="33" class="leftbt">消息通告栏</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="5" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" valign="top">
+                                            <iframe src="../../message/queryDrPromptRecMessageList.do" frameborder="0"
+                                                height="177" width="100%" scrolling="no">
+                                            </iframe>
+                                    </tr>
+                                    <tr>
+                                        <td height="5" colspan="2"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="10">&nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="783" height="5"></td>
+            </tr>
+            <tr>
+                <td valign="top" height="400">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="wz"><img src="../../images/top.gif" width="15" height="15"> 当前位置：<a
+                                    href="../main/main.jsp">首页</a>-报表报送</td>
+                        </tr>
+                        <tr>
+                            <td height="5"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="99" height="30" align="center" background="../../images/pro06.gif"
+                                            class="style5">报表列表</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="14"></td>
+                        </tr>
+                    </table>
+                    <table width="100%" border="0" cellpadding="5" cellspacing="1" class="tab-soid">
+
+
+
+
+                        <tr>
+                            <td style="padding:0">
+                                <table id="fillTableListTable" width="100%" border="0" cellpadding="4" cellspacing="1"
+                                    class="tab-soid thl">
+                                    <tr class="bt" align="center">
+                                        <td width="60" height="25" bgcolor="#7FCDEF">表号</td>
+                                        <td bgcolor="#7FCDEF">表名</td>
+                                        <td width="60" bgcolor="#7FCDEF">报告期别</td>
+                                        <td width="92" bgcolor="#7FCDEF">报告期</td>
+                                        <td width="90" bgcolor="#7FCDEF">报送开始时间</td>
+                                        <td width="90" bgcolor="#7FCDEF">报送截止时间</td>
+                                        <td width="185" bgcolor="#7FCDEF">报送与验收状态</td>
+                                    </tr>
+
+
+                                    <tr bgcolor="#FFFFFF">
+                                        <td align="center" class="dyg">205-1
+                                            <input type="hidden" name='queryInfo'
+                                                id='8600000002023112107060321_20240005'
+                                                value='8600000002023112107060321'>
+                                        </td>
+                                        <td align="left" class="dyg">能源购进、消费与库存
+                                            <input type="hidden" name='tabStatus' value=''><input type="hidden"
+                                                name='orgType' value='0'><input type="hidden" name='mainStatus'
+                                                value='1'><input type="hidden" name='orgId' value='860000000000000'>
+                                        </td>
+                                        <td align="center">月报
+                                            <input type="hidden" name='dataType' value='0'>
+                                        </td>
+                                        <td align="center">2024年5月
+                                            <input type="hidden" name='period' value='20240005'>
+                                        </td>
+                                        <td align="center">2024-06-01 00:00:00
+                                            <input type="hidden" name='regimeId' value='8600000002023112106900002'>
+                                        </td>
+                                        <td align="center">2024-06-07 12:00:00
+                                            <input type="hidden" name='mainTableId' value='8600000002023112107060551'>
+                                            <input type="hidden" name='permissionTableInfos'
+                                                value='8600000002023112107060321_20240005'>
+                                        </td>
+                                        <td align="center" style="padding:0" id='td_8600000002023112107060321_20240005'>
+                                        </td>
+                                    </tr>
+
+                                    <tr bgcolor="#FFFFFF">
+                                        <td align="center" class="dyg">206
+                                            <input type="hidden" name='queryInfo'
+                                                id='8600000002023112107060368_20240005'
+                                                value='8600000002023112107060368'>
+                                        </td>
+                                        <td align="left" class="dyg">固定资产投资项目情况
+                                            <input type="hidden" name='tabStatus' value=''><input type="hidden"
+                                                name='orgType' value='0'><input type="hidden" name='mainStatus'
+                                                value='2'><input type="hidden" name='orgId' value='863700000000000'>
+                                        </td>
+                                        <td align="center">月报
+                                            <input type="hidden" name='dataType' value='1'>
+                                        </td>
+                                        <td align="center">2024年5月
+                                            <input type="hidden" name='period' value='20240005'>
+                                        </td>
+                                        <td align="center">2024-06-01 00:00:00
+                                            <input type="hidden" name='regimeId' value='8600000002023112106900002'>
+                                        </td>
+                                        <td align="center">2024-06-07 12:00:00
+                                            <input type="hidden" name='mainTableId' value='8600000002023112107060551'>
+                                            <input type="hidden" name='permissionTableInfos'
+                                                value='8600000002023112107060368_20240005'>
+                                        </td>
+                                        <td align="center" style="padding:0" id='td_8600000002023112107060368_20240005'>
+                                        </td>
+                                    </tr>
+
+                                    <tr bgcolor="#FFFFFF">
+                                        <td align="center" class="dyg">B204-1
+                                            <input type="hidden" name='queryInfo'
+                                                id='8600000002023112107060293_20240005'
+                                                value='8600000002023112107060293'>
+                                        </td>
+                                        <td align="left" class="dyg">工业产销总值及主要产品产量
+                                            <input type="hidden" name='tabStatus' value=''><input type="hidden"
+                                                name='orgType' value='0'><input type="hidden" name='mainStatus'
+                                                value='1'><input type="hidden" name='orgId' value='860000000000000'>
+                                        </td>
+                                        <td align="center">月报
+                                            <input type="hidden" name='dataType' value='0'>
+                                        </td>
+                                        <td align="center">2024年5月
+                                            <input type="hidden" name='period' value='20240005'>
+                                        </td>
+                                        <td align="center">2024-06-01 00:00:00
+                                            <input type="hidden" name='regimeId' value='8600000002023112106900002'>
+                                        </td>
+                                        <td align="center">2024-06-07 12:00:00
+                                            <input type="hidden" name='mainTableId' value='8600000002023112107060551'>
+                                            <input type="hidden" name='permissionTableInfos'
+                                                value='8600000002023112107060293_20240005'>
+                                        </td>
+                                        <td align="center" style="padding:0" id='td_8600000002023112107060293_20240005'>
+                                            <a href="/input" target="_blank">报送</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr bgcolor="#FFFFFF">
+                                        <td align="center" class="dyg">X204-3
+                                            <input type="hidden" name='queryInfo'
+                                                id='8600000002023112207080079_20240005'
+                                                value='8600000002023112207080079'>
+                                        </td>
+                                        <td align="left" class="dyg">保障性住房开发及经营情况
+                                            <input type="hidden" name='tabStatus' value=''><input type="hidden"
+                                                name='orgType' value='0'><input type="hidden" name='mainStatus'
+                                                value='2'><input type="hidden" name='orgId' value='863700000000000'>
+                                        </td>
+                                        <td align="center">月报
+                                            <input type="hidden" name='dataType' value='1'>
+                                        </td>
+                                        <td align="center">2024年5月
+                                            <input type="hidden" name='period' value='20240005'>
+                                        </td>
+                                        <td align="center">2024-06-01 00:00:00
+                                            <input type="hidden" name='regimeId' value='8600000002023112106900002'>
+                                        </td>
+                                        <td align="center">2024-06-07 12:00:00
+                                            <input type="hidden" name='mainTableId' value='8600000002023112107060551'>
+                                            <input type="hidden" name='permissionTableInfos'
+                                                value='8600000002023112207080079_20240005'>
+                                        </td>
+                                        <td align="center" style="padding:0" id='td_8600000002023112207080079_20240005'>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- <tr>
+                  	<td>
+                  	</td>
+                  </tr> -->
+
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+
+
+
+
+                    <table width="1003" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="1003" height="23" background="../../images/wwbottome.gif">
+                                <table width="1003" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td width="731" height="23" valign="bottom" align="center" class="botm">
+                                            国家统计局数据管理中心监制 北京京云万峰信息技术有限公司技术支持</td>
+                                        <td width="257">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </form>
 </body>
+
 </html>

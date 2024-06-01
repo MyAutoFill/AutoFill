@@ -93,22 +93,28 @@ def data():
     return {}
 
 
+@app.route('/data_input')
+def data_input():
+    return render_template('data_input.html')
+
 @app.route('/config_page')
 def config_page():
     return render_template('page_config.html')
 
 
-@app.route('/save')
+@app.route('/save', methods=['POST'])
 def save():
-    name = request.args.get('name')
-    value = request.args.get('value')
-    save_user_input('page_config', "1", [{"name": name, "value": value}])
-    return {}
+    request_data = request.get_json()
+    save_user_input(request_data)
+    return {
+        'status': 'ok'
+    }
 
 
 @app.route('/load')
 def load():
-    return json.dumps(load_config('page_config'))
+    table = request.args.get('table')
+    return json.dumps(load_config(table))
 
 
 def load_config(table_name):
@@ -116,29 +122,15 @@ def load_config(table_name):
         return json.load(f).get(table_name, {})
 
 
-def save_user_input(table_name, system_id, value):
+def save_user_input(value):
     """
     把前端返回的键值对保存到配置表中
-    :param table_name: 表名，一般为page_config
-    :param system_id: 对接系统的id，page_config的id字段
     :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
     :return:
     """
-    value_map = dict()
-    for item in value:
-        value_map[item.get('name')] = item.get('value')
     with open('data.json', 'r') as f:
         total_config = json.load(f)
-    config_list = total_config.get(table_name, [])
-    for item in config_list:
-        if item.get('id') != system_id:
-            continue
-        cur_config = item.get('config')
-        for config_item in cur_config:
-            if config_item['name'] not in value_map:
-                continue
-            config_item['value'] = value_map[config_item['name']]
-        item.update({'config': cur_config})
+    total_config.update({"data_input_config": value})
     with open('data.json', 'w') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
