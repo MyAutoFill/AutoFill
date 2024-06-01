@@ -1,0 +1,1321 @@
+<html>
+
+<head>
+
+  <script type="text/javascript">var ACT_URL = "http://zb.stats-sd.gov.cn/dr/jsp/report/reportinfo.jsp";</script>
+  <base href="https://ca.stats-sd.gov.cn/dr/jsp/report/reportinfo.jsp">
+  <!-- dr_163 AeUtX7ccvYRzDsVduyzaNJ5r5pqIFPaVBTBY3FfJ6MQrEjGaH4TF!-277827349!1763219817!1701568296732 -->
+  <style type="text/css">
+    .thl {
+      behavior: url(/dr/js/common/tablehl.htc);
+    }
+
+    .bhl {
+      behavior: url(/dr/js/common/buttonhl.htc);
+    }
+
+    .ichg {
+      behavior: url(/dr/js/common/imagechg.htc);
+    }
+  </style>
+  <script type="text/javascript" src="/dr/js/common/common.js?v=1685980800000"></script>
+  <script type="text/javascript">var ROOT_PATH = "/dr/";</script>
+  <script type="text/javascript" src="/dr/js/common/moduleclose.js?v=1685980800000"></script>
+  <title>录入调查对象</title>
+  <link href="../../css/common/tableviewlr.css?v=1685980800000" rel="stylesheet" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style>
+    #lastdata td {
+      display: block;
+    }
+
+    #divRingRate td {
+      display: block;
+    }
+  </style>
+  <script type="text/javascript" src="../../js/data/drreport.js?v=1685980800000"></script>
+  <script type="text/javascript" src="../../js/data/serialreport.js?v=1685980800000"></script>
+  <script type="text/javascript" src="../../js/data/checkconfirm.js?v=1685980800000"></script>
+  <script type="text/javascript" src="../../js/data/tableindctdesc.js?v=1685980800000"></script>
+  <script type="text/javascript">
+
+
+    function showCalBtn() {
+      try {
+        parent.parent.frames["bottomFrame"].document.getElementById("calculatespan").style.display = "inline";
+      } catch (e) {
+        setTimeout(showCalBtn, 100);
+      }
+    }
+    showCalBtn();
+
+    //YB-14210
+    var gatherShowPeriodDatas = 1;
+    function defaultInit() {
+      var tableId = document.getElementById("tableId").value;
+      var period = document.getElementById("period").value;
+      var soId = document.getElementById("surveyObjectId").value;
+      var url = ROOT_PATH + "gather/asyncheckconfirm.do?tableId=" + tableId + "&period=" + period + "&soId=" + soId;
+      executeXhrNew(callbackDefaultNew, url);
+    }
+    function importERPData(fileName) {
+      //window.location.href = showReportUrl + "&fileName=" + fileName;
+      var objs = document.getElementsByTagName("input");
+      var disStr = "";
+      for (var i = 0; i < objs.length; i++) {
+        if (objs[i].disabled) {
+          disStr += getModelId(objs[i]) + ",";
+        }
+      }
+      if ("" != disStr) {
+        disStr = disStr.substring(0, disStr.length - 1);
+      }
+      enabledprocess();
+      var frm = document.forms[0];
+      //备份原action和target
+      var ac = frm.action;
+      var target = frm.target;
+      frm.action = showReportUrl + "&fileName=" + fileName;
+      var input = document.createElement("input");
+      input.type = 'hidden';
+      input.name = 'disabledModel';
+      input.value = disStr;
+      frm.appendChild(input);
+      frm.submit();
+      //还原原action和target
+      frm.action = ac;
+      frm.target = target;
+      disabledprocess();
+    }
+
+    var disabledObjs = new Array();
+    function enabledprocess() {
+      var objs = document.getElementsByTagName("input");
+      var j = 0;
+      for (var i = 0; i < objs.length; i++) {
+        if (objs[i].disabled) {
+          disabledObjs[j++] = objs[i];
+          objs[i].disabled = false;
+        }
+      }
+    }
+    function disabledprocess() {
+      for (var i = 0; i < disabledObjs.length; i++) {
+        disabledObjs[i].disabled = true;
+      }
+    }
+
+    function downloadTemplate() {
+      var tableId = document.getElementById("tableId").value;
+      var period = document.getElementById("period").value;
+      var soId = document.getElementById("surveyObjectId").value;
+      var exportFileName = encodeURIComponent("ERP模板样例");
+      exportFileName = encodeURIComponent(exportFileName);
+      //window.open(ROOT_PATH + "gather/exportTemplate.do?tableId=" + tableId +"&actSoId=" + soId + "&period=" + period + "&exportFileName=" + exportFileName);
+      enabledprocess();
+      var frm = document.forms[0];
+      //备份原action和target
+      var ac = frm.action;
+      var target = frm.target;
+      frm.action = ROOT_PATH + "gather/exportTemplate.do?tableId=" + tableId + "&actSoId=" + soId + "&period=" + period + "&exportFileName=" + exportFileName;
+      frm.submit();
+      //还原原action和target
+      frm.action = ac;
+      frm.target = target;
+      disabledprocess();
+      return;
+    }
+  </script>
+</head>
+
+<body leftmargin="0" topmargin="0" rightmargin="0">
+
+  <div id="indctdesc" class="errs" style='top:100px;'>
+    <table id='t_indctdesc' width='200' border='0' cellspacing='0' cellpadding='1'
+      style='cursor:auto;font-size:10pt;color:#FFFFFF;'>
+      <tr align="center" bgcolor="#0234c8">
+        <td width="200">指标解释</td>
+      </tr>
+    </table>
+    <table border="0" align="left" width="200" cellspacing="1" cellpadding="3"
+      style='cursor:auto;table-layout:fixed;word-wrap: break-word;'>
+      <tr bgcolor="#FFFF80">
+        <td width="200"><span id="span_metadesc"
+            style=" width:196px;height:200px;overflow-y:auto;table-layout:fixed;word-wrap: break-word;display:inline-block;"></span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+  <div id="dsavingnotime" class="dsaving" style="width: 270px; height: 70px;">
+    <table border="0" cellspacing="0" cellpadding="0" height="100%" style="border: 1px solid #97C4E3;" width="100%">
+      <tr>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/dr/images/loading.gif"></td>
+        <td>
+          <font color="#2556A7" id="lblWait">正在处理中, 请稍候...</font>&nbsp;&nbsp;
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id='divBlind' class='dblind'></div>
+  <iframe id='dsaving' src='../../jsp/process.jsp' frameborder='0' class='dsaving'></iframe>
+
+  <form name="surveyentityForm" method="post" action="/dr/gather/showdrreport.do">
+    <div><input type="hidden" name="org.apache.struts.taglib.html.TOKEN" value="e79d13ef69332d767eb728d42fbbbf72"></div>
+
+
+
+
+
+
+
+    <script type="text/javascript" src="/dr/js/jquery.min.js?v=1685980800000"></script>
+    <script type="text/javascript" src="/dr/js/jquery-ui-autocomplete.min.js?v=1685980800000"></script>
+    <link href="/dr/css/jquery-ui/jquery-ui-autocomplete.min.css" rel="stylesheet" type="text/css">
+    <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td height="25" nowrap>
+          <font color="blue">处理地：<span id="scantonCode">371071004000</span><span
+              id="scantonName">（山东省威海市威海火炬高技术产业开发区怡园街道）</span></font>&nbsp;&nbsp;
+          <input type="checkbox" name="check" onClick="setCheck();" />即录即审&nbsp;&nbsp; <select
+            onchange="inputOrder=parseInt(this.value,10);">
+            <option value="0">按行录入</option>
+            <option value="1">按列录入</option>
+          </select>&nbsp;&nbsp;
+          <input type="checkbox" name="notReport" value="1" onclick="setNotReport(this);">是否免报<span
+            id="snotReportReason" style="display:none;">&nbsp;&nbsp;免报原因<select name="notReportReason">
+              <option value="停业（歇业）">停业（歇业）</option>
+              <option value="其他">其他</option>
+            </select></span>&nbsp;&nbsp;
+          <span id="span_showindctdescflag"><input type="checkbox" name="showIndctDescFlag"
+              onclick="isShowIndctDesc(this);" />是否显示指标解释</span>&nbsp;
+          <img src='/dr/images/account/calc.gif' style='cursor:pointer;' title='计算器' align='absmiddle'
+            onclick='showCalc();'>
+        </td>
+      </tr>
+      <tr>
+        <td style="color:red">选中录入项，按F1键查看元数据解释</td>
+      </tr>
+    </table>
+    <script type="text/javascript">
+      function resubmit() {
+        document.forms[0].surveyObjectId.value = document.forms[0].parentSurveyObjectId.value;
+        document.forms[0].submit();
+      }
+    </script>
+    <script type="text/javascript">
+
+    </script>
+
+    <link type="text/css" rel="stylesheet" href="/dr/css/common/calcsm.css">
+    <script type="text/javascript" src="/dr/js/common/calc.js?v=1685980800000"></script>
+    <div id="calcMainPanel" style="display:none;">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td colspan="2" align="center" height="50"><input type="text" id="resultIpt" value="0" maxlength="16"
+              size="16" readonly /></td>
+        </tr>
+        <tr style="display:none;">
+          <td><span>计算式：</span></td>
+          <td>
+            <div id="expressBox"></div>
+          </td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0" id="btnTable" autofocus="true">
+        <tr>
+          <td><input type="button" id="num7Btn" class="btnCss btnOfBlueCss" value="7" /></td>
+          <td><input type="button" id="num8Btn" class="btnCss btnOfBlueCss" value="8" /></td>
+          <td><input type="button" id="num9Btn" class="btnCss btnOfBlueCss" value="9" /></td>
+          <td><input type="button" id="addBtn" class="btnCss btnOfOperatorCss" value="+" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" id="num4Btn" class="btnCss btnOfBlueCss" value="4" /></td>
+          <td><input type="button" id="num5Btn" class="btnCss btnOfBlueCss" value="5" /></td>
+          <td><input type="button" id="num6Btn" class="btnCss btnOfBlueCss" value="6" /></td>
+          <td><input type="button" id="subBtn" class="btnCss btnOfOperatorCss" value="-" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" id="num1Btn" class="btnCss btnOfBlueCss" value="1" /></td>
+          <td><input type="button" id="num2Btn" class="btnCss btnOfBlueCss" value="2" /></td>
+          <td><input type="button" id="num3Btn" class="btnCss btnOfBlueCss" value="3" /></td>
+          <td><input type="button" id="mulBtn" class="btnCss btnOfOperatorCss" value="×" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" id="num0Btn" class="btnCss btnOfBlueCss" value="0" /></td>
+          <td><input type="button" id="dotBtn" class="btnCss btnOfBlueCss" value="." /></td>
+          <td><input type="button" id="equBtn" class="btnCss btnOfYellowCss" value="=" /></td>
+          <td><input type="button" id="divBtn" class="btnCss btnOfOperatorCss" value="÷" /></td>
+        </tr>
+        <tr>
+          <td><input type="button" class="btnCss btnOfBlackCss" value="C" maxLength="9" /></td>
+          <td><input type="button" class="btnCss btnOfBlackCss" value="关闭" /></td>
+          <td colspan="2"></td>
+        </tr>
+      </table>
+    </div>
+    <script type="text/javascript">
+      base.args.maxLength = 13;
+    </script>
+    <input type="hidden" name="tableId" value="8600000002022101807202305" id="tableId">
+    <input type="hidden" name="period" value="20230011" id="period">
+    <input type="hidden" name="areaId" value="">
+    <input type="hidden" name="chooseDir" value="">
+    <input type="hidden" name="dirId" value="">
+    <input type="hidden" name="dirCode" value="">
+    <input type="hidden" name="surveyObjectId" value="">
+    <input type="hidden" name="parentSurveyObjectId" value="">
+    <input type="hidden" name="uu" value="">
+    <input type="hidden" name="mainTableId" value="8600000002022101807202562">
+    <input type="hidden" name="regimeId" value="8600000002022101806380008">
+    <input type="hidden" name="status" value="">
+    <input type="hidden" name="tabStatus" value="">
+    <input type="hidden" name="soTableId" value="">
+    <input type="hidden" name="orgType" value="0" id="orgType">
+    <input type="hidden" name="mainStatus" value="1">
+    <input type="hidden" name="serialTableIds" value="null">
+    <input type="hidden" name="rowdisplayserials" value="null">
+    <input type="hidden" name="series_id" value="">
+
+    <center>
+
+      <!-- ====================== 引入JS、定义显示框 ====================== -->
+
+      <!--[if !IE]><!-->
+      <script type="text/javascript" src="../../js/common/clipboard.min.js?v=1685980800000"></script>
+      <!--<![endif]-->
+      <script type="text/javascript" src="../../js/data/extreport.js?v=1685980800000"></script>
+      <script type="text/javascript" src="../../js/common/simplemenu.js?v=1685980800000"></script>
+      <script type="text/javascript" src="../../js/data/reporttable.js?v=1685980800000"></script>
+      <script type="text/javascript" src="../../js/common/commontable.js?v=1685980800000"></script>
+      <script type="text/javascript">
+        meta_link_path = "../../";
+        is_show_meta_link = false;
+        projectCount = 2;
+        isReadOnly = false;
+        dataType = '0';
+        var blcDetail = new Array();
+        var tableProperObj = {}; tableProperObj.addDisabled = []; tableProperObj.delDisabled = []; tableProperObj.delDisabled = []; tableProperObj.drColCount = []; tableProperObj.prjTableHasIndexCol = [];
+        tableProperObj.tableType = "1";
+        tableProperObj.checkChild = false;
+        tableProperObj.hideViewAttachOnline = true;
+        tableProperObj.appendIndcts = [];
+        tableProperObj.addRowByEnter = true;
+        tableProperObj.invisibleModels = [];
+        tableProperObj.invisibleModels["2002"] = 1;
+        tableProperObj.invisibleModels["2003"] = 1;
+        tableProperObj.invisibleModels["2001"] = 1;
+        tableProperObj.sec3Attach = false;
+        tableNum = 'B204-1';
+      </script>
+      <script type="text/javascript" src="../../js/data/reportcheck.js?v=1685980800000"></script>
+      <div id="dataAnderror" unselectable="on" class="err">
+        <table width="250" border="0" cellpadding="4" cellspacing="1" align="center" class="tab-soid">
+          <tr align="center">
+            <td bgcolor="#17A7E4" style="font-size:10pt;cursor:hand;color:#FFFFFF;">错误信息</td>
+          </tr>
+          <tr class="tab-bt">
+            <td id="errormsg" bgcolor="#17A7E4" style="font-size: 12px; color: #ffff00;"></td>
+          </tr>
+        </table>
+      </div>
+      <div id="clewdata" class="ddp">
+        <table width="130" border="0" cellpadding="4" cellspacing="0" align="center" class="tab-soid">
+          <tr id="lastdata_2" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffffff;border:1;border-bottom: 1px solid #A0D3F5;">
+              上三期数据：<span id="spanlp_2"></span></td>
+          </tr>
+          <tr id="lastdata_1" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffffff;border:1;border-bottom: 1px solid #A0D3F5;">
+              上上期数据：<span id="spanlp_1"></span></td>
+          </tr>
+          <tr id="lastdata" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffffff;">上期数据：<span id="spanlp"></span></td>
+          </tr>
+          <tr class="tab-bt" id="divRingRate" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffff00;border:1;border-top: 1px solid #A0D3F5;">
+              环比：<span id="ringrate"></span><br>差额：<span id="ringData"></span></td>
+          </tr>
+          <tr id="samedata" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffffff;border-top: 1px solid #A0D3F5;">去年同期：<span
+                id="spansp"></span></td>
+          </tr>
+          <tr class="tab-bt" id="divSameRate" style="display: none;">
+            <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffff00;border-top: 1px solid #A0D3F5;">同比：<span
+                id="samerate"></span><br>差额：<span id="sameData"></span></td>
+          </tr>
+        </table>
+      </div>
+      <div id="enum_div" class="enum_div" onmousedown=startdrag(this) onmouseup=stopdrag(this)
+        style="visibility: hidden;">
+        <table id="enum_tbl" border="1" bordercolor="#CACACC" cellspacing="0" cellpadding="3" class="enum_tbl">
+        </table>
+      </div>
+      <script type="text/javascript" language="javascript"
+        src="../../js/data/definefunction.js?v=1685980800000"></script>
+      <script type="text/javascript" language="javascript" src="../../js/data/fillrule.js?v=1685980800000"></script>
+      <script type="text/javascript" language="javascript" src="../../js/common/calendar.js?v=1685980800000"></script>
+      <div id="t_error" class="errs" style='left:150px;top:40px;' onmousedown='errorsDown();'>
+        <table id='t_emove' width='750' border='0' cellspacing='0' cellpadding='1'
+          style='cursor:pointer;font-size:10pt;color:#FFFFFF;'>
+          <tr align="center" bgcolor="#0234c8">
+            <td width="25" height="30"></td>
+            <td width="50" ctype='code'>编号</td>
+            <td width="60">&nbsp;审核类型</td>
+            <td width="120" ctype='error'>审核错误</td>
+            <td width="215" ctype='desc'>错误说明</td>
+            <td>错误数据</td>
+            <td width="17" title="关闭" onClick="showErrors(false);"><img src='../../images/common/close.gif' border='0'>
+            </td>
+          </tr>
+        </table>
+        <div id="t_serr" style="overflow-y:auto;overflow-x:hidden;width:750px;cursor:default">
+          <table border="0" align="left" width="731" cellspacing="1" cellpadding="3"
+            style='table-layout:fixed;word-wrap: break-word;'>
+            <tbody id="t_errtable">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <script type="text/javascript"
+        src="../../js/data/j8600000000/86000000020221018072023051696853462737.js?v=1685980800000"></script>
+      <script type='text/javascript'>keyText = "m_1";</script>
+      <script type="text/javascript">dataReportCountsInTable = 3</script>
+
+      <table id="mainTable" rightEdge="777" width=780 border=0 cellspacing=0 cellpadding=0>
+        <tr>
+          <td width=1></td>
+          <td width=778></td>
+          <td width=1></td>
+        </tr>
+        <tr>
+          <td width=780 colspan=3 rowspan=2>
+            <TABLE border="0" width="780" cellpadding="0" cellspacing="0" id="comp1">
+              <tr>
+                <td width=780 colspan=1 rowspan=1>
+                  <table align=center width=779 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=84></td>
+                      <td width=7></td>
+                      <td width=4></td>
+                      <td width=8></td>
+                      <td width=150></td>
+                      <td width=17></td>
+                      <td width=2></td>
+                      <td width=14></td>
+                      <td width=54></td>
+                      <td width=12></td>
+                      <td width=34></td>
+                      <td width=2></td>
+                      <td width=12></td>
+                      <td width=2></td>
+                      <td width=21></td>
+                      <td width=10></td>
+                      <td width=2></td>
+                      <td width=13></td>
+                      <td width=78></td>
+                      <td width=67></td>
+                      <td width=155></td>
+                      <td width=13></td>
+                      <td width=9></td>
+                      <td width=8></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=6></td>
+                      <td width=273 colspan=14 rowspan=2>
+                        <style type='text/css'>
+                          .lbl0 {
+                            font-size: 21px;
+                            line-height: 25px;
+                            display: inline-block;
+                          }
+                        </style>
+                        <span class=lbl0 style='width:273px'>
+                          工业产销总值及主要产品产量</span>
+                      </td>
+                      <td colspan=5></td>
+                    </tr>
+                    <tr>
+                      <td height=24 colspan=6></td>
+                      <td colspan=5></td>
+                    </tr>
+                    <tr>
+                      <td height=65 colspan=25></td>
+                    </tr>
+                    <tr>
+                      <td height=15 colspan=21></td>
+                      <td width=155>
+                        <style type='text/css'>
+                          .lbl1 {
+                            font-size: 12px;
+                            line-height: 15px;
+                            display: inline-block;
+                          }
+                        </style>
+                        <span class=lbl1 style='width:155px'>
+                          表&ensp;&ensp;&ensp;&ensp;号：B&ensp;2&ensp;0&ensp;4&ensp;-&ensp;1&ensp;表</span>
+                      </td>
+                      <td colspan=3></td>
+                    </tr>
+                    <tr>
+                      <td height=3 width=96 colspan=4 rowspan=2>
+                        <span class=lbl1 style='width:96px'>
+                          统一社会信用代码</span>
+                      </td>
+                      <td></td>
+                      <td width=249 colspan=6 rowspan=2>
+                        <input name='m_5' type='text' metaId="8600000002015112402540001" value="91371000613752141X"
+                          style='width:180px;' class='txt0' onkeydown="return dpe();"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();" onblur="dpe();"
+                          onchange="dpe();" maxlength='18'>
+                      </td>
+                      <td colspan=14></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td height=12 colspan=10></td>
+                      <td width=168 colspan=2 rowspan=3>
+                        <span class=lbl1 style='width:168px'>
+                          制定机关：国&ensp;&ensp;家&ensp;&ensp;统&ensp;&ensp;计&ensp;&ensp;局</span>
+                      </td>
+                      <td colspan=2></td>
+                    </tr>
+                    <tr>
+                      <td height=2 colspan=21></td>
+                      <td colspan=2></td>
+                    </tr>
+                    <tr>
+                      <td height=1 width=271 colspan=7 rowspan=3>
+                        <span class=lbl1 style='width:271px'>
+                          尚未领取统一社会信用代码的填写原组织机构代码</span>
+                      </td>
+                      <td colspan=2></td>
+                      <td width=137 colspan=7 rowspan=3>
+                        <input name='m_1' type='text' tabIndex='-1' metaId="8600000002008030602000001"
+                          style='width:100px;' class='txt0 key_text' onkeydown="return dpe();"
+                          onkeyup="try{checkKeyValue();return dpe();}catch(e){}" onfocus="return dpe();" onblur="dpe();"
+                          onchange="dpe();" onpaste="checkPastValue();" maxlength='9'>
+                      </td>
+                      <td colspan=5></td>
+                      <td colspan=2></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=2></td>
+                      <td colspan=9></td>
+                    </tr>
+                    <tr>
+                      <td height=13 colspan=2></td>
+                      <td colspan=5></td>
+                      <td width=177 colspan=3 rowspan=3>
+                        <span class=lbl1 style='width:177px'>
+                          文&ensp;&ensp;&ensp;&ensp;号：国统字〔2022〕90号</span>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=21></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td height=1 width=85 colspan=2 rowspan=2>
+                        <span class=lbl1 style='width:85px'>
+                          单位详细名称：</span>
+                      </td>
+                      <td></td>
+                      <td width=181 colspan=5 rowspan=2>
+                        <input name='m_4' type='text' readOnly disabled metaId="8600000002009050702001444"
+                          style='width:180px;' class='txt0 key_text'>
+                      </td>
+                      <td colspan=2></td>
+                      <td width=46 colspan=2 rowspan=2>
+                        <input name='m_3' type='text' metaId="8600000002009050702001445" style='width:45px;'
+                          class='txt0' onkeydown="if (dpe()){return aispositive(this);}else{return false;}"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();" onblur="valYear('3');dpe();"
+                          onchange="dpe();">
+                      </td>
+                      <td></td>
+                      <td width=12 rowspan=2>
+                        <span class=lbl1 style='width:12px'>
+                          年</span>
+                      </td>
+                      <td></td>
+                      <td width=31 colspan=2 rowspan=2>
+                        <input name='m_2' type='text' metaId="8600000002009050702001446" style='width:30px;'
+                          class='txt0' onkeydown="if (dpe()){return aispositive(this);}else{return false;}"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();" onblur="valMonth('2');dpe();"
+                          onchange="dpe();">
+                      </td>
+                      <td></td>
+                      <td width=13 rowspan=2>
+                        <span class=lbl1 style='width:13px'>
+                          月</span>
+                      </td>
+                      <td colspan=2></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td height=14 colspan=2></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td colspan=2></td>
+                      <td width=168 colspan=2 rowspan=2>
+                        <span class=lbl1 style='width:168px'>
+                          有效期至：2&ensp;0&ensp;2&ensp;4&ensp;年&ensp;1&ensp;月</span>
+                      </td>
+                      <td colspan=2></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=21></td>
+                      <td colspan=2></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </TABLE>
+          </td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+          <td width=780 colspan=3>
+            <TABLE border="0" width="780" cellpadding="0" cellspacing="0" id="comp34">
+              <tr>
+                <td width=780 colspan=1 rowspan=1>
+                  <table align=center width=779 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=776></td>
+                      <td width=2></td>
+                    </tr>
+                    <tr>
+                      <td width=777 colspan=2 rowspan=2>
+                        <div>
+                          <div id="tdiv1" class="tdiv">
+                            <table id='table1' border='0' cellspacing='0' cellpadding='0' width=777 owidth=777
+                              bcheight=74>
+                              <tr>
+                                <td align='center' class="b2tcb nftd1 nftd2 ztop" id="ftd1_2" height=54 rowspan=2
+                                  width=247 basewidth=247 colspan=1 index='0'>
+                                  指标名称
+                                </td>
+                                <td align='center' class="b3tcbl nftd1 nftd2 ztop" id="ftd1_2" height=54 rowspan=2
+                                  width=50 basewidth=50 colspan=1 index='1'>
+                                  计量<br>单位
+                                </td>
+                                <td align='center' class="b4tcblr nftd1 nftd2 ztop" id="ftd1_2" height=54 rowspan=2
+                                  width=76 basewidth=76 colspan=1 index='2'>
+                                  代码
+                                </td>
+                                <td align='center' class="b1tc nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_3_4_' metaId="8600000002008032202000132">
+                                  本年
+                                </td>
+                                <td align='center' class="b2tcl nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_5_6_' metaId="8600000002009051102001575">
+                                  上年同期
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align='center' class="b2tb nftd1 ztop" id="ftd1" height=24 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='3' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=24 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='4' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=24 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='5' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=24 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='6' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                              </tr>
+                              <tr id=f_dr>
+                                <td id='ftd1_2' height='20' class='b1b nftd1 nftd2 ztop' align='center'>甲</td>
+                                <td id='ftd1_2' height='20' class='b2bl nftd1 nftd2 ztop' align='center'>乙</td>
+                                <td id='ftd1_2' height='20' class='b3blr nftd1 nftd2 ztop' align='center'>丙</td>
+                                <td id='ftd1' height='20' class='b1b nftd1' align='center'>1</td>
+                                <td id='ftd1' height='20' class='b2bl nftd1' align='center'>2</td>
+                                <td id='ftd1' height='20' class='b2bl nftd1' align='center'>3</td>
+                                <td id='ftd1' height='20' class='b2bl nftd1' align='center'>4</td>
+                              </tr>
+                              <tr id=c1_1>
+                                <td realrIndex=1 width='247' height='20' class='b0 nftd2' id='ftd2'
+                                  metaId="8600000002008032202000391" lc='0' nowrap>
+                                  一、工业总产值(当年价格)
+                                </td>
+                                <td class='b1l nftd2' id='ftd2' align='center' style='width:50px'>千元</td>
+                                <td class='b2lr nftd2' id='ftd2' align='center' style='width:76px'>01</td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_1_3 maxlength='20' modelId="13" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_1_4 maxlength='20' modelId="14" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_1_5 value="1743" maxlength='20' modelId="15" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_1_6 value="27437" maxlength='20' modelId="16" p="2"></td>
+                              </tr>
+                              <tr id=c1_1>
+                                <td realrIndex=2 width='247' height='21' class='b0 nftd2' id='ftd2'
+                                  metaId="8600000002008032202000387" lc='4' nowrap>
+                                  &ensp;&ensp;&ensp;&ensp;工业销售产值(当年价格)
+                                </td>
+                                <td class='b1l nftd2' id='ftd2' align='center' style='width:50px'>千元</td>
+                                <td class='b2lr nftd2' id='ftd2' align='center' style='width:76px'>03</td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_2_3 maxlength='20' modelId="17" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_2_4 maxlength='20' modelId="18" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_2_5 value="1743" maxlength='20' modelId="19" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_2_6 value="27437" maxlength='20' modelId="20" p="2"></td>
+                              </tr>
+                              <tr id=c1_1>
+                                <td realrIndex=3 width='247' height='20' class='b0 nftd2' id='ftd2'
+                                  metaId="8600000002008032202000261" lc='5' nowrap>
+                                  &ensp;&ensp;&ensp;&ensp;&ensp;其中:出口交货值
+                                </td>
+                                <td class='b1l nftd2' id='ftd2' align='center' style='width:50px'>千元</td>
+                                <td class='b2lr nftd2' id='ftd2' align='center' style='width:76px'>04</td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_3_3 maxlength='20' modelId="21" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_3_4 maxlength='20' modelId="22" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_3_5 value="1743" maxlength='20' modelId="23" p="2"></td>
+                                <td class='b0' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c1_3_6 value="27437" maxlength='20' modelId="24" p="2"></td>
+                              </tr>
+                              <tr id=c1_1>
+                                <td width='247' height='23' class='b1bc nftd2' id='ftd2' lc='0' nowrap>
+                                  二、工业总产值(当年价格)按工业行业小类分
+                                </td>
+                                <td class='b2bcl nftd2' id='ftd2' align='center' style='width:50px'>-</td>
+                                <td class='b3bclr nftd2' id='ftd2' align='center' style='width:76px'>-</td>
+                                <td class='b1bc' align='center' style='width:101px'>&nbsp;</td>
+                                <td class='b1bc' align='center' style='width:101px'>&nbsp;</td>
+                                <td class='b1bc' align='center' style='width:101px'>&nbsp;</td>
+                                <td class='b1bc' align='center' style='width:101px'>&nbsp;</td>
+                              </tr>
+
+                            </table>
+
+                          </div>
+
+                        </div>
+                        <script type="text/javascript" language="javascript">
+                          maxRows["1"] = 4;
+                          maxCols["1"] = 6;
+                          maxRecordCounts["1"] = -1
+                          tableProperObj.drColCount['1'] = 7;
+                          dr_catIds["1"] = "";
+                          dr_codeIndex["1"] = 2;
+                          dr_unitIndex["1"] = 1;
+                          dr_catType["1"] = 0;
+                          binTop["1"] = 282; zhuLeft["1"] = 393; dr_startRow["1"] = 3;
+                          dr_startCol["1"] = 3;
+                        </script>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=3></td>
+                    </tr>
+                  </table>
+                  <script type="text/javascript">drHeight = 154;</script>
+                </td>
+              </tr>
+              <tr>
+                <td width=780 colspan=1 rowspan=1>
+                  <table align=center width=779 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=774></td>
+                      <td width=4></td>
+                    </tr>
+                    <tr>
+                      <td width=775 colspan=2 rowspan=2>
+                        <div>
+                          <div id="tdiv2" class="tdiv">
+                            <table id='table2' isProject='true' subType='1' projectType='row' firstfill='true'
+                              border='0' cellspacing='0' cellpadding='0' width=775 owidth=775 bcheight=63>
+                              <tr style='display:none'>
+                                <td align='center' class="b2tcb nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=247 basewidth=247 colspan=1 index='0' metaId="8600000002011070502001614">
+                                  行业名称
+                                </td>
+                                <td align='center' class="b3tcbl nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=49 basewidth=49 colspan=1 index='1' metaId="8600000002008032202000464">
+                                  计量单位
+                                </td>
+                                <td align='center' class="b3tcbl nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=75 basewidth=75 colspan=1 index='2' metaId="8600000002008032202000284">
+                                  代码
+                                </td>
+                                <td align='center' class="b2tcl nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_3_4_' metaId="8600000002008032202000132">
+                                  本年
+                                </td>
+                                <td align='center' class="b2tcl nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_5_6_' metaId="8600000002009051102001575">
+                                  上年同期
+                                </td>
+                              </tr>
+                              <tr style='display:none'>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='3' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='4' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='5' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='6' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class='b1bc nftd2' id='ftd2' align='right' style='width:247px'><INPUT class="input"
+                                    style="width:243px" name=c2_1_0 value="变压器、整流器和电感器制造" modelId="25_1" disabled></td>
+                                <td class='b2bcl nftd2' id='ftd2' align='right' style='width:49px'><INPUT class="input"
+                                    style="width:45px" name=c2_1_1 value="千元" modelId="26_1" disabled></td>
+                                <td class='b2bcl nftd2' id='ftd2' align='right' style='width:75px'><INPUT class="input"
+                                    style="width:71px" name=c2_1_2 value="3821" modelId="27_1" title='F2 选择代码'></td>
+                                <td class='b2bcl' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c2_1_3 maxlength='20' modelId="28_1" p="2"></td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c2_1_4 maxlength='20' modelId="29_1" p="2"></td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c2_1_5 value="1743" maxlength='20' modelId="30_1" p="2">
+                                </td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c2_1_6 value="27437" maxlength='20' modelId="31_1" p="2">
+                                </td>
+                              </tr>
+
+
+                            </table>
+
+                          </div>
+
+                          <table width='100%' id='selBtn2' cellpadding='0' bgcolor='#DADADA' cellspacing='0'>
+                            <tr>
+                              <td height=25 align='center'><span class='btn_s11'><span class="btn_s1"><input
+                                      type="button" onclick="selectCodeButton(&#39;2&#39;);" value="【点此按钮选择上表填报目录】"
+                                      style="width:223px;letter-spacing: 0px;height:26px;margin:5px 0;font-size:14px;vertical-align:middle;font-weight:bold;"
+                                      class="btn1" name="bSelCat"></span></span>&ensp;&ensp;[最后一行Enter] 增加行
+                                &ensp;[Ctrl+I] 插入行 &ensp;[Ctrl+D] 删除行 &ensp;[Ctrl+T] 显示/隐藏合计行</td>
+                            </tr>
+                          </table>
+                        </div>
+                        <script type="text/javascript" language="javascript">
+                          maxRows["2"] = 1;
+                          maxCols["2"] = 6;
+                          maxRecordCounts["2"] = -1
+                          tableProperObj.drColCount['2'] = 7;
+                          dr_catIds["2"] = "8600000002018012604980001";
+                          dr_codeIndex["2"] = 2;
+                          dr_unitIndex["2"] = 1;
+                          dr_nameIndex["2"] = 0;
+                          dr_catType["2"] = 0;
+                          binTop["2"] = 431; zhuLeft["2"] = 267; dr_startRow["2"] = 2;
+                          dr_startCol["2"] = 0;
+                        </script>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </table>
+                  <script type="text/javascript">drHeight = 314;</script>
+                </td>
+              </tr>
+              <tr>
+                <td width=780 colspan=1 rowspan=1>
+                  <table align=center width=779 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=119></td>
+                      <td width=659></td>
+                    </tr>
+                    <tr>
+                      <td height=3 colspan=3></td>
+                    </tr>
+                    <tr>
+                      <td height=15 width=120 colspan=2>
+                        <span class=lbl1 style='width:120px'>
+                          三、主要工业产品产量</span>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td height=2 colspan=3></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width=780 colspan=1 rowspan=1>
+                  <table align=center width=779 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=774></td>
+                      <td width=4></td>
+                    </tr>
+                    <tr>
+                      <td width=775 colspan=2 rowspan=3>
+                        <div>
+                          <div id="tdiv3" class="tdiv">
+                            <table id='table3' isProject='true' subType='1' projectType='row' firstfill='true'
+                              border='0' cellspacing='0' cellpadding='0' width=775 owidth=775 bcheight=63>
+                              <tr style='display:none'>
+                                <td align='center' class="b2tcb nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=247 basewidth=247 colspan=1 index='0' metaId="8600000002008032202000192">
+                                  产品名称
+                                </td>
+                                <td align='center' class="b3tcbl nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=49 basewidth=49 colspan=1 index='1' metaId="8600000002011070502001615">
+                                  计量单位
+                                </td>
+                                <td align='center' class="b3tcbl nftd1 nftd2 ztop" id="ftd1_2" height=63 rowspan=2
+                                  width=75 basewidth=75 colspan=1 index='2' metaId="8600000002011070502001616">
+                                  产品代码
+                                </td>
+                                <td align='center' class="b2tcl nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_3_4_' metaId="8600000002008032202000132">
+                                  本年
+                                </td>
+                                <td align='center' class="b2tcl nftd1 ztop" id="ftd1" height=30 rowspan=1 width=202
+                                  basewidth=202 colspan=2 childIndex='_5_6_' metaId="8600000002009051102001575">
+                                  上年同期
+                                </td>
+                              </tr>
+                              <tr style='display:none'>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='3' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='4' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='5' metaId="8600000002009050802001470">
+                                  本月
+                                </td>
+                                <td align='center' class="b3tbl nftd1 ztop" id="ftd1" height=33 rowspan=1 width=101
+                                  basewidth=101 colspan=1 index='6' metaId="8600000002009050802001471">
+                                  1-本月
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class='b1bc nftd2' id='ftd2' align='right' style='width:247px'><INPUT class="input"
+                                    style="width:243px" name=c3_1_0 modelId="32_1" disabled></td>
+                                <td class='b2bcl nftd2' id='ftd2' align='right' style='width:49px'><INPUT class="input"
+                                    style="width:45px" name=c3_1_1 modelId="33_1" disabled></td>
+                                <td class='b2bcl nftd2' id='ftd2' align='right' style='width:75px'><INPUT class="input"
+                                    style="width:71px" name=c3_1_2 modelId="34_1" title='F2 选择代码'></td>
+                                <td class='b2bcl' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c3_1_3 maxlength='20' modelId="35_1" p="2"></td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c3_1_4 maxlength='20' modelId="36_1" p="2"></td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c3_1_5 maxlength='20' modelId="37_1" p="2"></td>
+                                <td class='b1bc' align='right' style='width:101px'><INPUT class="input0"
+                                    style="width:97px" name=c3_1_6 maxlength='20' modelId="38_1" p="2"></td>
+                              </tr>
+
+
+                            </table>
+
+                          </div>
+
+                          <table width='100%' id='selBtn3' cellpadding='0' bgcolor='#DADADA' cellspacing='0'>
+                            <tr>
+                              <td height=25 align='center'><span class='btn_s11'><span class="btn_s1"><input
+                                      type="button" onclick="selectCodeButton(&#39;3&#39;);" value="【点此按钮选择上表填报目录】"
+                                      style="width:223px;letter-spacing: 0px;height:26px;margin:5px 0;font-size:14px;vertical-align:middle;font-weight:bold;"
+                                      class="btn1" name="bSelCat"></span></span>&ensp;&ensp;[最后一行Enter] 增加行
+                                &ensp;[Ctrl+I] 插入行 &ensp;[Ctrl+D] 删除行 &ensp;[Ctrl+T] 显示/隐藏合计行</td>
+                            </tr>
+                          </table>
+                        </div>
+                        <script type="text/javascript" language="javascript">
+                          maxRows["3"] = 1;
+                          maxCols["3"] = 6;
+                          maxRecordCounts["3"] = -1
+                          tableProperObj.drColCount['3'] = 7;
+                          dr_catIds["3"] = "8600000002022120804600001";
+                          dr_codeIndex["3"] = 2;
+                          dr_unitIndex["3"] = 1;
+                          dr_nameIndex["3"] = 0;
+                          dr_catType["3"] = 0;
+                          binTop["3"] = 537; zhuLeft["3"] = 267; dr_startRow["3"] = 2;
+                          dr_startCol["3"] = 0;
+                        </script>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </table>
+                  <script type="text/javascript">drHeight = 420;</script>
+                </td>
+              </tr>
+            </TABLE>
+          </td>
+        </tr>
+        <tr>
+          <td height=1 colspan=3></td>
+        </tr>
+        <tr>
+          <td width=779 colspan=2 rowspan=2>
+            <TABLE border="0" width="779" cellpadding="0" cellspacing="0" id="comp17">
+              <tr>
+                <td width=779 colspan=1 rowspan=1>
+                  <table align=center width=778 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=70></td>
+                      <td width=5></td>
+                      <td width=61></td>
+                      <td width=24></td>
+                      <td width=69></td>
+                      <td width=4></td>
+                      <td width=61></td>
+                      <td width=21></td>
+                      <td width=45></td>
+                      <td width=2></td>
+                      <td width=61></td>
+                      <td width=6></td>
+                      <td width=55></td>
+                      <td width=5></td>
+                      <td width=76></td>
+                      <td width=60></td>
+                      <td width=2></td>
+                      <td width=46></td>
+                      <td width=1></td>
+                      <td width=12></td>
+                      <td width=1></td>
+                      <td width=31></td>
+                      <td width=1></td>
+                      <td width=12></td>
+                      <td width=1></td>
+                      <td width=31></td>
+                      <td width=12></td>
+                      <td width=2></td>
+                    </tr>
+                    <tr>
+                      <td height=4 colspan=29></td>
+                    </tr>
+                    <tr>
+                      <td height=14 width=71 colspan=2 rowspan=2>
+                        <span class=lbl1 style='width:71px'>
+                          单位负责人:</span>
+                      </td>
+                      <td></td>
+                      <td width=61 rowspan=2>
+                        <input name='m_6' type='text' metaId="8600000002008102402001382" value="金满根" style='width:60px;'
+                          class='txt0' onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}"
+                          onfocus="return dpe();" onblur="dpe();" onchange="dpe();">
+                      </td>
+                      <td></td>
+                      <td width=69 rowspan=2>
+                        <span class=lbl1 style='width:69px'>
+                          统计负责人:</span>
+                      </td>
+                      <td></td>
+                      <td width=61 rowspan=2>
+                        <input name='m_7' type='text' metaId="8600000002008032302000803" value="庄宝香" style='width:60px;'
+                          class='txt0' onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}"
+                          onfocus="return dpe();" onblur="dpe();" onchange="dpe();">
+                      </td>
+                      <td></td>
+                      <td width=45 rowspan=2>
+                        <span class=lbl1 style='width:45px'>
+                          填表人:</span>
+                      </td>
+                      <td></td>
+                      <td width=61 rowspan=2>
+                        <input name='m_8' type='text' metaId="8600000002008030602000056" value="王娟" style='width:60px;'
+                          class='txt0' onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}"
+                          onfocus="return dpe();" onblur="dpe();" onchange="dpe();">
+                      </td>
+                      <td></td>
+                      <td width=55 rowspan=2>
+                        <span class=lbl1 style='width:55px'>
+                          联系电话:</span>
+                      </td>
+                      <td></td>
+                      <td width=76 rowspan=2>
+                        <input name='m_12' type='text' metaId="8600000002008030602000057" value="5817772"
+                          style='width:75px;' class='txt0' onkeydown="return dpe();"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();" onblur="dpe();"
+                          onchange="dpe();">
+                      </td>
+                      <td width=60 rowspan=2>
+                        <span class=lbl1 style='width:60px'>
+                          报出日期:</span>
+                      </td>
+                      <td></td>
+                      <td width=46 rowspan=2>
+                        <input name='m_9' type='text' metaId="8600000002008030602000062"
+                          style='width:45px;ime-mode:disabled;' class='txt0'
+                          onkeydown="if (dpe()){return aispositive(this);}else{return false;}"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();" onblur="valYear('9');dpe();"
+                          onchange="dpe();" maxlength='4'>
+                      </td>
+                      <td></td>
+                      <td width=12 rowspan=2>
+                        <span class=lbl1 style='width:12px'>
+                          年</span>
+                      </td>
+                      <td></td>
+                      <td width=31 rowspan=2>
+                        <input name='m_10' type='text' metaId="8600000002008030602000063"
+                          style='width:30px;ime-mode:disabled;' class='txt0'
+                          onkeydown="if (dpe()){return aispositive(this);}else{return false;}"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();"
+                          onblur="if (valMonth('10'));dpe();" onchange="dpe();" maxlength='2'>
+                      </td>
+                      <td></td>
+                      <td width=12 rowspan=2>
+                        <span class=lbl1 style='width:12px'>
+                          月</span>
+                      </td>
+                      <td></td>
+                      <td width=31 rowspan=2>
+                        <input name='m_11' type='text' metaId="8600000002008030602000065"
+                          style='width:30px;ime-mode:disabled;' class='txt0'
+                          onkeydown="if (dpe()){return aispositive(this);}else{return false;}"
+                          onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();"
+                          onblur="if (valDay('11'));dpe();" onchange="dpe();" maxlength='2'>
+                      </td>
+                      <td width=12 rowspan=2>
+                        <span class=lbl1 style='width:12px'>
+                          日</span>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width=779 colspan=1 rowspan=1>
+                  <table align=center width=778 border=0 cellspacing=0 cellpadding=0>
+                    <tr>
+                      <td width=1></td>
+                      <td width=776></td>
+                      <td width=1></td>
+                    </tr>
+                    <tr>
+                      <td height=1 colspan=3></td>
+                    </tr>
+                    <tr>
+                      <td height=180 width=777 colspan=2>
+                        <span class=lbl1 style='width:777px'>
+                          说明：1.统计范围：辖区内规模以上工业法人单位和规模以上工业个体经营户。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2.报送日期及方式：调查单位2、5、6、7、8、10、11月月后7日，3、9月月后10日，4、12月月后8日12:00前独立自行网上填报，1月免<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;报；省级统计机构2、5、6、7、8、10、11月月后10日，3、9月月后13日，4、12月月后11日12:00前完成数据审核、验收、上报，1月<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;免报。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;3.本表甲栏下“二、工业总产值(当年价格)按工业行业小类分”按国民经济行业小类填报；“三、主要工业产品产量”按《规模以上工<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;业产品产量目录》填报。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;4.本表“上年同期”数据统一由国家统计局在数据处理软件中复制，调查单位和各级统计机构原则上不得修改（不含产品产量）；本年<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;新增的调查单位自行填报“上年同期”数据；涉及拆分、兼并、重组等情况的企业，经国家统计局批准后，调查单位可调整同期数；<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;本年新增指标的同期数由调查单位自行填报。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;5.主要审核关系：<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(1)工业销售产值(03)≥其中：出口交货值(04)<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(2)工业总产值(01)=烟煤和无烟煤开采洗选(0610)+…+其他水处理、利用与分配(4690)</span>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td height=14 colspan=3></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </TABLE>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td height=20 colspan=3></td>
+        </tr>
+        <tr>
+          <td width=780 colspan=3>
+            <TABLE border="0" width="780" cellpadding="0" cellspacing="0" id="comp1">
+              <tr>
+                <td style='display:none'>
+                  <span class=lbl1 style='width:54px'>
+                    附加标记1</span>
+                  &nbsp;
+                  <input name='m_2001' type='text' metaId="8600000002013101002002719" style='width:15px;' class='txt0'
+                    onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();"
+                    onblur="dpe();" onchange="dpe();">
+                  &nbsp;
+                  <span class=lbl1 style='width:54px'>
+                    附加标记1</span>
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td style='display:none'>
+                  <span class=lbl1 style='width:54px'>
+                    附加标记2</span>
+                  &nbsp;
+                  <input name='m_2002' type='text' metaId="8600000002013101002002720" style='width:15px;' class='txt0'
+                    onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();"
+                    onblur="dpe();" onchange="dpe();">
+                  &nbsp;
+                  <span class=lbl1 style='width:54px'>
+                    附加标记2</span>
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td style='display:none'>
+                  <span class=lbl1 style='width:54px'>
+                    附加标记3</span>
+                  &nbsp;
+                  <input name='m_2003' type='text' metaId="8600000002013101002002721" style='width:15px;' class='txt0'
+                    onkeydown="return dpe();" onkeyup="try{return dpe();}catch(e){}" onfocus="return dpe();"
+                    onblur="dpe();" onchange="dpe();">
+                  &nbsp;
+                  <span class=lbl1 style='width:54px'>
+                    附加标记3</span>
+                  &nbsp;
+                </td>
+              </tr>
+            </TABLE>
+          </td>
+        </tr>
+      </table>
+      <script type="text/javascript">
+        otherChecks.push("valYear('3')");
+        otherChecks.push("valMonth('2')");
+        otherChecks.push("valYear('9')");
+        otherChecks.push("valMonth('10')");
+        otherChecks.push("valDay('11')");
+      </script>
+      <script type="text/javascript">
+        var formulaShowDataRepotIndex = true;
+      </script>
+
+      <script type='text/javascript'>addInputEvents(); window.onload = function () { loadInit(false, false); };</script>
+      <br>
+
+
+
+
+
+
+
+
+
+      <script type="text/javascript">
+
+        function checkCodeRepetition() {
+          var tbl;
+          for (var i = 1; (tbl = document.getElementById("table" + i)) != null; i++) {
+            if (tbl.getAttribute("isProject") == "true") {
+              var index = "" + i;
+              var catId = dr_catIds[index];
+              if (catId != null && catId != "") {
+                var r = dr_codeIndex[index];
+                if (r != null) {
+                  var array = new Array();
+                  for (var j = 0; j < tbl.rows.length; j++) {
+                    var td = tbl.rows[j].cells[r];
+                    if (td && td.children[0]) {
+                      var input = td.children[0];
+                      if (input != null && input.type == "text") {
+                        var value = input.value;
+                        if (value != "") {
+                          array.push(new Array(value, input.name));
+                        }
+                      }
+                    }
+                  }
+                  var flag = checkSameCode(array);
+                  if (flag != null) {
+                    return flag;
+                  }
+                }
+              }
+            }
+          }
+          return true;
+        }
+        function checkSameCode(array) {
+          for (var i = array.length - 1; i > 0; i--) {
+            for (var j = 0; j < i; j++) {
+              if (array[i][0] == array[j][0]) {
+                return new Array(array[i][1], "代码不能重复", "0");
+              }
+            }
+          }
+          return null;
+        }
+
+        saveChecks.push("checkCodeRepetition()");
+
+        hideWait();
+
+      </script>
+      <input type="hidden" name="reportUserId" value="613752141">
+
+
+  </form>
+  <script type="text/javascript">
+    var showReportUrl = "/dr/gather/showdrreport.do?tableId=8600000002022101807202305&period=20230011&surveyObjectId=&tabStatus=&keyValue=null&mainTableId=8600000002022101807202562&regimeId=8600000002022101806380008&soTableId=&orgType=0&mainStatus=1&regimeId=8600000002022101806380008&byCheck=null&subKeyValue=null&parentSurveyObjectId=&childSurveyObjectId=";
+    tabsTableObj = document.getElementById("tabsTable");
+    dateInfo["m_3"] = "2023"; dateInfo["m_2"] = "11"; dateInfo["m_10"] = "12"; dateInfo["m_9"] = "2023"; dateInfo["m_11"] = "03"; initDateInfo(); disableInput(getObjByName('m_2')); disableInput(getObjByName('m_3'));
+    restoreForceReasonsFromLocal('8600000002022101807202305', '20230011', '613752141', '', '8600000002022101806380008', '613752141');
+    showChildSoButton('add', 'none'); getObjByName(keyText).value = '613752141'; getObjByName(keyText).disabled = true; showTemporaryButton('8600000002022101807202305', '20230011', '613752141'); setValue('m_1', '613752141'); setValue('m_4', '威海东日技研电子有限公司'); fetchForceReasons('8600000002022101807202305', '20230011', '8637107100400035400000005', '613752141'); setButtons(false, ['saveLocalReport', 'loadData', 'saveTemporary', 'delTemporary', 'bcomputeData', 'bhelpReport']); setButtonSelCat(false); saveDrInitialReportInSeries();
+    function backupCurrentReport() {
+      localSave('8600000002022101807202305', '20230011', '613752141', '', '8600000002022101806380008'); subKeyValueBak = getValue(getObjByName(keyText));
+    }
+    var subKeyValueBak = getValue(getObjByName(keyText));
+    var keyValueBak = '613752141';
+    var calTableKeyValue = new Array();
+
+    function calculateFillRule() {
+      if (isNNReport) { return }
+      rfc_8600000002022101807202305();
+      initBeforeSave();
+    }
+
+    defaultInit();
+  </script>
+</body>
+
+</html>
