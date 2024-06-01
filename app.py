@@ -144,8 +144,5 @@ def save_user_input(table_name, system_id, value):
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
 
-
-
-
 if __name__ == '__main__':
     app.run()
