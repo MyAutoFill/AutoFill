@@ -23,79 +23,82 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-config = [
-    {
-        "row": "工业总产值(当年价格)",
-        "col": "本月",
-        "value": "1314",
-        "name": "c1_1_3"
-    },
-    {
-        "row": "工业总产值(当年价格)",
-        "col": "1-本月",
-        "value": "1234",
-        "name": "c1_1_4"
-    },
-    {
-        "row": "工业销售产值(当年价格)",
-        "col": "本月",
-        "value": "000",
-        "name": "c1_2_3"
-    },
-    {
-        "row": "工业销售产值(当年价格)",
-        "col": "1-本月",
-        "value": "001",
-        "name": "c1_2_4"
-    },
-    {
-        "row": "其中:出口交货值",
-        "col": "本月",
-        "value": "004",
-        "name": "c1_3_3"
-    },
-    {
-        "row": "其中:出口交货值",
-        "col": "1-本月",
-        "value": "500",
-        "name": "c1_3_4"
-    },
-]
-
-
 @app.route('/button')
 def button():
     addr = request.args.get('address')
+    select_name = request.args.get('select_name')
     new_addr = base64.urlsafe_b64decode(addr).decode('utf-8')
-    return render_template('button.html', address=new_addr)
+    new_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
+    return render_template('button.html', address=new_addr, select_name=new_name)
 
 
 @app.route('/new_api', methods=['POST'])
 def new_api():
     request_data = request.get_json()
     new_addr = str(request_data['url'])
-    encode_addr = new_addr[new_addr.find('address=') + len('address='):]
+    params = new_addr[new_addr.find('?') + 1:].split('&')
+    params_dict = dict()
+    for item in params:
+        params_dict[item[:item.find('=')]] = item[item.find('=') + 1:]
+    encode_addr = params_dict.get('address')
+    select_name = params_dict.get('select_name')
+    select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
+    print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
+    page_config = load_config('page_config')
+    cur_platform = None
+    for item in page_config:
+        if item.get('name') == select_name:
+            cur_platform = item
+    cur_config_list = cur_platform.get('config_list')
+
+    data_input_config = load_config('data_input_config')
+    data_pool = dict()
+    for (item, value) in data_input_config.items():
+        for pool in value:
+            data_pool[pool.get('key')] = pool.get('value')
+
     page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    for item in config:
-        page.latest_tab.ele('@name='+item.get('name')).input(item.get('value'))
+    target_page_html = page.latest_tab.html
+    cur_map = None
+    for item in cur_config_list:
+        if item.get('name') in target_page_html:
+            cur_map = item.get('map')
+            break
+
+    for key, value in cur_map.items():
+        by_name = value.get('name')
+        by_id = value.get('modelid')
+        if key in data_pool.keys():
+            page.latest_tab.ele('@name=' + by_name).input(data_pool[key])
+
     return {}
 
 
-@app.route('/data')
+@app.route('/data', methods=['POST'])
 def data():
+    request_data = request.get_json()
+    print(request_data)
+    url = str(request_data['url'])
+    select_name = str(request_data['select_name'])
     co = ChromiumOptions().auto_port()
     page = ChromiumPage(co)
-    page.get('http://127.0.0.1:5000/dashboard')
+    page.get(url)
     page2 = ChromiumPage(co)
     page2.set.window.size(100, 200)
-    page2.set.window.location(200, 0)
-    page2.get('http://127.0.0.1:5000/button?address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
+    page2.set.window.location(500, 0)
+    page2.get('http://127.0.0.1:5000/button?select_name=' + base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8') + '&address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
     return {}
 
 
 @app.route('/data_input')
 def data_input():
     return render_template('data_input.html')
+
+
+@app.route('/power')
+def power():
+    return render_template('power.html')
+
 
 @app.route('/config_page')
 def config_page():
@@ -133,6 +136,18 @@ def save_user_input(value):
     total_config.update({"data_input_config": value})
     with open('data.json', 'w') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
+
+
+@app.route('/get_platform_dropdown')
+def get_platform_dropdown():
+    page_config = load_config('page_config')
+    result = list()
+    for item in page_config:
+        result.append({
+            'name': item.get('name'),
+            'url': item.get('url')
+        })
+    return result
 
 
 if __name__ == '__main__':
