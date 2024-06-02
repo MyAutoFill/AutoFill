@@ -1,0 +1,367 @@
+<body>
+    <div>
+          <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+      <link rel="stylesheet" href="/static/css/page_fill.css" />
+        <link rel="preload" href="https://coscdn.htmlpage.cn/sandbox/assets/fonts/Unicons.woff2" as="font"
+            type="font/woff2" crossorigin="" />
+        <link rel="stylesheet" href="https://coscdn.htmlpage.cn/sandbox/assets/css/plugins.css" />
+        <link rel="stylesheet" href="https://coscdn.htmlpage.cn/sandbox/assets/css/style.css" />
+        <link rel="stylesheet" href="https://coscdn.htmlpage.cn/sandbox/assets/css/colors/orange.css" />
+        <link rel="preload" href="https://coscdn.htmlpage.cn/sandbox/assets/css/fonts/thicccboi.css" as="style" />
+        <div class="content-wrapper">
+            <header class="wrapper bg-light">
+                <!-- /.navbar -->
+            </header>
+            <!-- /header -->
+            <section class="wrapper bg-light">
+                <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/plugins.css" />
+                <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/style.css" />
+                <header data-image-src="https://coscdn.htmlpage.cn/sandbox/assets/img/photos/bg3.jpg" id="i0j6ej"
+                    class="wrapper image-wrapper bg-image pb-1 c138568">
+                    <nav class="navbar navbar-expand-lg classic transparent">
+                        <div class="container flex-lg-row flex-nowrap align-items-center">
+                            <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
+                                <div class="offcanvas-header d-lg-none">
+                                    <a href="./index.html"><img
+                                            src="https://coscdn.htmlpage.cn/logos/logo-small-white.svg"
+                                            srcset="https://coscdn.htmlpage.cn/logos/logo-small-white.svg" alt="" /></a>
+                                    <button type="button" data-bs-dismiss="offcanvas" aria-label="Close"
+                                        class="btn-close btn-close-white">Send</button>
+                                </div>
+                                <img src="https://coscdn.htmlpage.cn/user-upload-images/7574/logo_whitte.png"
+                                    class="c141754" />
+                                <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100 navbar-dark">
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link text-white">首页</a>
+                                        </li>
+                                        <li class="nav-item dropdown">
+                                        </li>
+                                        <li class="nav-item dropdown dropdown-mega">
+                                            <!--/.dropdown-menu -->
+                                        </li>
+                                        <a href="#" class="nav-link text-white">数据填写</a>
+                                        <a href="#" class="nav-link text-white">往期数据</a>
+                                        <li class="nav-item dropdown">
+                                        </li>
+                                    </ul>
+                                    <!-- /.navbar-nav -->
+                                    <div class="d-lg-none mt-auto pt-6 pb-6 order-4">
+                                        <a href="mailto:first.last@email.com" class="link-inverse">help@lapus.cn</a>
+                                        <br /> 00 (123) 456 78 90
+                                        <br />
+                                        <nav class="nav social social-white mt-4">
+                                            <a href="#"><i class="uil uil-twitter">
+                                                </i></a>
+                                            <a href="#"><i class="uil uil-facebook-f">
+                                                </i></a>
+                                            <a href="#"><i class="uil uil-dribbble">
+                                                </i></a>
+                                            <a href="#"><i class="uil uil-instagram">
+                                                </i></a>
+                                            <a href="#"><i class="uil uil-youtube">
+                                                </i></a>
+                                        </nav>
+                                        <!-- /.social -->
+                                    </div>
+                                    <!-- /offcanvas-nav-other -->
+                                </div>
+                                <!-- /.offcanvas-body -->
+                            </div>
+                            <!-- /.navbar-collapse -->
+                            <div class="navbar-other ms-lg-4">
+                                <!-- /.navbar-nav -->
+                            </div>
+                            <!-- /.navbar-other -->
+                        </div>
+                        <!-- /.container -->
+                    </nav>
+                    <!-- /.navbar -->
+                </header>
+                <!--/.card-footer -->
+                <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/plugins.js"></script>
+                <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/theme.js"></script>
+
+                <div class="container pt-11 pt-md-13 pb-11 pb-md-19 pb-lg-22 text-center">
+                    <div class="row">
+                        <div data-cues="slideInDown" data-group="page-title"
+                            class="col-lg-8 col-xl-7 col-xxl-6 mx-auto">
+                            <h1 class="display-1 fs-60 mb-4 px-md-15 px-lg-0">
+                                <span class="underline-3 style-3 primary">开始填充</span>
+                            </h1>
+                            <p class="lead fs-24 lh-sm mb-7 mx-md-13 mx-lg-10">
+                            </p>
+                            <h3 id="ijhh1" draggable="false" class="mb-10 px-xl-10 c14052">请在下面选择您要申报的平台，点击后再进入要申报的报表填写页
+                            </h3>
+                            <p>
+                            </p>
+                        </div>
+                        <!-- /column -->
+                    </div>
+
+                    <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/plugins.css" />
+                    <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/style.css" />
+                    <section class="wrapper" id="app">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 gx-lg-6 gy-6 justify-content-center">
+
+                            <div class="col" v-for="item in dropdownItems" :key="item.name">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <img :src="item.img" class="c24334" />
+                                    </div>
+                                    <a class="btn btn-sm btn-primary rounded-pill" v-on:click="myFunction(item.url, item.name)">{{ "{{item.name}}" }}</a>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="col">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <img src="https://coscdn.htmlpage.cn/user-upload-images/7574/山东省统计联网直报平台.png"
+                                            class="c24334" />
+                                    </div>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                        class="btn btn-sm btn-primary rounded-pill">国家统计局</a>
+                                    <!--/.card-body -->
+                                </div>
+                                <!--/.card -->
+                            </div>
+                            <div class="col">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <img src="https://coscdn.htmlpage.cn/user-upload-images/7574/电子税务局.png"
+                                            class="c23862" />
+                                    </div>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                        class="btn btn-sm btn-primary rounded-pill">山东省电子税务局</a>
+                                    <!--/.card-body -->
+                                </div>
+                                <!--/.card -->
+                            </div>
+                            <!--/column -->
+                            <!--/column -->
+                            <div class="col">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                            <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z3.png"
+                                                alt="" />
+                                        </figure>
+                                    </div>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                        class="btn btn-sm btn-primary rounded-pill">预留平台1</a>
+                                    <!--/.card-body -->
+                                </div>
+                                <!--/.card -->
+                            </div>
+                            <!--/column -->
+                            <div class="col">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                            <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z4.png"
+                                                alt="" />
+                                        </figure>
+                                    </div>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                        class="btn btn-sm btn-primary rounded-pill">预留平台2</a>
+                                    <!--/.card-body -->
+                                </div>
+                                <!--/.card -->
+                            </div>
+                            <!--/column -->
+                            <div class="col">
+                                <div class="card shadow-lg h-100 align-items-center">
+                                    <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                        <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                            <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z5.png"
+                                                alt="" />
+                                        </figure>
+                                    </div>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                        class="btn btn-sm btn-primary rounded-pill">预留平台3</a>
+                                    <!--/.card-body -->
+                                </div>
+                                <!--/.card -->
+                            </div>
+                            <!--/column -->
+                        </div>
+                        <div class="container py-14 py-md-16">
+                            <!-- /.row -->
+                            <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/plugins.css" />
+                            <link rel="stylesheet" href="https://coscdn.htmlpage.cn/vip-tpl/assets/css/style.css" />
+                            <header class="wrapper bg-soft-primary pb-10">
+                                <nav class="navbar navbar-expand-lg fancy navbar-light navbar-bg-light">
+                                    <!-- /.container -->
+                                </nav>
+                                <!-- /.navbar -->
+                            </header>
+                            <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/plugins.js"></script>
+                            <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/theme.js"></script>
+                            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 gx-lg-6 gy-6 justify-content-center">
+                                <div class="col">
+                                    <div class="card shadow-lg h-100 align-items-center">
+                                        <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                            <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                                <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z1.png"
+                                                    alt="" />
+                                            </figure>
+                                        </div>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                            class="btn btn-sm btn-primary rounded-pill">预留平台4</a>
+                                        <!--/.card-body -->
+                                    </div>
+                                    <!--/.card -->
+                                </div>
+                                <!--/column -->
+                                <div class="col">
+                                    <div class="card shadow-lg h-100 align-items-center">
+                                        <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                            <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                                <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z2.png"
+                                                    alt="" />
+                                            </figure>
+                                        </div>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                            class="btn btn-sm btn-primary rounded-pill">预留平台5</a>
+                                        <!--/.card-body -->
+                                    </div>
+                                    <!--/.card -->
+                                </div>
+                                <!--/column -->
+                                <div class="col">
+                                    <div class="card shadow-lg h-100 align-items-center">
+                                        <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                            <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                                <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z3.png"
+                                                    alt="" />
+                                            </figure>
+                                        </div>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                            class="btn btn-sm btn-primary rounded-pill">预留平台6</a>
+                                        <!--/.card-body -->
+                                    </div>
+                                    <!--/.card -->
+                                </div>
+                                <!--/column -->
+                                <div class="col">
+                                    <div class="card shadow-lg h-100 align-items-center">
+                                        <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                            <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                                <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z4.png"
+                                                    alt="" />
+                                            </figure>
+                                        </div>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                            class="btn btn-sm btn-primary rounded-pill">预留平台7</a>
+                                        <!--/.card-body -->
+                                    </div>
+                                    <!--/.card -->
+                                </div>
+                                <!--/column -->
+                                <div class="col">
+                                    <div class="card shadow-lg h-100 align-items-center">
+                                        <div class="card-body align-items-center d-flex px-3 py-6 p-md-8">
+                                            <figure class="px-md-3 px-xl-0 px-xxl-3 mb-0">
+                                                <img src="https://coscdn.htmlpage.cn/vip-tpl/assets/img/brands/z5.png"
+                                                    alt="" />
+                                            </figure>
+                                        </div>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="trueLink"
+                                            class="btn btn-sm btn-primary rounded-pill">预留平台8</a>
+                                        <!--/.card-body -->
+                                    </div>
+                                    <!--/.card -->
+                                </div>
+                                <!--/column -->
+                            </div>
+                            <!--/.row -->
+                        </div>
+                        <!-- /.container -->
+                    </section>
+                    <!-- /section -->
+                    <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/plugins.js"></script>
+                    <script src="https://coscdn.htmlpage.cn/vip-tpl/assets/js/theme.js"></script>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container -->
+            </section>
+            <!-- /section -->
+            <!-- /section -->
+            <section class="wrapper bg-light">
+                <!-- /.container -->
+            </section>
+            <!-- /section -->
+            <section class="wrapper bg-dark">
+                <!-- /.container -->
+            </section>
+            <!-- /section -->
+            <section class="wrapper bg-light">
+                <!-- /.container -->
+            </section>
+            <!-- /section -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="bg-navy text-inverse">
+            <div class="container pt-15 pt-md-17 pb-13 pb-md-15">
+                <!--/div -->
+                <div id="izt7w8" class="c47368">
+                    <span id="iov5td" draggable="false" class="gjs-selected c47427">诚挚的感谢您对本产品的信任和使用！</span>
+                </div>
+                <hr class="mt-11 mb-12" />
+                <!--/.row -->
+            </div>
+            <!-- /.container -->
+        </footer>
+        <script src="https://coscdn.htmlpage.cn/sandbox/assets/js/plugins.js"></script>
+        <script src="https://coscdn.htmlpage.cn/sandbox/assets/js/theme.js"></script>
+    </div>
+</body>
+
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+        data() {
+          return {
+          dropdownItems: []
+          }
+        },
+          created() {
+            this.loadDropdownItems();
+          },
+        methods: {
+          async loadDropdownItems() {
+              // 这里模拟异步获取数据的过程
+              const asyncData = await fetch('/get_platform_dropdown').then(response => response.json());
+              this.dropdownItems = asyncData;
+            },
+            myFunction: function (url, select_name) {
+              console.log("test")
+              console.log(select_name)
+              axios.post('/data', {'url': url, 'select_name': select_name}).then(res => {
+
+                })
+            }
+        },
+        mounted () {
+      axios
+      .get('/load?table=data_input_config')
+      .then(response => {
+        this.myFormData = response.data
+          this.loading = false
+      })
+      .catch(error => {
+        console.log(error)
+        this.errored = true
+      })
+      .finally(() => this.loading = false)
+    }
+    })
+  </script>

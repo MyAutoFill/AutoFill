@@ -1,8 +1,9 @@
 {
     "page_config": [
         {
-            "name": "税务局平台",
+            "name": "国家统计局",
             "url": "http://zb.stats-sd.gov.cn/dr/queryLoginInfo.do",
+            "img": "https://coscdn.htmlpage.cn/user-upload-images/7574/山东省统计联网直报平台.png",
             "config_list": [
                 {
                     "name": "工业产销总值及主要产品产量",
@@ -172,21 +173,27 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "山东省电子税务局",
+            "url": "http://zb.stats-sd.gov.cn/dr/queryLoginInfo.do",
+            "img": "https://coscdn.htmlpage.cn/user-upload-images/7574/电子税务局.png",
+            "config_list": []
         }
     ],
     "data_input_config": {
         "企业产销数据": [
             {
                 "key": "工业总产值(当年价格)-本月",
-                "value": ""
+                "value": "1"
             },
             {
                 "key": "工业总产值(当年价格)-1-本月",
-                "value": ""
+                "value": "2"
             },
             {
                 "key": "工业销售产值(当年价格)-本月",
-                "value": ""
+                "value": "2"
             },
             {
                 "key": "工业销售产值(当年价格)-1-本月",

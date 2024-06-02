@@ -125,6 +125,11 @@ def data_input():
     return render_template('data_input.html')
 
 
+@app.route('/start_fill')
+def start_fill():
+    return render_template('start_fill.html')
+
+
 @app.route('/power')
 def power():
     return render_template('test_page/power.html')
@@ -170,7 +175,8 @@ def get_platform_dropdown():
     for item in page_config:
         result.append({
             'name': item.get('name'),
-            'url': item.get('url')
+            'url': item.get('url'),
+            'img': item.get('img')
         })
     return result
 
