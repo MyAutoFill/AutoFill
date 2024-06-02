@@ -64,13 +64,43 @@ def new_api():
         if item.get('name') in target_page_html:
             cur_map = item.get('map')
             break
-
-    for key, value in cur_map.items():
-        by_name = value.get('name')
-        by_id = value.get('modelid')
-        if key in data_pool.keys():
-            page.latest_tab.ele('@name=' + by_name).input(data_pool[key])
-
+    frames = page.latest_tab.get_frames()
+    print("total" + str(len(frames)))
+    for frame in frames:
+        for item in cur_config_list:
+            print(item.get('name'))
+            if item.get('name') in frame.inner_html:
+                print("in inner_html")
+                cur_map = item.get('map')
+                break
+            if item.get('name') in frame.html:
+                print("in html")
+                cur_map = item.get('map')
+                break
+    able_frame_list = list()
+    for frame in frames:
+        total = str(frame.inner_html) + str(frame.html)
+        flag = False
+        for key, value in cur_map.items():
+            by_name = value.get('name')
+            if by_name in total:
+                flag = True
+        if flag:
+            able_frame_list.append(frame)
+    print("find" + str(len(able_frame_list)))
+    for frame in able_frame_list:
+        for key, value in cur_map.items():
+            by_name = value.get('name')
+            if key not in data_pool.keys():
+                continue
+            print('key in')
+            target_ele = frame.ele('@name=' + by_name)
+            print(target_ele)
+            if target_ele:
+                print('find')
+                target_ele.input(data_pool[key])
+            else:
+                continue
     return {}
 
 
@@ -121,7 +151,7 @@ def load():
 
 
 def load_config(table_name):
-    with open('data.json', 'r') as f:
+    with open('data.json', 'r', encoding='utf-8') as f:
         return json.load(f).get(table_name, {})
 
 
@@ -131,10 +161,10 @@ def save_user_input(value):
     :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
     :return:
     """
-    with open('data.json', 'r') as f:
+    with open('data.json', 'r', encoding='utf-8') as f:
         total_config = json.load(f)
     total_config.update({"data_input_config": value})
-    with open('data.json', 'w') as f:
+    with open('data.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
 
