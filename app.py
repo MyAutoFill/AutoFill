@@ -1,11 +1,15 @@
 import base64
 import json
+import os
+import sys
+import webbrowser
 
 from flask import Flask, render_template, request
 
 from DrissionPage import ChromiumPage, ChromiumOptions
 
 app = Flask(__name__)
+base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 
 
 @app.route('/')
@@ -167,7 +171,7 @@ def load():
 
 
 def load_config(table_name):
-    with open('data.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
         return json.load(f).get(table_name, {})
 
 
@@ -177,10 +181,10 @@ def save_user_input(value):
     :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
     :return:
     """
-    with open('data.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
         total_config = json.load(f)
     total_config.update({"data_input_config": value})
-    with open('data.json', 'w', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
 
@@ -198,4 +202,5 @@ def get_platform_dropdown():
 
 
 if __name__ == '__main__':
+    webbrowser.open_new('http://127.0.0.1:5000')
     app.run()
