@@ -15,12 +15,12 @@ def hello_world():
 
 @app.route('/input')
 def input_data():
-    return render_template('input.html')
+    return render_template('test_page/input.html')
 
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('test_page/dashboard.html')
 
 
 @app.route('/button')
@@ -127,12 +127,7 @@ def data_input():
 
 @app.route('/power')
 def power():
-    return render_template('power.html')
-
-
-@app.route('/config_page')
-def config_page():
-    return render_template('page_config.html')
+    return render_template('test_page/power.html')
 
 
 @app.route('/save', methods=['POST'])
