@@ -49,6 +49,7 @@ def new_api():
     for item in page_config:
         if item.get('name') == select_name:
             cur_platform = item
+            break
     cur_config_list = cur_platform.get('config_list')
 
     data_input_config = load_config('data_input_config')
@@ -64,6 +65,15 @@ def new_api():
         if item.get('name') in target_page_html:
             cur_map = item.get('map')
             break
+
+    for key, value in cur_map.items():
+        by_name = value.get('name')
+        if key in data_pool.keys():
+            cur_ele = page.latest_tab.ele('@name=' + by_name)
+            if cur_ele:
+                cur_ele.clear(by_js=True)
+                cur_ele.input('', clear=True)
+                cur_ele.input(data_pool[key], clear=True)
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
     for frame in frames:
@@ -98,7 +108,9 @@ def new_api():
             print(target_ele)
             if target_ele:
                 print('find')
-                target_ele.input(data_pool[key])
+                target_ele.clear(by_js=True)
+                target_ele.input('', clear=True)
+                target_ele.input(data_pool[key], clear=True)
             else:
                 continue
     return {}
@@ -113,6 +125,7 @@ def data():
     co = ChromiumOptions().auto_port()
     page = ChromiumPage(co)
     page.get(url)
+    page.set.window.max()
     page2 = ChromiumPage(co)
     page2.set.window.size(100, 200)
     page2.set.window.location(500, 0)
