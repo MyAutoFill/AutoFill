@@ -65,15 +65,16 @@ def new_api():
         if item.get('name') in target_page_html:
             cur_map = item.get('map')
             break
-
-    for key, value in cur_map.items():
-        by_name = value.get('name')
-        if key in data_pool.keys():
-            cur_ele = page.latest_tab.ele('@name=' + by_name)
-            if cur_ele:
-                cur_ele.clear(by_js=True)
-                cur_ele.input('', clear=True)
-                cur_ele.input(data_pool[key], clear=True)
+    if cur_map is not None:
+        for key, value in cur_map.items():
+            by_name = value.get('name')
+            if key in data_pool.keys():
+                cur_ele = page.latest_tab.ele('@name=' + by_name)
+                if cur_ele:
+                    cur_ele.clear(by_js=True)
+                    cur_ele.input('', clear=True)
+                    cur_ele.input(data_pool[key], clear=True)
+        return {'status': 'ok'}
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
     for frame in frames:
