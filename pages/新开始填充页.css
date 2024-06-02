@@ -1,0 +1,85 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Roboto, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Microsoft Jhenghei", sans-serif;
+}
+
+.logo path {
+    pointer-events: none;
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 7;
+    stroke: rgb(255, 255, 255);
+}
+
+.wechat-group img {
+    max-width: 220px;
+    height: auto;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    width: 100%;
+}
+
+.welcome-img img {
+    width: 100%;
+}
+
+.c24334 {
+    width: 217px;
+    height: 83.6667px;
+}
+
+.c23862 {
+    width: 220px;
+    height: 101px;
+}
+
+.navbar.navbar-expand-lg.center-nav.transparent.navbar-light {
+    background-color: rgb(142, 204, 245);
+}
+
+.c47368 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.c47427 {
+    font-weight: bolder;
+    font-size: 50px;
+}
+
+.col-lg-8.col-xl-7.col-xxl-6.mx-auto {
+    width: 1200px;
+}
+
+.c138568 {
+    background-image: url('https://coscdn.htmlpage.cn/sandbox/assets/img/photos/bg3.jpg');
+}
+
+.c141754 {
+    color: black;
+    width: 257px;
+    height: 83px;
+}
