@@ -113,7 +113,9 @@ def new_api():
                 target_ele.input(data_pool[key], clear=True)
             else:
                 continue
-    return {}
+    return {
+        'status': 'ok'
+    }
 
 
 @app.route('/data', methods=['POST'])
