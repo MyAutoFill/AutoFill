@@ -27,6 +27,11 @@ def dashboard():
     return render_template('test_page/dashboard.html')
 
 
+@app.route('/tax')
+def tax():
+    return render_template('test_page/tax_benefit.html')
+
+
 @app.route('/button')
 def button():
     addr = request.args.get('address')
@@ -71,9 +76,10 @@ def new_api():
             break
     if cur_map is not None:
         for key, value in cur_map.items():
-            by_name = value.get('name')
+            find_key = list(value.keys())[0]
+            find_value = value[find_key]
             if key in data_pool.keys():
-                cur_ele = page.latest_tab.ele('@name=' + by_name)
+                cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
                 if cur_ele:
                     cur_ele.clear(by_js=True)
                     cur_ele.input('', clear=True)
@@ -97,19 +103,21 @@ def new_api():
         total = str(frame.inner_html) + str(frame.html)
         flag = False
         for key, value in cur_map.items():
-            by_name = value.get('name')
-            if by_name in total:
+            find_key = list(value.keys())[0]
+            find_value = value[find_key]
+            if find_value in total:
                 flag = True
         if flag:
             able_frame_list.append(frame)
     print("find" + str(len(able_frame_list)))
     for frame in able_frame_list:
         for key, value in cur_map.items():
-            by_name = value.get('name')
+            find_key = list(value.keys())[0]
+            find_value = value[find_key]
             if key not in data_pool.keys():
                 continue
             print('key in')
-            target_ele = frame.ele('@name=' + by_name)
+            target_ele = frame.ele(f'@{find_key}={find_value}')
             print(target_ele)
             if target_ele:
                 print('find')
