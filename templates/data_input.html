@@ -33,14 +33,14 @@
                                 <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100 navbar-dark">
                                     <ul class="navbar-nav">
                                         <li class="nav-item">
-                                            <a href="#" class="nav-link text-white">首页</a>
+                                            <a href="/" class="nav-link text-white">首页</a>
                                         </li>
                                         <li class="nav-item dropdown">
                                         </li>
                                         <li class="nav-item dropdown dropdown-mega">
                                             <!--/.dropdown-menu -->
                                         </li>
-                                        <a href="#" class="nav-link text-white">数据填写</a>
+                                        <a href="/data_input" class="nav-link text-white">数据填写</a>
                                         <a href="#" class="nav-link text-white">往期数据</a>
                                         <li class="nav-item dropdown">
                                         </li>
@@ -106,26 +106,36 @@
                             <h3 id="ijhh1" draggable="false" class="mb-10 px-xl-10 c14052">请在下面填写您将要申报的的企业数据
                             </h3>
                             <p>
+                            <script src="//unpkg.com/element-ui@2.15.14/lib/index.js"></script>
                                   <div id="app">
+
+
                                       <div v-if="loading">Loading...</div>
                                       <el-form v-else :model="myFormData" ref="myFormData" label-width="250px" class="demo-dynamic">
+
+                                    <el-collapse v-model="activeNames" accordion>
                                           <div
                                             v-for="(value, key, index) in myFormData"
                                           >
-                                              <h4>{{ "{{key}}" }}</h4>
-                                            <el-form-item
-                                                v-for="(item, index) in value"
-                                                :label="item.key"
-                                                :key="item.key"
-                                                :prop="'item.' + item.key + '.index'"
-                                              >
-                                            <el-input v-model="item.value"></el-input>
-                                          </el-form-item>
+                                              <el-collapse-item :title="key" :name="key">
+                                                  <div style="display: flex; flex-wrap: wrap; justify-content: space-between">
+                                                          <el-col :span="6" v-for="(item, index) in value">
+                                                                <el-form-item
+                                                                    :label="item.key"
+                                                                    :key="item.key"
+                                                                    :prop="'item.' + item.key + '.index'"
+                                                                  >
+                                                                <el-input v-model="item.value"></el-input>
+                                                              </el-form-item>
+                                                          </el-col>
+                                                  </div>
+                                              </el-collapse-item>
                                           </div>
-                                          <el-form-item>
+                                    </el-collapse>
+                                          <div style="margin-top: 20px">
                                             <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
                                             <a class="btn btn-sm btn-primary rounded-pill" href="/start_fill">开始申报</a>
-                                          </el-form-item>
+                                          </div>
                                         </el-form>
                                   </div>
                             </p>
@@ -180,7 +190,8 @@
         data() {
           return {
             myFormData: {},
-              loading: true
+              loading: true,
+              activeNames: []
           }
         },
         methods: {
