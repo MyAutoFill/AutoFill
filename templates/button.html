@@ -93,7 +93,7 @@
 
   <div id="app">
     <span><a class="btn btn-lg btn-primary rounded-pill mx-1" @click="onSubmit()">启动填充</a>
-        <a class="btn btn-lg btn-primary rounded-pill mx-1">关闭程序</a></span>
+        <a class="btn btn-lg btn-primary rounded-pill mx-1" @click="closeProgress()">关闭程序</a></span>
   </div>
     <div id="iqmol" class="c46049">
     </div>
@@ -119,6 +119,11 @@
                       type: 'success'
                     });
                 }
+            })
+          },
+          closeProgress() {
+            axios.post('/close_progress', {url: window.location.href}).then(res => {
+
             })
           }
         },

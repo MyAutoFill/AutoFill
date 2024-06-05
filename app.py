@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import signal
 import sys
 import webbrowser
 
@@ -70,21 +71,20 @@ def new_api():
     page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
     target_page_html = page.latest_tab.html
     cur_map = None
-    for item in cur_config_list:
-        if item.get('name') in target_page_html:
-            cur_map = item.get('map')
-            break
-    if cur_map is not None:
-        for key, value in cur_map.items():
-            find_key = list(value.keys())[0]
-            find_value = value[find_key]
-            if key in data_pool.keys():
-                cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
-                if cur_ele:
-                    cur_ele.clear(by_js=True)
-                    cur_ele.input('', clear=True)
-                    cur_ele.input(data_pool[key], clear=True)
-        return {'status': 'ok'}
+    if cur_platform.get('title_tag') == "":
+        for item in cur_config_list:
+            if item.get('name') in target_page_html:
+                cur_map = item.get('map')
+                break
+    else:
+        new_table_head_ele = page.latest_tab.ele('@class=' + cur_platform.get('title_tag'))
+        if new_table_head_ele:
+            # 说明是税务局情况，需要特殊判断
+            table_head = new_table_head_ele.child('tag:h1').inner_html
+            for item in cur_config_list:
+                if item.get('name') in table_head:
+                    cur_map = item.get('map')
+                    break
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
     for frame in frames:
@@ -144,7 +144,10 @@ def data():
     page2 = ChromiumPage(co)
     page2.set.window.size(100, 200)
     page2.set.window.location(500, 0)
-    page2.get('http://127.0.0.1:5000/button?select_name=' + base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8') + '&address=' + base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8'))
+    encode_select_name = base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8')
+    encode_address = base64.urlsafe_b64encode(page.address.encode('utf-8')).decode('utf-8')
+    encode_button_address = base64.urlsafe_b64encode(page2.address.encode('utf-8')).decode('utf-8')
+    page2.get(f'http://127.0.0.1:5000/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
     return {}
 
 
@@ -176,6 +179,24 @@ def save():
 def load():
     table = request.args.get('table')
     return json.dumps(load_config(table))
+
+
+@app.route('/close_progress', methods=['POST'])
+def close_progress():
+    request_data = request.get_json()
+    new_addr = str(request_data['url'])
+    params = new_addr[new_addr.find('?') + 1:].split('&')
+    params_dict = dict()
+    for item in params:
+        params_dict[item[:item.find('=')]] = item[item.find('=') + 1:]
+    encode_addr = params_dict.get('address')
+    button_addr = params_dict.get('button_addr')
+    page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
+    page.quit()
+    page2 = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(button_addr).decode('utf-8'))
+    page2.quit()
+    os.kill(os.getpid(), signal.SIGINT)
+    sys.exit()
 
 
 def load_config(table_name):
