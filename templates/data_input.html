@@ -206,7 +206,7 @@
       },
       mounted() {
         axios
-          .get('/load?table=data_input_config')
+          .get('/load_data?table=data_input_config')
           .then(response => {
             this.myFormData = response.data
             this.loading = false

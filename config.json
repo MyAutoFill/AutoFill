@@ -1,0 +1,503 @@
+{
+    "page_config": [
+        {
+            "name": "国家统计局",
+            "title_tag": "",
+            "url": "http://zb.stats-sd.gov.cn/dr/queryLoginInfo.do",
+            "img": "https://coscdn.htmlpage.cn/user-upload-images/7574/山东省统计联网直报平台.png",
+            "config_list": [
+                {
+                    "name": "工业产销总值及主要产品产量",
+                    "map": {
+                        "工业总产值(当年价格)-本月": {
+                            "name": "c1_1_3"
+                        },
+                        "工业总产值(当年价格)-1-本月": {
+                            "name": "c1_1_4"
+                        },
+                        "工业销售产值(当年价格)-本月": {
+                            "name": "c1_2_3"
+                        },
+                        "工业销售产值(当年价格)-1-本月": {
+                            "name": "c1_2_4"
+                        },
+                        "出口交货值-本月": {
+                            "name": "c1_3_3"
+                        },
+                        "出口交货值-1-本月": {
+                            "name": "c1_3_4"
+                        },
+                        "变压器、整流器、电感器制造-本月": {
+                            "name": "c2_1_3"
+                        },
+                        "变压器、整流器、电感器制造-1-本月": {
+                            "name": "c2_1_4"
+                        }
+                    }
+                },
+                {
+                    "name": "能源购进、消费与库存",
+                    "map": {
+                        "电力购进量": {
+                            "name": "c1_33_4"
+                        },
+                        "电力购进金额": {
+                            "name": "c1_33_6"
+                        },
+                        "电力工业生产消费量": {
+                            "name": "c1_33_7"
+                        }
+                    }
+                },
+                {
+                    "name": "财务状况",
+                    "map": {
+                        "流动资产合计": {
+                            "name": "c1_2_3"
+                        },
+                        "应收账款": {
+                            "name": "c1_3_3"
+                        },
+                        "存货": {
+                            "name": "c1_4_3"
+                        },
+                        "产成品": {
+                            "name": "c1_5_3"
+                        },
+                        "固定资产原价": {
+                            "name": "c1_6_3"
+                        },
+                        "资产总计": {
+                            "name": "c1_7_3"
+                        },
+                        "负债合计": {
+                            "name": "c1_8_3"
+                        },
+                        "主营业务收入": {
+                            "name": "c1_10_3"
+                        },
+                        "主营业务成本": {
+                            "name": "c1_11_3"
+                        },
+                        "主营业务税金及附加": {
+                            "name": "c1_12_3"
+                        },
+                        "营业费用": {
+                            "name": "c1_13_3"
+                        },
+                        "管理费用": {
+                            "name": "c1_14_3"
+                        },
+                        "研发费用": {
+                            "name": "c1_15_3"
+                        },
+                        "财务费用": {
+                            "name": "c1_16_3"
+                        },
+                        "资产减值": {
+                            "name": "c1_17_3"
+                        },
+                        "信用减值": {
+                            "name": "c1_18_3"
+                        },
+                        "其他收益": {
+                            "name": "c1_19_3"
+                        },
+                        "投资收益": {
+                            "name": "c1_20_3"
+                        },
+                        "净敞口套期收益": {
+                            "name": "c1_21_3"
+                        },
+                        "公允价值波动收益": {
+                            "name": "c1_22_3"
+                        },
+                        "资产处置收益": {
+                            "name": "c1_23_3"
+                        },
+                        "营业利润": {
+                            "name": "c1_24_3"
+                        },
+                        "营业外收入": {
+                            "name": "c1_25_3"
+                        },
+                        "营业外支出": {
+                            "name": "c1_26_3"
+                        },
+                        "利润总额": {
+                            "name": "c1_27_3"
+                        },
+                        "应交增值税": {
+                            "name": "c1_28_3"
+                        },
+                        "平均用工人数": {
+                            "name": "c1_29_3"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "山东省电子税务局",
+            "title_tag": "NewTableHead",
+            "url": "https://etax.shandong.chinatax.gov.cn:8443/loginb/",
+            "img": "https://coscdn.htmlpage.cn/user-upload-images/7574/电子税务局.png",
+            "config_list": [
+                {
+                    "name": "利润表",
+                    "map": {
+                        "主营业务收入": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[0].bys"
+                        },
+                        "主营业务成本": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[1].bys"
+                        },
+                        "主营业务税金及附加": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[2].bys"
+                        },
+                        "其他业务利润": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[4].bys"
+                        },
+                        "营业费用": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[5].bys"
+                        },
+                        "管理费用": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[6].bys"
+                        },
+                        "财务费用": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[7].bys"
+                        },
+                        "投资收益": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[9].bys"
+                        },
+                        "补贴收入": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[10].bys"
+                        },
+                        "营业外收入": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[11].bys"
+                        },
+                        "营业外支出": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[12].bys"
+                        },
+                        "所得税": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[14].bys"
+                        },
+                        "出售、处置部门或被投资单位所得收益": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[16].bys"
+                        },
+                        "自然灾害发生的损失": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[17].bys"
+                        },
+                        "会计政策变更增加(或减少)利润总额": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[18].bys"
+                        },
+                        "会计估计变更增加(或减少)利润总额": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[19].bys"
+                        },
+                        "债务重组损失": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[20].bys"
+                        },
+                        "其他": {
+                            "ng-model": "qykjzdcwbblrbxxGrid.qykjzdcwbblrbxxGridlb[21].bys"
+                        }
+                    }
+                },
+                {
+                    "name": "资产负债表",
+                    "map": {
+                        "货币资金": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[0].ncsZc"
+                        },
+                        "短期投资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[1].ncsZc"
+                        },
+                        "应收票据": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[2].ncsZc"
+                        },
+                        "应收股利": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[3].ncsZc"
+                        },
+                        "应收利息": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[4].ncsZc"
+                        },
+                        "应收账款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[5].ncsZc"
+                        },
+                        "其他应收款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[6].ncsZc"
+                        },
+                        "预付账款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[7].ncsZc"
+                        },
+                        "应收补贴款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[8].ncsZc"
+                        },
+                        "存货": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[9].ncsZc"
+                        },
+                        "待摊费用": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[10].ncsZc"
+                        },
+                        "一年内到期的长期债权投资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[11].ncsZc"
+                        },
+                        "其他流动资产": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[12].ncsZc"
+                        },
+                        "长期股权投资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[14].ncsZc"
+                        },
+                        "长期债权投资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[15].ncsZc"
+                        },
+                        "固定资产原价": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[18].ncsZc"
+                        },
+                        "累计折旧": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[19].ncsZc"
+                        },
+                        "固定资产减值准备": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[21].ncsZc"
+                        },
+                        "工程物资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[23].ncsZc"
+                        },
+                        "在建工程": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[24].ncsZc"
+                        },
+                        "固定资产清理": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[25].ncsZc"
+                        },
+                        "无形资产": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[28].ncsZc"
+                        },
+                        "长期待摊费用": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[29].ncsZc"
+                        },
+                        "其他长期资产": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[30].ncsZc"
+                        },
+                        "递延税款借项": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[34].ncsZc"
+                        },
+                        "短期借款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[0].ncsQy"
+                        },
+                        "应付票据": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[1].ncsQy"
+                        },
+                        "应付账款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[2].ncsQy"
+                        },
+                        "预收账款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[3].ncsQy"
+                        },
+                        "应付工资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[4].ncsQy"
+                        },
+                        "应付福利费": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[5].ncsQy"
+                        },
+                        "应付股利": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[6].ncsQy"
+                        },
+                        "应交税金": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[7].ncsQy"
+                        },
+                        "其他应交款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[8].ncsQy"
+                        },
+                        "其他应付款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[9].ncsQy"
+                        },
+                        "预提费用": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[10].ncsQy"
+                        },
+                        "预计负债": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[11].ncsQy"
+                        },
+                        "一年内到期的长期负债": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[12].ncsQy"
+                        },
+                        "其他流动负债": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[13].ncsQy"
+                        },
+                        "长期借款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[16].ncsQy"
+                        },
+                        "应付债券": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[17].ncsQy"
+                        },
+                        "长期应付款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[18].ncsQy"
+                        },
+                        "专项应付款": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[19].ncsQy"
+                        },
+                        "其他长期负债": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[20].ncsQy"
+                        },
+                        "递延税款贷项": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[23].ncsQy"
+                        },
+                        "实收资本(或股本)": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[27].ncsQy"
+                        },
+                        "已归还投资": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[28].ncsQy"
+                        },
+                        "资本公积": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[30].ncsQy"
+                        },
+                        "盈余公积": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[31].ncsQy"
+                        },
+                        "法定公益金": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[32].ncsQy"
+                        },
+                        "未分配利润": {
+                            "ng-model": "bdxxGrid.zcfzbdxxGridlb[33].ncsQy"
+                        }
+                    }
+                },
+                {
+                    "name": "现金流量表",
+                    "map": {
+                        "销售商品.提供劳务收到的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[0].je"
+                        },
+                        "收到的税费返还": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[1].je"
+                        },
+                        "收到的其他与经营活动有关的资金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[2].je"
+                        },
+                        "购买商品.接受劳务支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[4].je"
+                        },
+                        "支付给职工以及为职工支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[5].je"
+                        },
+                        "支付的各项税费": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[6].je"
+                        },
+                        "支付的其他与经营活动有关的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[7].je"
+                        },
+                        "收回投资所收到的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[10].je"
+                        },
+                        "取得投资收益所收到的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[11].je"
+                        },
+                        "处置固定资产.无形资产和其他长期资产所收回的现金净额": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[12].je"
+                        },
+                        "收到其他与投资活动有关的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[13].je"
+                        },
+                        "购建固定资产.无形资产和其他长期资产所支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[15].je"
+                        },
+                        "投资所支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[16].je"
+                        },
+                        "支付的其他与投资活动有关的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[17].je"
+                        },
+                        "吸收投资所收到的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[20].je"
+                        },
+                        "借款所收到的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[21].je"
+                        },
+                        "收到的其他与筹资活动有关的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[22].je"
+                        },
+                        "偿还债务所支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[24].je"
+                        },
+                        "分配股利.利润或偿付利息所支付的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[25].je"
+                        },
+                        "支付的其他与筹资活动有关的现金": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[26].je"
+                        },
+                        "汇率变动对现金的影响": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[29].je"
+                        },
+                        "净利润": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[31].je"
+                        },
+                        "计提的资产减值准备": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[32].je"
+                        },
+                        "固定资产折旧": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[33].je"
+                        },
+                        "无形资产摊销": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[34].je"
+                        },
+                        "长期待摊费用摊销": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[35].je"
+                        },
+                        "待摊费用减少": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[36].je"
+                        },
+                        "预提费用增加": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[37].je"
+                        },
+                        "处置固定资产.无形资产和其他长期资产的损失": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[38].je"
+                        },
+                        "固定资产报废损失 ": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[39].je"
+                        },
+                        "财务费用": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[40].je"
+                        },
+                        "投资损失": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[41].je"
+                        },
+                        "递延税款贷项": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[42].je"
+                        },
+                        "存货的减少": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[43].je"
+                        },
+                        "经营性应收项目的减少": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[44].je"
+                        },
+                        "经营性应付项目的增加": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[45].je"
+                        },
+                        "其他": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[46].je"
+                        },
+                        "债务转为资本": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[48].je"
+                        },
+                        "一年内到期的可转换公司债券": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[49].je"
+                        },
+                        "融资租入固定资产": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[50].je"
+                        },
+                        "现金的期末余额": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[51].je"
+                        },
+                        "现金的期初余额": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[52].je"
+                        },
+                        "现金等价物的期末余额": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[53].je"
+                        },
+                        "现金等价物的期初余额": {
+                            "ng-model": "qykjzdcwbbxjllbxxGrid.qykjzdcwbbxjllbxxGridlb[54].je"
+                        }
+                    }
+                }
+            ]
+        }
+  ]
+}

@@ -175,10 +175,10 @@ def save():
     }
 
 
-@app.route('/load')
+@app.route('/load_data')
 def load():
     table = request.args.get('table')
-    return json.dumps(load_config(table))
+    return json.dumps(load_data(table))
 
 
 @app.route('/close_progress', methods=['POST'])
@@ -199,8 +199,13 @@ def close_progress():
     sys.exit()
 
 
-def load_config(table_name):
+def load_data(table_name):
     with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+        return json.load(f).get(table_name, {})
+
+
+def load_config(table_name):
+    with open(os.path.join(base_path, 'config.json'), 'r', encoding='utf-8') as f:
         return json.load(f).get(table_name, {})
 
 
