@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 import webbrowser
+from threading import Timer
 
 from flask import Flask, render_template, request
 
@@ -235,6 +236,12 @@ def get_platform_dropdown():
     return result
 
 
+def open_browser():
+    co = ChromiumOptions().auto_port()
+    page = ChromiumPage(co)
+    page.get('http://127.0.0.1:5000')
+
+
 if __name__ == '__main__':
-    webbrowser.open_new('http://127.0.0.1:5000')
+    Timer(0.5, open_browser).start()
     app.run()
