@@ -101,15 +101,6 @@ def new_api():
                 if item.get('name') in table_head:
                     cur_map = item.get('map')
                     break
-    for key, value in cur_map.items():
-        find_key = list(value.keys())[0]
-        find_value = value[find_key]
-        if key in data_pool.keys():
-            cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
-            if cur_ele:
-                cur_ele.clear(by_js=True)
-                cur_ele.input('', clear=True)
-                cur_ele.input(data_pool[key], clear=True)
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
     for frame in frames:
