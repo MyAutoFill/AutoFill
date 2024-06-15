@@ -137,7 +137,7 @@
                 </div>
                 <div style="margin-top: 20px">
                   <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
-                  <a class="btn btn-sm btn-primary rounded-pill" href="/start_fill">开始申报</a>
+                  <a class="btn btn-sm btn-primary rounded-pill" @click="onHref()">开始申报</a>
                 </div>
               </el-form>
             </div>
@@ -211,6 +211,13 @@
             }
           }
           this.myFormData = data;
+        },
+        onHref() {
+          axios.post('/save', this.myFormData).then(res => {
+            if (res.data.status === "ok") {
+              window.location.href = '/start_fill'
+            }
+          })
         },
         onSubmit() {
           axios.post('/save', this.myFormData).then(res => {

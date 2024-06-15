@@ -163,7 +163,7 @@ def data():
     cur_page.get(url)
     cur_page.set.window.max()
     cur_page2 = ChromiumPage(co)
-    cur_page2.set.window.size(100, 200)
+    cur_page2.set.window.size(100, 400)
     cur_page2.set.window.location(500, 0)
     encode_select_name = base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8')
     encode_address = base64.urlsafe_b64encode(cur_page.address.encode('utf-8')).decode('utf-8')
