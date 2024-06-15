@@ -111,25 +111,30 @@
             <div id="app">
               <div v-if="loading">Loading...</div>
               <el-form v-else :model="myFormData" ref="myFormData" label-width="250px" class="demo-dynamic">
-                <el-collapse v-model="activeNames" accordion>
-                  <div
-                    v-for="(value, key, index) in myFormData"
-                  >
-                    <el-collapse-item :title="key" :name="key">
-                      <div style="display: flex; flex-wrap: wrap; justify-content: space-between">
-                        <el-col :span="6" v-for="(item, index) in value">
-                          <el-form-item
-                            :label="item.key"
-                            :key="item.key"
-                            :prop="'item.' + item.key + '.index'"
-                          >
-                            <el-input v-model="item.value"></el-input>
-                          </el-form-item>
-                        </el-col>
-                      </div>
-                    </el-collapse-item>
+                <div v-for="(cur_value, cur_key, cur_index) in myFormData">
+                  <div style="padding-bottom: 10px;padding-top: 10px">
+                    <span style="font-weight: bold;color: black">{{ "{{ cur_key }}" }}</span>
                   </div>
-                </el-collapse>
+                  <el-collapse v-model="activeNames" accordion >
+                    <div
+                      v-for="(value, key, index) in cur_value"
+                    >
+                      <el-collapse-item :title="key" :name="key">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: left">
+                          <el-col :span="6" v-for="(item, index) in value">
+                            <el-form-item
+                              :label="item.key"
+                              :key="item.key"
+                              :prop="'item.' + item.key + '.index'"
+                            >
+                              <el-input v-model="item.value" @input="handleChange(item)"></el-input>
+                            </el-form-item>
+                          </el-col>
+                        </div>
+                      </el-collapse-item>
+                    </div>
+                  </el-collapse>
+                </div>
                 <div style="margin-top: 20px">
                   <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
                   <a class="btn btn-sm btn-primary rounded-pill" href="/start_fill">开始申报</a>
@@ -193,6 +198,20 @@
         }
       },
       methods: {
+        handleChange(test) {
+          let data = JSON.parse(JSON.stringify(this.myFormData));
+          for (let item in data) {
+            let temp = data[item];
+            for (let inner in temp) {
+              for (let i = 0; i < temp[inner].length; ++i) {
+                if (temp[inner][i].id === test.id) {
+                  data[item][inner][i].value = test.value;
+                }
+              }
+            }
+          }
+          this.myFormData = data;
+        },
         onSubmit() {
           axios.post('/save', this.myFormData).then(res => {
             if (res.data.status === "ok") {
