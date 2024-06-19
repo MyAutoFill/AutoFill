@@ -111,29 +111,28 @@
             <div id="app">
               <div v-if="loading">Loading...</div>
               <el-form v-else :model="myFormData" ref="myFormData" label-width="250px" class="demo-dynamic">
-                <div v-for="(cur_value, cur_key, cur_index) in myFormData">
+                <div v-for="(cur_value, cur_key, cur_index) in myFormData" style="margin-bottom: 50px;">
                   <div style="padding-bottom: 10px;padding-top: 10px">
-                    <span style="font-weight: bold;color: black">{{ "{{ cur_key }}" }}</span>
+                    <span style="font-weight: bold;color: black;font-size: 24px">{{ "{{ cur_key }}" }}</span>
                   </div>
-                  <el-collapse v-model="activeNames" accordion >
-                    <div
+                  <el-tabs type="card">
+                    <el-tab-pane
                       v-for="(value, key, index) in cur_value"
+                      :key="key" :label="key" :name="index"
                     >
-                      <el-collapse-item :title="key" :name="key">
-                        <div style="display: flex; flex-wrap: wrap; justify-content: left">
-                          <el-col :span="6" v-for="(item, index) in value">
-                            <el-form-item
-                              :label="item.key"
-                              :key="item.key"
-                              :prop="'item.' + item.key + '.index'"
-                            >
-                              <el-input v-model="item.value" @input="handleChange(item)"></el-input>
-                            </el-form-item>
-                          </el-col>
-                        </div>
-                      </el-collapse-item>
-                    </div>
-                  </el-collapse>
+                      <div style="display: flex; flex-wrap: wrap; justify-content: left">
+                        <el-col :span="6" v-for="(item, index) in value">
+                          <el-form-item
+                            :label="item.key"
+                            :key="item.key"
+                            :prop="'item.' + item.key + '.index'"
+                          >
+                            <el-input v-model="item.value" @input="handleChange(item)"></el-input>
+                          </el-form-item>
+                        </el-col>
+                      </div>
+                    </el-tab-pane>
+                  </el-tabs>
                 </div>
                 <div style="margin-top: 20px">
                   <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
