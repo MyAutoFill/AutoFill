@@ -54,7 +54,7 @@
                     <!--/.dropdown-menu -->
                   </li>
                   <a href="./data_input.html" class="nav-link text-white">数据填写</a>
-                  <a href="#" class="nav-link text-white">往期数据</a>
+                  <a href="#" class="nav-link text-white" onclick="logout()">登出</a>
                   <li class="nav-item dropdown">
                   </li>
                 </ul>
@@ -428,6 +428,20 @@
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+  function logout() {
+    fetch('/api/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+          window.location.href = '/login'
+      })
+  }
+</script>
+<script>
   new Vue({
     el: '#app',
     data() {
@@ -447,19 +461,6 @@
       myFunction: function (url, select_name) {
         axios.post('/data', {'url': url, 'select_name': select_name}).then(res => {})
       }
-    },
-    mounted() {
-      axios
-        .get('/load?table=data_input_config')
-        .then(response => {
-          this.myFormData = response.data
-          this.loading = false
-        })
-        .catch(error => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => this.loading = false)
     }
   })
 </script>

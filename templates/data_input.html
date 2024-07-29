@@ -128,7 +128,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="6">
-                    <el-menu :default-openeds="Object.keys(myFormData)" @select="handleSelect" default-active="工业产销总值及主要产品产量">
+                    <el-menu @select="handleSelect" default-active="工业产销总值及主要产品产量">
                       <el-submenu v-for="(cur_value, cur_key, cur_index) in myFormData" :index="cur_key">
                         <span slot="title" style="font-weight: bold;color: black;font-size: 24px">{{ "{{ cur_key }}" }}</span>
                         <el-menu-item-group>
@@ -142,7 +142,7 @@
                   <el-col :span="18">
                     <div style="display: flex; flex-wrap: wrap; justify-content: left">
                       <el-form :model="myFormData" ref="myFormData" label-width="250px" class="demo-dynamic">
-                        <el-col :span="8" v-for="(item, index) in myFormData[globalKeyPath[0]][globalKeyPath[1]]">
+                        <el-col :span="12" v-for="(item, index) in myFormData[globalKeyPath[0]][globalKeyPath[1]]">
                           <el-form-item
                             :label="item.key"
                             :key="item.key"
@@ -152,16 +152,16 @@
                           </el-form-item>
                         </el-col>
                       </el-form>
+                      <div style="margin-top: 20px; margin-left: 60px">
+                        <a class="btn btn-sm btn-primary rounded-pill" @click="onHref()">申报预览</a>
+                        <a class="btn btn-sm btn-primary rounded-pill" @click="onTransfer()">查看报表</a>
+                        <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
+                        <a class="btn btn-sm btn-primary rounded-pill" @click="onHref()">开始申报</a>
+                      </div>
                     </div>
                   </el-col>
                 </el-row>
                 <el-row>
-                  <div style="margin-top: 20px">
-                    <a class="btn btn-sm btn-primary rounded-pill" @click="onHref()">申报预览</a>
-                    <a class="btn btn-sm btn-primary rounded-pill" @click="onTransfer()">查看报表</a>
-                    <a class="btn btn-sm btn-primary rounded-pill" @click="onSubmit()">保存数据</a>
-                    <a class="btn btn-sm btn-primary rounded-pill" @click="onHref()">开始申报</a>
-                  </div>
                 </el-row>
               </div>
             </p>

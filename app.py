@@ -21,6 +21,11 @@ def hello_world():
     return render_template('index.html')
 
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
 @app.route('/input')
 def input_data():
     return render_template('test_page/input.html')
@@ -102,6 +107,17 @@ def new_api():
                 if item.get('name') in table_head:
                     cur_map = item.get('map')
                     break
+    # if cur_map is not None:
+    #     for key, value in cur_map.items():
+    #         find_key = list(value.keys())[0]
+    #         find_value = value[find_key]
+    #         if key in data_pool.keys():
+    #             cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
+    #             if cur_ele:
+    #                 cur_ele.clear(by_js=True)
+    #                 cur_ele.input('', clear=True)
+    #                 cur_ele.input(data_pool[key], clear=True)
+    #     return {'status': 'ok'}
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
     for frame in frames:
@@ -186,6 +202,52 @@ def start_fill():
 @app.route('/power')
 def power():
     return render_template('test_page/power.html')
+
+
+@app.route('/api/login', methods=['POST'])
+def judge_login():
+    request_data = request.get_json()
+    name = request_data['username']
+    password = request_data['password']
+    with open('data.json', 'r') as f:
+        total_data = json.load(f)
+    user_list = total_data.get('user_list', [])
+    flag = False
+    for user in user_list:
+        if user.get('username') == name and user.get('password') == password:
+            flag = True
+    if flag:
+        total_data.update({'current_user': name})
+        with open('data.json', 'w') as f:
+            f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+        return json.dumps({'status': 1})
+    else:
+        return json.dumps({'status': 0})
+
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    request_data = request.get_json()
+    name = request_data['username']
+    password = request_data['password']
+    with open('data.json', 'r') as f:
+        total_data = json.load(f)
+        user_list = total_data.get('user_list', [])
+        user_list.append({'username': name, 'password': password})
+        total_data.update({'current_user': name})
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+    return json.dumps({'status': 'ok'})
+
+
+@app.route('/api/logout', methods=['GET'])
+def logout():
+    with open('data.json', 'r') as f:
+        total_data = json.load(f)
+        total_data.update({'current_user': ''})
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+    return json.dumps({'status': 'ok'})
 
 
 @app.route('/save', methods=['POST'])
@@ -314,5 +376,5 @@ def open_browser():
 
 
 if __name__ == '__main__':
-    webbrowser.open_new('http://127.0.0.1:5000')
+    webbrowser.open_new('http://127.0.0.1:5000/login')
     app.run()
