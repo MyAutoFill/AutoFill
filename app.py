@@ -1,4 +1,5 @@
 import base64
+import datetime
 import json
 import os
 import signal
@@ -70,7 +71,7 @@ def new_api():
 
     # 获取当前平台用户填写的数据，统一放到池子里
     # 即使一个相同的值，出现在了不同平台中，那也只取对应平台的，只是可以配置相同的id，在设置的时候一样
-    data_input_config = load_data('data_input_config')
+    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'))
     if select_name not in data_input_config.keys():
         return {
             'status': 'error'
@@ -190,7 +191,35 @@ def power():
 @app.route('/save', methods=['POST'])
 def save():
     request_data = request.get_json()
-    save_user_input(request_data)
+    cur_date = request_data['date']
+    save_data = request_data['data']
+    save_pool = dict()
+    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+        data_config = json.load(f)
+    value_pool = data_config.get('value_pool')
+    for platform in save_data.keys():
+        for table in save_data[platform]:
+            for item in save_data[platform][table]:
+                if not item.get('value'):
+                    continue
+                save_pool[item.get('id')] = item.get('value')
+    exist = set()
+    for item in value_pool:
+        if item.get('date') != cur_date:
+            continue
+        if item.get('id') in save_pool.keys():
+            item.update({'value': save_pool[item.get('id')]})
+            exist.add(item.get('id'))
+    for item in save_pool.keys():
+        if item not in exist:
+            value_pool.append({
+                "id": item,
+                "date": cur_date,
+                "value": save_pool[item]
+            })
+    data_config.update({'value_pool': value_pool})
+    with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+        f.write(json.dumps(data_config, ensure_ascii=False, indent=4))
     return {
         'status': 'ok'
     }
@@ -200,6 +229,26 @@ def save():
 def load():
     table = request.args.get('table')
     return json.dumps(load_data(table))
+
+
+def raw_load(date):
+    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+        data_config = json.load(f)
+    input_config = data_config.get('data_input_config')
+    value_pool = data_config.get('value_pool')
+    pool = dict()
+    for item in value_pool:
+        if item.get('date') != date:
+            continue
+        pool[item.get('id')] = item.get('value')
+    for platform in input_config.keys():
+        for table in input_config[platform]:
+            for item in input_config[platform][table]:
+                if item.get('id') in pool.keys():
+                    item.update({'value': pool[item.get('id')]})
+                else:
+                    item.update({'value': ''})
+    return input_config
 
 
 @app.route('/close_progress', methods=['POST'])
