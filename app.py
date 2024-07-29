@@ -227,8 +227,8 @@ def save():
 
 @app.route('/load_data')
 def load():
-    table = request.args.get('table')
-    return json.dumps(load_data(table))
+    date = request.args.get('date')
+    return json.dumps(raw_load(date))
 
 
 def raw_load(date):
