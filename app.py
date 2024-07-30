@@ -473,5 +473,5 @@ def open_browser():
 
 
 if __name__ == '__main__':
-    open_browser()
+    # open_browser()
     app.run()
