@@ -224,7 +224,7 @@ def do_login():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open(os.path.join(base_path, 'data.json'), 'r') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r') as f:
         total_data = json.load(f)
     user_list = total_data.get('user_list', [])
     flag = False
@@ -233,7 +233,7 @@ def do_login():
             flag = True
     if flag:
         total_data.update({'current_user': name})
-        with open(os.path.join(base_path, 'data.json'), 'w') as f:
+        with open(os.path.join(base_path, 'data.json/data.json'), 'w') as f:
             f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
         return json.dumps({'status': 1})
     else:
@@ -245,28 +245,28 @@ def register():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open(os.path.join(base_path, 'data.json'), 'r') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r') as f:
         total_data = json.load(f)
         user_list = total_data.get('user_list', [])
         user_list.append({'username': name, 'password': password})
         total_data.update({'current_user': name})
-    with open(os.path.join(base_path, 'data.json'), 'w') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'w') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 @app.route('/api/logout', methods=['GET'])
 def logout():
-    with open(os.path.join(base_path, 'data.json'), 'r') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r') as f:
         total_data = json.load(f)
         total_data.update({'current_user': ''})
-    with open(os.path.join(base_path, 'data.json'), 'w') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'w') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 def judge_login():
-    with open(os.path.join(base_path, 'data.json'), 'r') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r') as f:
         total_data = json.load(f)
     if total_data.get('current_user', ''):
         return True
@@ -280,7 +280,7 @@ def save():
     cur_date = request_data['date']
     save_data = request_data['data']
     save_pool = dict()
-    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r', encoding='utf-8') as f:
         data_config = json.load(f)
     value_pool = data_config.get('value_pool')
     for platform in save_data.keys():
@@ -304,7 +304,7 @@ def save():
                 "value": save_pool[item]
             })
     data_config.update({'value_pool': value_pool})
-    with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(data_config, ensure_ascii=False, indent=4))
     return {
         'status': 'ok'
@@ -318,7 +318,7 @@ def load():
 
 
 def raw_load(date):
-    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r', encoding='utf-8') as f:
         data_config = json.load(f)
     input_config = data_config.get('data_input_config')
     value_pool = data_config.get('value_pool')
@@ -358,7 +358,7 @@ def close_progress():
 
 
 def load_data(table_name):
-    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r', encoding='utf-8') as f:
         return json.load(f).get(table_name, {})
 
 
@@ -373,10 +373,10 @@ def save_user_input(value):
     :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
     :return:
     """
-    with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'r', encoding='utf-8') as f:
         total_config = json.load(f)
     total_config.update({"data_input_config": value})
-    with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+    with open(os.path.join(base_path, 'data.json/data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
 
 
