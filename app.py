@@ -205,7 +205,7 @@ def power():
 
 
 @app.route('/api/login', methods=['POST'])
-def judge_login():
+def do_login():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
@@ -248,6 +248,16 @@ def logout():
     with open('data.json', 'w') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
+
+
+@app.route('/api/judge_login', methods=['GET'])
+def judge_login():
+    with open('data.json', 'r') as f:
+        total_data = json.load(f)
+    if total_data.get('current_user', ''):
+        return json.dumps({'status': 1})
+    else:
+        return json.dumps({'status': 0})
 
 
 @app.route('/save', methods=['POST'])
@@ -376,5 +386,5 @@ def open_browser():
 
 
 if __name__ == '__main__':
-    webbrowser.open_new('http://127.0.0.1:5000/login')
+    open_browser()
     app.run()
