@@ -4,12 +4,17 @@ import json
 import os
 import signal
 import sys
+import io
 import webbrowser
 from threading import Timer
+import xml.etree.ElementTree as ET
+from PIL import Image, ImageDraw, ImageFont
 
 from flask import Flask, render_template, request
 
 from DrissionPage import ChromiumPage, ChromiumOptions
+
+import Utils
 
 app = Flask(__name__)
 base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
@@ -185,7 +190,8 @@ def data():
     encode_select_name = base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8')
     encode_address = base64.urlsafe_b64encode(cur_page.address.encode('utf-8')).decode('utf-8')
     encode_button_address = base64.urlsafe_b64encode(cur_page2.address.encode('utf-8')).decode('utf-8')
-    cur_page2.get(f'http://127.0.0.1:5000/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
+    cur_page2.get(
+        f'http://127.0.0.1:5000/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
     return {}
 
 
@@ -250,7 +256,7 @@ def logout():
     return json.dumps({'status': 'ok'})
 
 
-@app.route('/save', methods=['POST'])
+# @app.route('/save', methods=['POST'])
 def save():
     request_data = request.get_json()
     cur_date = request_data['date']
@@ -367,6 +373,89 @@ def get_platform_dropdown():
             'img': item.get('img')
         })
     return result
+
+
+def load_annotations(annotations):
+    data_tree = ET.parse(annotations)
+    root = data_tree.getroot()
+    annotation_table = []
+    for text_field in root.find('1'):
+        name = text_field.find('name').text
+        bndbox = text_field.find('bndbox')
+        x = int(bndbox.find('x').text)
+        y = int(bndbox.find('y').text)
+        w = int(bndbox.find('w').text)
+        h = int(bndbox.find('h').text)
+        annotation_table.append((name, x, y, w, h))
+    return annotation_table
+
+
+def generate_preview_image(image, annotation_table, data, output_path):
+    draw = ImageDraw.Draw(image)
+    try:
+        font = ImageFont.truetype('/System/Library/Fonts/Supplemental/Times New Roman.ttf', 20)
+    except IOError:
+        font = ImageFont.load_default()
+
+    # Extract base name without extension for data lookup
+    base_name = annotation_table[0][3:-4]
+
+    for obj in annotation_table[1]:
+        bbox = obj['bbox']
+        draw.rectangle(
+            [bbox['xmin'], bbox['ymin'], bbox['xmax'], bbox['ymax']],
+            outline='red',
+            width=1
+        )
+
+        if base_name in data:
+            customer_values = data[base_name]
+            for item in customer_values:
+                if item['key'] == obj['name']:
+                    text = item['value']
+                    text_width = font.getlength(text)
+                    x_center = (bbox['xmin'] + bbox['xmax']) / 2
+                    text_x = x_center - text_width / 2
+
+                    draw.text(
+                        (text_x, bbox['ymin']),
+                        text,
+                        fill='blue',
+                        font=font
+                    )
+    image.save(output_path)
+    return image
+
+
+# @app.route('/preview', methods=['POST'])
+# use save temporarily for testing
+@app.route('/save', methods=['POST'])
+def preview():
+    user_data = request.get_json()
+
+    # 用户期望生成预览的表名
+    # preview_table = user_data['name']
+    # 暂时使用固定名字，api完成后替换成上面代码
+    # preview_table = '统计_工业产销总值及主要产品产量'
+    preview_table = '税务_利润表'
+
+    image_template_path = os.path.join('images', preview_table + '.png')
+    image_template = Image.open(image_template_path)
+
+    image_label_path = os.path.join('labels', preview_table + '.xml')
+    image_labels = Utils.parse_labelimg_xml(image_label_path)
+
+    # 暂时使用全部表，api完成后可直接替换成 user_data['value']
+    flat_data = {k: v for group in user_data['data'].values() for k, v in group.items()}
+    preview_image_save_path = os.path.join('images/preview_images', preview_table + '.png')
+
+    preview_image = generate_preview_image(image_template, image_labels, flat_data, preview_image_save_path)
+
+    image_byte_arr = io.BytesIO()
+    preview_image.save(image_byte_arr, format='PNG')
+    image_byte_arr.seek(0)
+
+    # return send_file(image_byte_arr, mimetype='image/png')
 
 
 def open_browser():
