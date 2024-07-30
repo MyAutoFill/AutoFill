@@ -462,6 +462,7 @@ def preview():
     image_byte_arr = io.BytesIO()
     preview_image.save(image_byte_arr, format='PNG')
     image_byte_arr.seek(0)
+    return {}
 
     # return send_file(image_byte_arr, mimetype='image/png')
 
@@ -473,5 +474,5 @@ def open_browser():
 
 
 if __name__ == '__main__':
-    # open_browser()
+    webbrowser.open('http://127.0.0.1:5000/login')
     app.run()
