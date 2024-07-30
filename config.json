@@ -3,7 +3,7 @@
         {
             "name": "国家统计局",
             "title_tag": "",
-            "url": "http://zb.stats-sd.gov.cn/dr/queryLoginInfo.do",
+            "url": "http://127.0.0.1:5000/stat_finance",
             "img": "https://coscdn.htmlpage.cn/user-upload-images/7574/山东省统计联网直报平台.png",
             "config_list": [
                 {
