@@ -471,15 +471,15 @@ def preview():
     # preview_table = '统计_工业产销总值及主要产品产量'
     # preview_table = '税务_利润表'
 
-    image_template_path = os.path.join('images', preview_table + '.png')
+    image_template_path = os.path.join(base_path, os.path.join('images', preview_table + '.png'))
     image_template = Image.open(image_template_path)
 
-    image_label_path = os.path.join('labels', preview_table + '.xml')
+    image_label_path = os.path.join(base_path, os.path.join('labels', preview_table + '.xml'))
     image_labels = Utils.parse_labelimg_xml(image_label_path)
 
     # 暂时使用全部表，api完成后可直接替换成 user_data['value']
     flat_data = user_data['value']
-    preview_image_save_path = os.path.join('images/preview_images', preview_table + '.png')
+    preview_image_save_path = os.path.join(base_path, os.path.join('images/preview_images', preview_table + '.png'))
 
     preview_image = generate_preview_image(image_template, image_labels, flat_data, preview_image_save_path)
 
