@@ -921,56 +921,6 @@
                             "ng-model": "p.bqyjse1"
                         }
                     }
-                },
-                {
-                    "name": "",
-                    "map": {
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        },
-                        "": {
-                            "ng-model": ""
-                        }
-                    }
                 }
             ]
         },
