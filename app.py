@@ -224,8 +224,9 @@ def do_login():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r') as f:
-        total_data = json.load(f)
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+        text = f.read()
+        total_data = json.loads(text)
     user_list = total_data.get('user_list', [])
     flag = False
     for user in user_list:
@@ -233,11 +234,19 @@ def do_login():
             flag = True
     if flag:
         total_data.update({'current_user': name})
-        with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w') as f:
+        with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
             f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
         return json.dumps({'status': 1})
     else:
         return json.dumps({'status': 0})
+
+
+@app.route('/get_db', methods=['GET'])
+def get_db():
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+        text = f.read()
+        total_data = json.loads(text)
+    return json.dumps(total_data, ensure_ascii=False, indent=4)
 
 
 @app.route('/api/register', methods=['POST'])
@@ -245,29 +254,32 @@ def register():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r') as f:
-        total_data = json.load(f)
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+        text = f.read()
+        total_data = json.loads(text)
         user_list = total_data.get('user_list', [])
         user_list.append({'username': name, 'password': password})
         total_data.update({'current_user': name})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 @app.route('/api/logout', methods=['GET'])
 def logout():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r') as f:
-        total_data = json.load(f)
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+        text = f.read()
+        total_data = json.loads(text)
         total_data.update({'current_user': ''})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 def judge_login():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r') as f:
-        total_data = json.load(f)
+    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+        text = f.read()
+        total_data = json.loads(text)
     if total_data.get('current_user', ''):
         return True
     else:
@@ -281,7 +293,8 @@ def save():
     save_data = request_data['data']
     save_pool = dict()
     with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        data_config = json.load(f)
+        text = f.read()
+        data_config = json.loads(text)
     value_pool = data_config.get('value_pool')
     for platform in save_data.keys():
         for table in save_data[platform]:
@@ -319,7 +332,8 @@ def load():
 
 def raw_load(date):
     with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        data_config = json.load(f)
+        text = f.read()
+        data_config = json.loads(text)
     input_config = data_config.get('data_input_config')
     value_pool = data_config.get('value_pool')
     pool = dict()
@@ -359,12 +373,16 @@ def close_progress():
 
 def load_data(table_name):
     with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        return json.load(f).get(table_name, {})
+        text = f.read()
+        data_config = json.loads(text)
+        return data_config.get(table_name, {})
 
 
 def load_config(table_name):
     with open(os.path.join(os.path.join(base_path, 'config.json'), 'config.json'), 'r', encoding='utf-8') as f:
-        return json.load(f).get(table_name, {})
+        text = f.read()
+        data_config = json.loads(text)
+        return data_config.get(table_name, {})
 
 
 def save_user_input(value):
@@ -374,7 +392,8 @@ def save_user_input(value):
     :return:
     """
     with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        total_config = json.load(f)
+        text = f.read()
+        total_config = json.loads(text)
     total_config.update({"data_input_config": value})
     with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
         f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
