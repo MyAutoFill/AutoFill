@@ -10,7 +10,7 @@ from threading import Timer
 import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 
 from DrissionPage import ChromiumPage, ChromiumOptions
 
@@ -23,7 +23,10 @@ cur_page, cur_page2 = None, None
 
 @app.route('/')
 def hello_world():
-    return render_template('index.html')
+    if judge_login():
+        return render_template('index.html')
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/login')
@@ -197,12 +200,18 @@ def data():
 
 @app.route('/data_input')
 def data_input():
-    return render_template('data_input.html')
+    if judge_login():
+        return render_template('data_input.html')
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/start_fill')
 def start_fill():
-    return render_template('start_fill.html')
+    if judge_login():
+        return render_template('start_fill.html')
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/power')
@@ -256,14 +265,13 @@ def logout():
     return json.dumps({'status': 'ok'})
 
 
-@app.route('/api/judge_login', methods=['GET'])
 def judge_login():
     with open('data.json', 'r') as f:
         total_data = json.load(f)
     if total_data.get('current_user', ''):
-        return json.dumps({'status': 1})
+        return True
     else:
-        return json.dumps({'status': 0})
+        return False
 
 
 @app.route('/save', methods=['POST'])
@@ -400,7 +408,7 @@ def load_annotations(annotations):
     return annotation_table
 
 
-def generate_preview_image(image, annotation_table, data, output_path):
+def generate_preview_image(image, annotation_table, preview_data, output_path):
     draw = ImageDraw.Draw(image)
     try:
         font = ImageFont.truetype('/System/Library/Fonts/Supplemental/Times New Roman.ttf', 20)
@@ -418,21 +426,18 @@ def generate_preview_image(image, annotation_table, data, output_path):
             width=1
         )
 
-        if base_name in data:
-            customer_values = data[base_name]
-            for item in customer_values:
-                if item['key'] == obj['name']:
-                    text = item['value']
-                    text_width = font.getlength(text)
-                    x_center = (bbox['xmin'] + bbox['xmax']) / 2
-                    text_x = x_center - text_width / 2
-
-                    draw.text(
-                        (text_x, bbox['ymin']),
-                        text,
-                        fill='blue',
-                        font=font
-                    )
+        for item in preview_data:
+            if item['key'] == obj['name']:
+                text = item['value']
+                text_width = font.getlength(text)
+                x_center = (bbox['xmin'] + bbox['xmax']) / 2
+                text_x = x_center - text_width / 2
+                draw.text(
+                    (text_x, bbox['ymin']),
+                    text,
+                    fill='blue',
+                    font=font
+                )
     image.save(output_path)
     return image
 
@@ -442,10 +447,10 @@ def preview():
     user_data = request.get_json()
 
     # 用户期望生成预览的表名
-    # preview_table = user_data['name']
+    preview_table = user_data['name']
     # 暂时使用固定名字，api完成后替换成上面代码
     # preview_table = '统计_工业产销总值及主要产品产量'
-    preview_table = '税务_利润表'
+    # preview_table = '税务_利润表'
 
     image_template_path = os.path.join('images', preview_table + '.png')
     image_template = Image.open(image_template_path)
@@ -454,7 +459,7 @@ def preview():
     image_labels = Utils.parse_labelimg_xml(image_label_path)
 
     # 暂时使用全部表，api完成后可直接替换成 user_data['value']
-    flat_data = {k: v for group in user_data['data'].values() for k, v in group.items()}
+    flat_data = user_data['value']
     preview_image_save_path = os.path.join('images/preview_images', preview_table + '.png')
 
     preview_image = generate_preview_image(image_template, image_labels, flat_data, preview_image_save_path)
@@ -462,15 +467,15 @@ def preview():
     image_byte_arr = io.BytesIO()
     preview_image.save(image_byte_arr, format='PNG')
     image_byte_arr.seek(0)
-    return {}
+    return {
+        'status': 1,
+        'path': '/image/' + preview_table + '.png'
+    }
 
-    # return send_file(image_byte_arr, mimetype='image/png')
 
-
-def open_browser():
-    co = ChromiumOptions().auto_port()
-    page = ChromiumPage(co)
-    page.get('http://127.0.0.1:5000')
+@app.route('/image/<path:filename>')
+def image(filename):
+    return send_from_directory('images/preview_images/', filename)
 
 
 if __name__ == '__main__':
