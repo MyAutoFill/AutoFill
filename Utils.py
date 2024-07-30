@@ -6,7 +6,6 @@ def parse_labelimg_xml(xml_file):
     root = tree.getroot()
 
     filename = root.find('filename').text
-    size = root.find('size')
 
     objects = []
     for obj in root.findall('object'):
@@ -24,16 +23,3 @@ def parse_labelimg_xml(xml_file):
         })
 
     return filename, objects
-
-
-def main():
-    xml_file = 'labelInfo/统计_工业产销总值及主要产品产量.xml'
-    filename, objects = parse_labelimg_xml(xml_file)
-
-    print(f'Parsed {filename}')
-    for obj in objects:
-        print(f"Object: {obj['name']}," f"BBox: {obj['bbox']}")
-
-
-if __name__ == '__main__':
-    main()
