@@ -42,7 +42,7 @@
                     <!--/.dropdown-menu -->
                   </li>
                   <a href="/data_input" class="nav-link text-white">数据填写</a>
-                  <a href="#" class="nav-link text-white">往期数据</a>
+                  <a href="#" class="nav-link text-white" onclick="logout()">登出</a>
                   <li class="nav-item dropdown">
                   </li>
                 </ul>
@@ -196,6 +196,20 @@
   <!-- import JavaScript -->
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  function logout() {
+    fetch('/api/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+          window.location.href = '/login'
+      })
+  }
+</script>
   <script>
     new Vue({
       el: '#app',
