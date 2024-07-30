@@ -2331,21 +2331,9 @@
     ],
     "user_list": [
         {
-            "username": "123",
-            "password": "123"
-        },
-        {
-            "username": "1234",
-            "password": "1234"
-        },
-        {
-            "username": "12345",
-            "password": "12345"
-        },
-        {
-            "username": "6789",
-            "password": "6789"
+            "username": "whczj",
+            "password": "whczj264200"
         }
     ],
-    "current_user": "123"
+    "current_user": ""
 }
