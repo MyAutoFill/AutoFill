@@ -224,7 +224,7 @@ def do_login():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open('data.json', 'r') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r') as f:
         total_data = json.load(f)
     user_list = total_data.get('user_list', [])
     flag = False
@@ -233,7 +233,7 @@ def do_login():
             flag = True
     if flag:
         total_data.update({'current_user': name})
-        with open('data.json', 'w') as f:
+        with open(os.path.join(base_path, 'data.json'), 'w') as f:
             f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
         return json.dumps({'status': 1})
     else:
@@ -245,28 +245,28 @@ def register():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open('data.json', 'r') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r') as f:
         total_data = json.load(f)
         user_list = total_data.get('user_list', [])
         user_list.append({'username': name, 'password': password})
         total_data.update({'current_user': name})
-    with open('data.json', 'w') as f:
+    with open(os.path.join(base_path, 'data.json'), 'w') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 @app.route('/api/logout', methods=['GET'])
 def logout():
-    with open('data.json', 'r') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r') as f:
         total_data = json.load(f)
         total_data.update({'current_user': ''})
-    with open('data.json', 'w') as f:
+    with open(os.path.join(base_path, 'data.json'), 'w') as f:
         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
     return json.dumps({'status': 'ok'})
 
 
 def judge_login():
-    with open('data.json', 'r') as f:
+    with open(os.path.join(base_path, 'data.json'), 'r') as f:
         total_data = json.load(f)
     if total_data.get('current_user', ''):
         return True
