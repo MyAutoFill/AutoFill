@@ -15,8 +15,13 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from DrissionPage import ChromiumPage, ChromiumOptions
 
 import Utils
+from mySql.Config import Config
+from mySql.database import init_db
+from mySql.enterprise_service import create_enterprise_data
 
 app = Flask(__name__)
+app.config.from_object(Config)
+init_db(app)
 base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
@@ -228,26 +233,26 @@ def do_login():
     request_data = request.get_json()
     name = request_data['username']
     password = request_data['password']
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json')), 'r', encoding='utf-8') as f:
         text = f.read()
         total_data = json.loads(text)
     user_list = total_data.get('user_list', [])
     flag = False
     for user in user_list:
         if user.get('username') == name and user.get('password') == password:
-            flag = True
+            flag = False
     if flag:
         total_data.update({'current_user': name})
-        with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
+        with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
             f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
         return json.dumps({'status': 1})
     else:
-        return json.dumps({'status': 0})
+        return json.dumps({'status': 1})
 
 
 @app.route('/get_db', methods=['GET'])
 def get_db():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json')), 'r', encoding='utf-8') as f:
         text = f.read()
         total_data = json.loads(text)
     return json.dumps(total_data, ensure_ascii=False, indent=4)
@@ -281,7 +286,7 @@ def logout():
 
 
 def judge_login():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json')), 'r', encoding='utf-8') as f:
         text = f.read()
         total_data = json.loads(text)
     if total_data.get('current_user', ''):
@@ -335,7 +340,7 @@ def load():
 
 
 def raw_load(date):
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
+    with open(os.path.join(os.path.join(base_path, 'data.json')), 'r', encoding='utf-8') as f:
         text = f.read()
         data_config = json.loads(text)
     input_config = data_config.get('data_input_config')
@@ -473,7 +478,15 @@ def preview():
     preview_table = user_data['name']
     # 暂时使用固定名字，api完成后替换成上面代码
     # preview_table = '统计_工业产销总值及主要产品产量'
-    # preview_table = '税务_利润表'
+    info = {
+        "EnterpriseId": 1,
+        "date": 20230727,
+        "Platform": "税务局",
+        "TableName": "利润表",
+        "Data": {"利润": "11123", "成本": "111111"},
+        "SchemaVersion": 1
+    }
+    create_enterprise_data(info)
 
     image_template_path = os.path.join(base_path, os.path.join('images', preview_table + '.png'))
     image_template = Image.open(image_template_path)
@@ -495,6 +508,32 @@ def preview():
         'path': '/image/' + preview_table + '.png'
     }
 
+# Get from mySql
+# Steps for create databse:
+# 1. docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3307:3306 mysql
+# 2. docker exec -it mysql mysql -u root -p
+# 3. CREATE DATABASE AUTOFILL;
+# 4. use AUTOFILL;
+# 5. CREATE TABLE EnterpriseData (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     EnterpriseId BIGINT NOT NULL,
+#     date BIGINT NOT NULL,
+#     Platform VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL,
+#     TableName VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL,
+#     Data JSON NOT NULL,
+#     SchemaVersion INT NOT NULL
+# ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+#
+# 6. CREATE TABLE SchemaTable (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     Platform VARCHAR(255) NOT NULL,
+#     TableName VARCHAR(255) NOT NULL,
+#     AutoFillSchema JSON NOT NULL,
+#     PreviewSchema JSON NOT NULL
+# );
+
+
+
 
 @app.route('/image/<path:filename>')
 def image(filename):
@@ -504,3 +543,5 @@ def image(filename):
 if __name__ == '__main__':
     webbrowser.open('http://127.0.0.1:5000/login')
     app.run()
+
+# docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
