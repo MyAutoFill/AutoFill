@@ -95,7 +95,7 @@ def new_api():
     select_name = params_dict.get('select_name')
     select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
     print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    page_config = requests.get('http://127.0.0.1:8088/api/load_config').json()
+    page_config = load_config()
     cur_platform = None
     for item in page_config:
         if item.get('name') == select_name:
@@ -302,7 +302,7 @@ def save():
     request_data = request.get_json()
     date = request_data['date']
     cur_data = request_data['data']
-    exist_data = requests.get('http://127.0.0.1:8088/api/load_data_by_table_name?date=' + date).json()
+    exist_data = load_data_by_table_name(date)
     exist_data.update(cur_data)
     save_data_by_table_name(date, json.dumps(exist_data).replace(' ', ''))
     return {
@@ -314,11 +314,11 @@ def save():
 def load():
     request_data = request.get_json()
     date = request_data['date']
-    return requests.get('http://1.94.26.133:8088/api/load_data_by_table_name?date=' + date).text
+    return jsonify(load_data_by_table_name(date))
 
 
 def raw_load(date):
-    total_config = requests.get("http://127.0.0.1:8088/api/load_platform_config").json()
+    total_config = load_platform_config()
     input_config = {}
     for config_item in total_config:
         platform = config_item['platform_name']
@@ -327,7 +327,7 @@ def raw_load(date):
         if platform not in input_config.keys():
             input_config[platform] = {}
         input_config[platform].update({table_name: platform_config})
-    pool = requests.get('http://127.0.0.1:8088/api/load_data_by_table_name?date=' + date).json()
+    pool = load_data_by_table_name(date)
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -338,7 +338,6 @@ def raw_load(date):
     return input_config
 
 
-@app.route('/api/load_platform_config', methods=['GET'])
 def load_platform_config():
     cursor = db.cursor()
     sql = '''select * from platform_config_tbl'''
@@ -351,7 +350,7 @@ def load_platform_config():
             'table_name': item[2],
             'platform_config': json.loads(item[3])
         })
-    return jsonify(result)
+    return result
 
 
 @app.route('/close_progress', methods=['POST'])
@@ -374,7 +373,6 @@ def close_progress():
     return {}
 
 
-@app.route('/api/load_config', methods=['GET'])
 def load_config():
     cursor = db.cursor()
     sql = '''select * from platform_info_tbl'''
@@ -389,19 +387,17 @@ def load_config():
             'img': item[4],
             'config_list': json.loads(item[5]),
         })
-    return jsonify(result)
+    return result
 
 
-@app.route('/api/load_data_by_table_name', methods=['GET'])
-def load_data_by_table_name():
-    date = request.args.get('date')
+def load_data_by_table_name(date):
     cursor = db.cursor()
     sql = f'''select company_data from company_data_tbl where `date` = '{date}' '''
     cursor.execute(sql)
     cur_data = cursor.fetchall()
     if len(cur_data) == 0:
         return {}
-    return cur_data[0][0]
+    return json.loads(cur_data[0][0])
 
 
 def save_data_by_table_name(date, cur_data):
