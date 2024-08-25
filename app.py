@@ -24,7 +24,7 @@ base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
 db = pymysql.connect(
-    host='localhost',
+    host='1.94.26.133',
     port=3306,
     user='root',
     password='root@123',
@@ -314,7 +314,7 @@ def save():
 def load():
     request_data = request.get_json()
     date = request_data['date']
-    return requests.get('http://127.0.0.1:8088/api/load_data_by_table_name?date=' + date).text
+    return requests.get('http://1.94.26.133:8088/api/load_data_by_table_name?date=' + date).text
 
 
 def raw_load(date):
