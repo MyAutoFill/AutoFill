@@ -191,12 +191,10 @@ def new_api():
     }
 
 
-@app.route('/api/data', methods=['POST'])
+@app.route('/api/data', methods=['GET'])
 def data():
-    request_data = request.get_json()
-    print(request_data)
-    url = str(request_data['url'])
-    select_name = str(request_data['select_name'])
+    url = base64.urlsafe_b64decode(request.args.get('url')).decode('utf-8')
+    select_name = request.args.get('select_name')
     co = ChromiumOptions().auto_port()
     global cur_page, cur_page2
     if cur_page is not None:
