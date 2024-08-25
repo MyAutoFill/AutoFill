@@ -6,11 +6,12 @@ import signal
 import sys
 import io
 import webbrowser
+import pymysql
 from threading import Timer
 import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
 
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, jsonify
 
 from DrissionPage import ChromiumPage, ChromiumOptions
 
@@ -20,18 +21,32 @@ app = Flask(__name__)
 base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
+db = pymysql.connect(
+    host='localhost',
+    port=3306,
+    user='root',
+    password='root@123',
+    db='data',
+    autocommit=True
+)
 
-@app.route('/')
-def hello_world():
-    if judge_login():
-        return render_template('index.html')
-    else:
-        return redirect(url_for('login'))
+
+# @app.route('/')
+# def hello_world():
+#     if judge_login():
+#         return render_template('index.html')
+#     else:
+#         return redirect(url_for('login'))
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+# @app.route('/login')
+# def login():
+#     return render_template('login.html')
+
+
+# @app.route('/react_page')
+# def react_page():
+#     return render_template('react_page/index.html')
 
 
 @app.route('/input')
@@ -78,7 +93,7 @@ def new_api():
     select_name = params_dict.get('select_name')
     select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
     print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    page_config = load_config('page_config')
+    page_config = load_config()
     cur_platform = None
     for item in page_config:
         if item.get('name') == select_name:
@@ -176,7 +191,7 @@ def new_api():
     }
 
 
-@app.route('/data', methods=['POST'])
+@app.route('/api/data', methods=['POST'])
 def data():
     request_data = request.get_json()
     print(request_data)
@@ -198,24 +213,24 @@ def data():
     encode_address = base64.urlsafe_b64encode(cur_page.address.encode('utf-8')).decode('utf-8')
     encode_button_address = base64.urlsafe_b64encode(cur_page2.address.encode('utf-8')).decode('utf-8')
     cur_page2.get(
-        f'http://127.0.0.1:5000/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
+        f'http://127.0.0.1:8088/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
     return {}
 
 
-@app.route('/data_input')
-def data_input():
-    if judge_login():
-        return render_template('data_input.html')
-    else:
-        return redirect(url_for('login'))
+# @app.route('/data_input')
+# def data_input():
+#     if judge_login():
+#         return render_template('data_input.html')
+#     else:
+#         return redirect(url_for('login'))
 
 
-@app.route('/start_fill')
-def start_fill():
-    if judge_login():
-        return render_template('start_fill.html')
-    else:
-        return redirect(url_for('login'))
+# @app.route('/start_fill')
+# def start_fill():
+#     if judge_login():
+#         return render_template('start_fill.html')
+#     else:
+#         return redirect(url_for('login'))
 
 
 @app.route('/power')
@@ -223,128 +238,96 @@ def power():
     return render_template('test_page/power.html')
 
 
-@app.route('/api/login', methods=['POST'])
-def do_login():
-    request_data = request.get_json()
-    name = request_data['username']
-    password = request_data['password']
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_data = json.loads(text)
-    user_list = total_data.get('user_list', [])
-    flag = False
-    for user in user_list:
-        if user.get('username') == name and user.get('password') == password:
-            flag = True
-    if flag:
-        total_data.update({'current_user': name})
-        with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
-            f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
-        return json.dumps({'status': 1})
-    else:
-        return json.dumps({'status': 0})
+# @app.route('/api/login', methods=['POST'])
+# def do_login():
+#     request_data = request.get_json()
+#     name = request_data['username']
+#     password = request_data['password']
+#     with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+#         text = f.read()
+#         total_data = json.loads(text)
+#     user_list = total_data.get('user_list', [])
+#     flag = False
+#     for user in user_list:
+#         if user.get('username') == name and user.get('password') == password:
+#             flag = True
+#     if flag:
+#         total_data.update({'current_user': name})
+#         with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+#             f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+#         return json.dumps({'status': 1})
+#     else:
+#         return json.dumps({'status': 0})
+#
+#
+# @app.route('/api/register', methods=['POST'])
+# def register():
+#     request_data = request.get_json()
+#     name = request_data['username']
+#     password = request_data['password']
+#     with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+#         text = f.read()
+#         total_data = json.loads(text)
+#         user_list = total_data.get('user_list', [])
+#         user_list.append({'username': name, 'password': password})
+#         total_data.update({'current_user': name})
+#     with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+#         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+#     return json.dumps({'status': 'ok'})
+#
+#
+# @app.route('/api/logout', methods=['GET'])
+# def logout():
+#     with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+#         text = f.read()
+#         total_data = json.loads(text)
+#         total_data.update({'current_user': ''})
+#     with open(os.path.join(base_path, 'data.json'), 'w', encoding='utf-8') as f:
+#         f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
+#     return json.dumps({'status': 'ok'})
+#
+#
+# def judge_login():
+#     with open(os.path.join(base_path, 'data.json'), 'r', encoding='utf-8') as f:
+#         text = f.read()
+#         total_data = json.loads(text)
+#     if total_data.get('current_user', ''):
+#         return True
+#     else:
+#         return False
 
 
-@app.route('/get_db', methods=['GET'])
-def get_db():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_data = json.loads(text)
-    return json.dumps(total_data, ensure_ascii=False, indent=4)
-
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    request_data = request.get_json()
-    name = request_data['username']
-    password = request_data['password']
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_data = json.loads(text)
-        user_list = total_data.get('user_list', [])
-        user_list.append({'username': name, 'password': password})
-        total_data.update({'current_user': name})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
-        f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
-    return json.dumps({'status': 'ok'})
-
-
-@app.route('/api/logout', methods=['GET'])
-def logout():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_data = json.loads(text)
-        total_data.update({'current_user': ''})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
-        f.write(json.dumps(total_data, ensure_ascii=False, indent=4))
-    return json.dumps({'status': 'ok'})
-
-
-def judge_login():
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_data = json.loads(text)
-    if total_data.get('current_user', ''):
-        return True
-    else:
-        return False
-
-
-@app.route('/save', methods=['POST'])
+@app.route('/api/save', methods=['POST'])
 def save():
     request_data = request.get_json()
-    cur_date = request_data['date']
-    save_data = request_data['data']
-    save_pool = dict()
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        data_config = json.loads(text)
-    value_pool = data_config.get('value_pool')
-    for platform in save_data.keys():
-        for table in save_data[platform]:
-            for item in save_data[platform][table]:
-                if not item.get('value'):
-                    continue
-                save_pool[item.get('id')] = item.get('value')
-    exist = set()
-    for item in value_pool:
-        if item.get('date') != cur_date:
-            continue
-        if item.get('id') in save_pool.keys():
-            item.update({'value': save_pool[item.get('id')]})
-            exist.add(item.get('id'))
-    for item in save_pool.keys():
-        if item not in exist:
-            value_pool.append({
-                "id": item,
-                "date": cur_date,
-                "value": save_pool[item]
-            })
-    data_config.update({'value_pool': value_pool})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
-        f.write(json.dumps(data_config, ensure_ascii=False, indent=4))
+    date = request_data['date']
+    cur_data = request_data['data']
+    exist_data = load_data_by_table_name(date)
+    exist_data.update(cur_data)
+    save_data_by_table_name(date, json.dumps(exist_data).replace(' ', ''))
     return {
         'status': 'ok'
     }
 
 
-@app.route('/load_data')
+@app.route('/api/load_data', methods=['POST'])
 def load():
-    date = request.args.get('date')
-    return json.dumps(raw_load(date))
+    request_data = request.get_json()
+    date = request_data['date']
+    return jsonify(load_data_by_table_name(date))
 
 
 def raw_load(date):
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        data_config = json.loads(text)
-    input_config = data_config.get('data_input_config')
-    value_pool = data_config.get('value_pool')
-    pool = dict()
-    for item in value_pool:
-        if item.get('date') != date:
-            continue
-        pool[item.get('id')] = item.get('value')
+    total_config = load_platform_config()
+    input_config = {}
+    for config_item in total_config:
+        platform = config_item['platform_name']
+        table_name = config_item['table_name']
+        platform_config = config_item['platform_config']
+        if platform not in input_config.keys():
+            input_config[platform] = {}
+        input_config[platform].update({table_name: platform_config})
+    pool = load_data_by_table_name(date)
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -353,6 +336,21 @@ def raw_load(date):
                 else:
                     item.update({'value': ''})
     return input_config
+
+
+def load_platform_config():
+    cursor = db.cursor()
+    sql = '''select * from platform_config_tbl'''
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    result = list()
+    for item in cur_data:
+        result.append({
+            'platform_name': item[1],
+            'table_name': item[2],
+            'platform_config': json.loads(item[3])
+        })
+    return result
 
 
 @app.route('/close_progress', methods=['POST'])
@@ -375,37 +373,44 @@ def close_progress():
     return {}
 
 
-def load_data(table_name):
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        data_config = json.loads(text)
-        return data_config.get(table_name, {})
+def load_config():
+    cursor = db.cursor()
+    sql = '''select * from platform_info_tbl'''
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    result = list()
+    for item in cur_data:
+        result.append({
+            'name': item[1],
+            'title_tag': item[2],
+            'url': item[3],
+            'img': item[4],
+            'config_list': json.loads(item[5]),
+        })
+    return result
 
 
-def load_config(table_name):
-    with open(os.path.join(os.path.join(base_path, 'config.json'), 'config.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        data_config = json.loads(text)
-        return data_config.get(table_name, {})
+def load_data_by_table_name(date):
+    cursor = db.cursor()
+    sql = f'''select company_data from company_data_tbl where `date` = '{date}' '''
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    if len(cur_data) == 0:
+        return {}
+    return json.loads(cur_data[0][0])
 
 
-def save_user_input(value):
-    """
-    把前端返回的键值对保存到配置表中
-    :param value: 用户输入的键值对 [{"name": "xx", "value": "yy"}, ...]
-    :return:
-    """
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'r', encoding='utf-8') as f:
-        text = f.read()
-        total_config = json.loads(text)
-    total_config.update({"data_input_config": value})
-    with open(os.path.join(os.path.join(base_path, 'data.json'), 'data.json'), 'w', encoding='utf-8') as f:
-        f.write(json.dumps(total_config, ensure_ascii=False, indent=4))
+def save_data_by_table_name(date, cur_data):
+    cursor = db.cursor()
+    sql = f'''update company_data_tbl set `company_data` = '{cur_data}' where `date` = '{date}' '''
+    cursor.execute(sql)
+    cursor.close()
+    return
 
 
 @app.route('/get_platform_dropdown')
 def get_platform_dropdown():
-    page_config = load_config('page_config')
+    page_config = load_config()
     result = list()
     for item in page_config:
         result.append({
@@ -502,5 +507,5 @@ def image(filename):
 
 
 if __name__ == '__main__':
-    webbrowser.open('http://127.0.0.1:5000/login')
-    app.run()
+    webbrowser.open('http://124.71.222.68')
+    app.run(port=8088)
