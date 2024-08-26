@@ -1,26 +1,14 @@
 import base64
 import datetime
 import json
-import os
-import signal
-import sys
-import io
 import webbrowser
 import pymysql
-from threading import Timer
-import xml.etree.ElementTree as ET
 
-import requests
-from PIL import Image, ImageDraw, ImageFont
-
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, jsonify
+from flask import Flask, render_template, request
 
 from DrissionPage import ChromiumPage, ChromiumOptions
 
-import Utils
-
 app = Flask(__name__)
-base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
 db = pymysql.connect(
