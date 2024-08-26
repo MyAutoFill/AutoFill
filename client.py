@@ -176,11 +176,7 @@ def data():
     encode_button_address = base64.urlsafe_b64encode(cur_page2.address.encode('utf-8')).decode('utf-8')
     cur_page2.get(
         f'http://127.0.0.1:8088/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
-    return {}
-
-@app.route('/power')
-def power():
-    return render_template('test_page/power.html')
+    return '请关闭当前网页'
 
 
 def raw_load(date):
