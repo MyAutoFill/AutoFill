@@ -182,13 +182,14 @@ def raw_load(date):
         for table in input_config[platform]:
             for item in input_config[platform][table]:
                 if item.get('id') in pool.keys():
-                    item.update({'value': pool[item.get('id')]})
+                    item.update({'value': str(float(pool[item.get('id')]) * item.get('ratio'))})
                 else:
                     item.update({'value': ''})
     return input_config
 
 
 def load_platform_config():
+    db.ping(reconnect=True)
     cursor = db.cursor()
     sql = '''select * from platform_config_tbl'''
     cursor.execute(sql)
@@ -224,6 +225,7 @@ def close_progress():
 
 
 def load_config():
+    db.ping(reconnect=True)
     cursor = db.cursor()
     sql = '''select * from platform_info_tbl'''
     cursor.execute(sql)
@@ -241,6 +243,7 @@ def load_config():
 
 
 def load_data_by_table_name(date):
+    db.ping(reconnect=True)
     cursor = db.cursor()
     sql = f'''select company_data from company_data_tbl where `date` = '{date}' '''
     cursor.execute(sql)
