@@ -5,7 +5,7 @@ import webbrowser
 import pymysql
 
 from flask import Flask, render_template, request
-
+from decimal import Decimal
 from DrissionPage import ChromiumPage, ChromiumOptions
 
 app = Flask(__name__)
@@ -167,6 +167,10 @@ def data():
     return '请关闭当前网页'
 
 
+def remove_exponent(num):
+    return num.to_integral() if num == num.to_integral() else num.normalize()
+
+
 def raw_load(date):
     total_config = load_platform_config()
     input_config = {}
@@ -182,7 +186,9 @@ def raw_load(date):
         for table in input_config[platform]:
             for item in input_config[platform][table]:
                 if item.get('id') in pool.keys():
-                    item.update({'value': str(float(pool[item.get('id')]) * item.get('ratio'))})
+                    left = Decimal(pool[item.get('id')])
+                    right = Decimal(item.get('ratio'))
+                    item.update({'value': str(remove_exponent(left * right))})
                 else:
                     item.update({'value': ''})
     return input_config
