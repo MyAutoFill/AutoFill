@@ -222,7 +222,8 @@ def get_ratio_config():
     table = request.args.get('table')
     cur_map = {
         'CompanyRunningSumInfo': {
-            'company_runningsum_1': 0.001
+            'company_runningsum_1': 0.001,
+            'Tech_EcoInfo_5': 0.001
         }
     }
     return cur_map.get(table, {})
