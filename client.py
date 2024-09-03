@@ -187,7 +187,7 @@ def raw_load(date):
             for item in input_config[platform][table]:
                 if item.get('id') in pool.keys():
                     left = Decimal(pool[item.get('id')])
-                    right = Decimal(item.get('ratio'))
+                    right = Decimal(item.get('ratio', "1"))
                     item.update({'value': str(remove_exponent(left * right))})
                 else:
                     item.update({'value': ''})
