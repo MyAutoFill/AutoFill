@@ -57,6 +57,20 @@ def save():
         'status': 'ok'
     }
 
+@app.route('/api/save_from_excel', methods=['POST'])
+def save_from_excel():
+    request_data = request.get_json()
+    date = request_data['date']
+    cur_data = request_data['data']
+    real_data = dict()
+    for item in cur_data:
+        real_data[item.get('key')] = item.get('new_value')
+    exist_data = load_data_by_table_name(date)
+    exist_data.update(real_data)
+    save_data_by_table_name(date, json.dumps(exist_data).replace(' ', ''))
+    return {
+        'status': 'ok'
+    }
 
 @app.route('/api/load_data', methods=['POST'])
 def load():
@@ -79,6 +93,17 @@ def load_platform_config():
             'platform_config': json.loads(item[3])
         })
     return result
+
+
+def get_config_by_table_name(platform_name, table_name):
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = f'''select * from platform_config_tbl where platform_name='{platform_name}' and table_name='{table_name}' '''
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    if len(cur_data) == 0:
+        return []
+    return json.loads(cur_data[0][3])
 
 
 def load_config():
@@ -227,6 +252,54 @@ def get_ratio_config():
         }
     }
     return cur_map.get(table, {})
+
+
+@app.route('/api/parse_table', methods=['POST'])
+def parse_table():
+    request_data = request.get_json()
+    parse_data = request_data['parse_data']
+    table_type = request_data['type']
+    table_name_map = {
+        'lr': '利润表',
+        'xjll': '现金流量表',
+        'zcfz': '资产负债表'
+    }
+    parse_result = dict()
+    dfs(parse_data.get('内容', []), parse_result)
+    table_name = table_name_map[table_type]
+    config_list = get_config_by_table_name('山东省电子税务局', table_name)
+    key_id_map = dict()
+    for item in config_list:
+        key_id_map[item['key']] = item['id']
+    print(key_id_map)
+    change_dict = dict()
+    for item in parse_result.keys():
+        if item in key_id_map.keys():
+            change_dict[key_id_map[item]] = {
+                'name': item,
+                'new_value': parse_result[item],
+            }
+    exist_data = load_data_by_table_name('2024-09')
+    for key in change_dict.keys():
+        if key in exist_data.keys():
+            change_dict[key]['old_value'] = exist_data[key]
+        else:
+            change_dict[key]['old_value'] = ""
+    result = list()
+    for key in change_dict.keys():
+        result.append({
+            'key': key,
+            'name': change_dict[key]['name'],
+            'new_value': change_dict[key]['new_value'],
+            'old_value': change_dict[key]['old_value']
+        })
+    return jsonify(result)
+
+
+def dfs(cur_list, result):
+    for item in cur_list:
+        result[item.get('项目')] = str(item.get('年初数')).strip()
+        dfs(item.get("children", []), result)
 
 
 if __name__ == '__main__':
