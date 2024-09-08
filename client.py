@@ -87,40 +87,33 @@ def new_api():
                 if item.get('name') in table_head:
                     cur_map = item.get('map')
                     break
-    if cur_map is not None:
-        for key, value in cur_map.items():
-            find_key = list(value.keys())[0]
-            find_value = value[find_key]
-            if key in data_pool.keys():
-                cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
-                if cur_ele:
-                    cur_ele.clear(by_js=True)
-                    cur_ele.input('', clear=True)
-                    cur_ele.input(data_pool[key], clear=True)
+    # if cur_map is not None:
+    #     for key, value in cur_map.items():
+    #         find_key = list(value.keys())[0]
+    #         find_value = value[find_key]
+    #         if key in data_pool.keys():
+    #             cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
+    #             if cur_ele:
+    #                 cur_ele.clear(by_js=True)
+    #                 cur_ele.input('', clear=True)
+    #                 cur_ele.input(data_pool[key], clear=True)
     frames = page.latest_tab.get_frames()
     print("total" + str(len(frames)))
+    able_frame_list = list()
     for frame in frames:
         for item in cur_config_list:
             print(item.get('name'))
-            if item.get('name') in frame.inner_html:
+            print(item.get('keyword'))
+            if item.get('name') in frame.inner_html and item.get('keyword') in frame.inner_html:
                 print("in inner_html")
                 cur_map = item.get('map')
+                able_frame_list.append(frame)
                 break
-            if item.get('name') in frame.html:
+            if item.get('name') in frame.html and item.get('keyword') in frame.html:
                 print("in html")
                 cur_map = item.get('map')
+                able_frame_list.append(frame)
                 break
-    able_frame_list = list()
-    for frame in frames:
-        total = str(frame.inner_html) + str(frame.html)
-        flag = False
-        for key, value in cur_map.items():
-            find_key = list(value.keys())[0]
-            find_value = value[find_key]
-            if find_value in total:
-                flag = True
-        if flag:
-            able_frame_list.append(frame)
     print("find" + str(len(able_frame_list)))
     for frame in able_frame_list:
         for key, value in cur_map.items():

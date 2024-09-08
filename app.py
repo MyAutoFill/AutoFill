@@ -52,10 +52,11 @@ def save():
     cur_data = request_data['data']
     exist_data = load_data_by_table_name(date)
     exist_data.update(cur_data)
-    save_data_by_table_name(date, json.dumps(exist_data).replace(' ', ''))
+    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
     return {
         'status': 'ok'
     }
+
 
 @app.route('/api/save_from_excel', methods=['POST'])
 def save_from_excel():
@@ -67,10 +68,11 @@ def save_from_excel():
         real_data[item.get('key')] = item.get('new_value')
     exist_data = load_data_by_table_name(date)
     exist_data.update(real_data)
-    save_data_by_table_name(date, json.dumps(exist_data).replace(' ', ''))
+    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
     return {
         'status': 'ok'
     }
+
 
 @app.route('/api/load_data', methods=['POST'])
 def load():
