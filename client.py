@@ -179,9 +179,13 @@ def raw_load(date):
         for table in input_config[platform]:
             for item in input_config[platform][table]:
                 if item.get('id') in pool.keys():
-                    left = Decimal(pool[item.get('id')])
-                    right = Decimal(item.get('ratio', "1"))
-                    item.update({'value': str(remove_exponent(left * right))})
+                    try:
+                        float(pool[item.get('id')])
+                        left = Decimal(pool[item.get('id')])
+                        right = Decimal(item.get('ratio', "1"))
+                        item.update({'value': str(remove_exponent(left * right))})
+                    except ValueError:
+                        item.update({'value': str(pool[item.get('id')])})
                 else:
                     item.update({'value': ''})
     return input_config
