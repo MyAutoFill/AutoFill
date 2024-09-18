@@ -281,7 +281,7 @@ def parse_table():
                 'name': item,
                 'new_value': parse_result[item],
             }
-    exist_data = load_data_by_table_name('2024-09')
+    exist_data = load_data_by_table_name(datetime.datetime.now().strftime('%Y-%m'))
     for key in change_dict.keys():
         if key in exist_data.keys():
             change_dict[key]['old_value'] = exist_data[key]
