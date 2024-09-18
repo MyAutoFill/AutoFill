@@ -77,7 +77,7 @@ def save_from_excel():
 @app.route('/api/load_data', methods=['POST'])
 def load():
     request_data = request.get_json()
-    date = request_data['date']
+    date = request_data.get('date', '2024-09')
     return jsonify(load_data_by_table_name(date))
 
 
