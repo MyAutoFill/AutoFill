@@ -12,7 +12,7 @@ app = Flask(__name__)
 cur_page, cur_page2 = None, None
 
 db = pymysql.connect(
-    host='1.94.26.133',
+    host='119.3.122.142',
     port=3306,
     user='root',
     password='root@123',
@@ -257,5 +257,5 @@ def load_data_by_table_name(date):
 
 
 if __name__ == '__main__':
-    webbrowser.open('http://1.94.26.133')
+    webbrowser.open('http://119.3.122.142')
     app.run(port=8088)
