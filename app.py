@@ -300,7 +300,12 @@ def parse_table():
 
 def dfs(cur_list, result):
     for item in cur_list:
-        result[item.get('项目')] = str(item.get('年初数')).strip()
+        item_id = ""
+        if item.get('年初数') is not None:
+            item_id = item.get('年初数')
+        if item.get('本期数') is not None:
+            item_id = item.get('本期数')
+        result[item.get('项目')] = str(item_id).strip()
         dfs(item.get("children", []), result)
 
 
