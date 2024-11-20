@@ -50,9 +50,42 @@ def save():
     request_data = request.get_json()
     date = request_data['date']
     cur_data = request_data['data']
-    exist_data = load_data_by_table_name(date)
+    company_data, other_data = dict(), dict()
+    company_set = [
+        'company_basicinfo',
+        'company_employee',
+        'company_insurance',
+        'company_research',
+        'company_runningsum'
+    ]
+    for key in cur_data:
+        find = False
+        for keyword in company_set:
+            if keyword in key.lower():
+                find = True
+        if find:
+            company_data.update({key: cur_data[key]})
+        else:
+            other_data.update({key: cur_data[key]})
+    exist_other_data = load_data_by_table_name(date)
+    exist_other_data.update(other_data)
+    save_data_by_table_name(date, json.dumps(exist_other_data, ensure_ascii=False).replace(' ', ''))
+
+    exist_company_data = load_company_data_by_table_name()
+    exist_company_data.update(company_data)
+    save_data_by_table_name('', json.dumps(exist_company_data, ensure_ascii=False).replace(' ', ''))
+    return {
+        'status': 'ok'
+    }
+
+
+@app.route('/api/save_company_data', methods=['POST'])
+def save_company_data():
+    request_data = request.get_json()
+    cur_data = request_data['data']
+    exist_data = load_company_data_by_table_name()
     exist_data.update(cur_data)
-    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
+    save_data_by_table_name('', json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
     return {
         'status': 'ok'
     }
@@ -78,7 +111,27 @@ def save_from_excel():
 def load():
     request_data = request.get_json()
     date = request_data['date']
-    return jsonify(load_data_by_table_name(date))
+    other_data = load_data_by_table_name(date)
+    company_data = load_company_data_by_table_name()
+    other_data.update(company_data)
+    return jsonify(other_data)
+
+
+@app.route('/api/load_company_data', methods=['POST'])
+def load_company_data():
+    request_data = request.get_json()
+    return jsonify(load_company_data_by_table_name())
+
+
+def load_company_data_by_table_name():
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = f'''select company_data from company_data_tbl where `date` = '' '''
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    if len(cur_data) == 0:
+        return {}
+    return json.loads(cur_data[0][0])
 
 
 def load_platform_config():
