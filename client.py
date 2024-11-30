@@ -20,7 +20,6 @@ db = pymysql.connect(
     autocommit=True
 )
 
-
 @app.route('/button')
 def button():
     addr = request.args.get('address')
@@ -33,8 +32,38 @@ def button():
 @app.route('/new_api', methods=['POST'])
 def new_api():
     request_data = request.get_json()
+    encode_addr, select_name = parse_page_name(request_data['url'])
+
+    page_config = load_config()
+    cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
+    if not cur_platform:
+        return {'status': 'error'}
+
+    # 获取到当前平台的配置项，包含多个表
+    cur_config_list = cur_platform.get('config_list')
+    # 获取当前平台用户填写的数据，统一放到池子里
+    # 即使一个相同的值，出现在了不同平台中，那也只取对应平台的，只是可以配置相同的id，在设置的时候一样
+    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'))
+
+    if select_name not in data_input_config.keys():
+        return {'status': 'error'}
+
+    data_pool = {pool.get('key'): pool.get('value') for value in data_input_config[select_name].values() for pool in
+                 value}
+    page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
+    target_page_html = page.latest_tab.html
+
+    # 根据不同平台，获取到当前表的map映射关系, 并且填充数据
+    get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool)
+
+    return {
+        'status': 'ok'
+    }
+
+
+def parse_page_name(url):
     # button.html会把参数传到这里，用于找到控制的是哪个浏览器页面
-    new_addr = str(request_data['url'])
+    new_addr = str(url)
     # 解析出参数列表
     params = new_addr[new_addr.find('?') + 1:].split('&')
     params_dict = dict()
@@ -45,76 +74,84 @@ def new_api():
     select_name = params_dict.get('select_name')
     select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
     print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    page_config = load_config()
-    cur_platform = None
-    for item in page_config:
-        if item.get('name') == select_name:
-            cur_platform = item
-            break
-    # 获取到当前平台的配置项，包含多个表
-    cur_config_list = cur_platform.get('config_list')
+    return encode_addr, select_name
 
-    # 获取当前平台用户填写的数据，统一放到池子里
-    # 即使一个相同的值，出现在了不同平台中，那也只取对应平台的，只是可以配置相同的id，在设置的时候一样
-    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'))
-    if select_name not in data_input_config.keys():
-        return {
-            'status': 'error'
-        }
-    data_pool = dict()
-    for (item, value) in data_input_config[select_name].items():
-        for pool in value:
-            data_pool[pool.get('key')] = pool.get('value')
 
-    page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    target_page_html = page.latest_tab.html
-    cur_map = None
-    # 获取到当前表的map映射关系
+def get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool):
+    """Get the current map based on the platform configuration."""
     if cur_platform.get('title_tag') == "":
-        # 如果tag为空，说明是统计局，对该平台所有配置项循环
+        # 如果tag为空，说明是非使用frame框架的页面，对该平台所有配置项循环
+        return fill_general_page(cur_config_list, target_page_html, page, data_pool)
+
+    # 使用frame框架的页面（税务局）
+    return fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool)
+
+
+def fill_general_page(cur_config_list, target_page_html, page, data_pool):
+    start = datetime.datetime.now()
+    # 统计局
+    schema = None
+    for item in cur_config_list:
+        if item.get('name') in target_page_html:
+            schema = item.get('map')
+    if schema is not None and len(schema) > 0:
+        fill_general_data_in_page(page, schema, data_pool)
+    end = datetime.datetime.now()
+    print("Page fill finished in: {}  seconds", (end - start).seconds)
+
+
+def fill_general_data_in_page(page, schema, data_pool):
+    selector_list = [f'@{list(value.keys())[0]}={value[list(value.keys())[0]]}' for value in schema.values()]
+    key_list = list(schema.keys())
+
+    find_res = page.latest_tab.find(selector_list, any_one=False)
+    print(len(selector_list), len(key_list), len(find_res))
+
+    for key, selector in zip(key_list, selector_list):
+        if key in data_pool:
+            cur_ele = find_res[selector]
+            if cur_ele:
+                if cur_ele.tag in ['input', 'textarea']:
+                    cur_ele.clear(by_js=True)
+                    cur_ele.input('', clear=True)
+                    cur_ele.input(data_pool[key], clear=True)
+                elif cur_ele.tag == 'select':
+                    cur_ele.select.by_text(str(data_pool[key]))
+
+
+def fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool):
+    # 税务局
+    start = datetime.datetime.now()
+    tax_schema = None
+    new_table_head_ele = page.latest_tab.ele('@class=' + cur_platform.get('title_tag'))
+    if new_table_head_ele:
+        # 说明是税务局情况，需要特殊判断
+        table_head = new_table_head_ele.child('tag:h1').inner_html
         for item in cur_config_list:
-            # 找到某个表的map
-            if item.get('name') in target_page_html:
-                cur_map = item.get('map')
-                break
-    else:
-        # 一定要判断当前页面的title中包含关键字
-        new_table_head_ele = page.latest_tab.ele('@class=' + cur_platform.get('title_tag'))
-        if new_table_head_ele:
-            # 说明是税务局情况，需要特殊判断
-            table_head = new_table_head_ele.child('tag:h1').inner_html
-            for item in cur_config_list:
-                if item.get('name') in table_head:
-                    cur_map = item.get('map')
-                    break
-    # if cur_map is not None:
-    #     for key, value in cur_map.items():
-    #         find_key = list(value.keys())[0]
-    #         find_value = value[find_key]
-    #         if key in data_pool.keys():
-    #             cur_ele = page.latest_tab.ele(f'@{find_key}={find_value}')
-    #             if cur_ele:
-    #                 cur_ele.clear(by_js=True)
-    #                 cur_ele.input('', clear=True)
-    #                 cur_ele.input(data_pool[key], clear=True)
+            if item.get('name') in table_head:
+                tax_schema = item.get('map')
+    if tax_schema is not None:
+        fill_taxation_data_in_page(page, tax_schema, data_pool, cur_config_list)
+    end = datetime.datetime.now()
+    print("Page fill finished in: {}  seconds", (end - start).seconds)
+
+
+def fill_taxation_data_in_page(page, cur_map, data_pool, cur_config_list):
     frames = page.latest_tab.get_frames()
-    print("total" + str(len(frames)))
-    able_frame_list = list()
+
+    print(f"total {len(frames)}")
+    able_frame_list = []
     for frame in frames:
         for item in cur_config_list:
-            print(item.get('name'))
-            print(item.get('keyword'))
-            if item.get('name') in frame.inner_html and item.get('keyword') in frame.inner_html:
-                print("in inner_html")
+            name, keyword = item.get('name'), item.get('keyword')
+            if keyword and (
+                    name in frame.inner_html and keyword in frame.inner_html or name in frame.html and keyword in frame.html):
+                print(f"in {'inner_html' if name in frame.inner_html else 'html'}")
                 cur_map = item.get('map')
                 able_frame_list.append(frame)
-                break
-            if item.get('name') in frame.html and item.get('keyword') in frame.html:
-                print("in html")
-                cur_map = item.get('map')
-                able_frame_list.append(frame)
-                break
+
     print("find" + str(len(able_frame_list)))
+
     for frame in able_frame_list:
         for key, value in cur_map.items():
             find_key = list(value.keys())[0]
@@ -129,11 +166,10 @@ def new_api():
                 target_ele.clear(by_js=True)
                 target_ele.input('', clear=True)
                 target_ele.input(data_pool[key], clear=True)
-            else:
-                continue
-    return {
-        'status': 'ok'
-    }
+                if target_ele.tag == 'select':
+                    target_ele.select(str(data_pool[key]))
+                    target_ele.select.by_text(str(data_pool[key]))
+                    target_ele.select.by_value(str(data_pool[key]))
 
 
 @app.route('/api/data', methods=['GET'])

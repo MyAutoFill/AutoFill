@@ -4,12 +4,15 @@ import json
 import os
 import sys
 import io
+import tempfile
+from decimal import Decimal
 import pymysql
 import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
-from flask import Flask, render_template, request, send_from_directory, jsonify
+from flask import Flask, render_template, request, send_from_directory, jsonify, send_file
 
 import Utils
+import parse_excel
 
 app = Flask(__name__)
 base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
@@ -365,6 +368,87 @@ def parse_table():
         })
     return jsonify(result)
 
+@app.route('/api/fill_excel', methods=['POST'])
+def download_xlsx():
+    data = request.get_json()
+    table_name = data['table_name']
+    excel_path = prepare_excel(table_name)
+
+    if not os.path.exists(excel_path):
+        return "文件不存在", 404
+    return send_file(excel_path, as_attachment=True, download_name=table_name + "上传数据.xlsx")
+
+def prepare_excel(table):
+    # Load data
+    table_config = load_config_by_table_name(table)
+    data_pool = load_data_by_company_id(datetime.datetime.now().strftime('%Y-%m'), table_config[0])
+
+    data = {}
+    for item in data_pool:
+        data[item['key']] = item['value']
+
+    return fill_excel_table(table, data)
+
+
+def fill_excel_table(table, data_pool):
+    excel_structure = parse_excel.parse_excel_structure('asset/' + table + '.json')
+
+    # fill excel data | use Excel key get value in data pool
+    for key in excel_structure:
+        if key in data_pool:
+            excel_structure[key]['data'] = data_pool[key]
+
+    # Save excel to temporary path
+    temp_dir = tempfile.TemporaryDirectory(delete=False)
+    excel_save_path = os.path.join(temp_dir.name, 'temp_' + table + '_excel.xlsx')
+    parse_excel.fill_excel_data('asset/' + table + '_template.xlsx', excel_structure, excel_save_path)
+
+    return excel_save_path
+
+
+def load_config_by_table_name(table):
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = "select * from platform_config_tbl where table_name = %s"
+    cursor.execute(sql, table)
+    cur_data = cursor.fetchall()
+    result = list()
+    for item in cur_data:
+        result.append({
+            'platform_name': item[1],
+            'table_name': item[2],
+            'platform_config': json.loads(item[3])
+        })
+    return result
+
+def load_data_by_company_id(date, table_config):
+    input_config = {}
+    # for config_item in table_config:
+    platform = table_config['platform_name']
+    table_name = table_config['table_name']
+    platform_config = table_config['platform_config']
+    if platform not in input_config.keys():
+        input_config[platform] = {}
+    input_config[platform].update({table_name: platform_config})
+
+    pool = load_data_by_table_name(date)
+    for platform in input_config.keys():
+        for table in input_config[platform]:
+            for item in input_config[platform][table]:
+                if item.get('id') in pool.keys():
+                    try:
+                        float(pool[item.get('id')])
+                        left = Decimal(pool[item.get('id')])
+                        right = Decimal(item.get('ratio', "1"))
+                        item.update({'value': str(remove_exponent(left * right))})
+                    except ValueError:
+                        item.update({'value': str(pool[item.get('id')])})
+                else:
+                    item.update({'value': ''})
+    return input_config[platform][table_name]
+
+def remove_exponent(num):
+    return num.to_integral() if num == num.to_integral() else num.normalize()
 
 def dfs(cur_list, result):
     for item in cur_list:
