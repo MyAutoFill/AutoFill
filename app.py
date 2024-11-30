@@ -134,6 +134,7 @@ def load_company_data_by_table_name(uuid):
 
 
 # test done!
+@app.route('/api_test/load_platform_config', methods=['GET'])
 def load_platform_config():
     db.ping(reconnect=True)
     cursor = db.cursor()
@@ -147,7 +148,7 @@ def load_platform_config():
             'table_name': item[2],
             'platform_config': json.loads(item[3])
         })
-    return result
+    return jsonify(result)
 
 
 # test done!
@@ -160,6 +161,12 @@ def get_config_by_table_name(platform_name, table_name):
     if len(cur_data) == 0:
         return []
     return json.loads(cur_data[0][3])
+
+
+# test done!
+@app.route('/api_test/load_config', methods=['GET'])
+def real_load_config():
+    return jsonify(load_config())
 
 
 # test done!
