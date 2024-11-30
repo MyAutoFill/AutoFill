@@ -25,31 +25,14 @@ db = pymysql.connect(
 )
 
 
-@app.route('/input')
-def input_data():
-    return render_template('test_page/input.html')
-
-
-@app.route('/tax')
-def tax():
-    return render_template('test_page/tax_benefit.html')
-
-
-@app.route('/stat_finance')
-def stat_finance():
-    return render_template('test_page/stat_finance.html')
-
-
-@app.route('/power')
-def power():
-    return render_template('test_page/power.html')
-
-
-@app.route('/api/save', methods=['POST'])
+@app.route('/api_test/save', methods=['POST'])
 def save():
     request_data = request.get_json()
-    date = request_data['date']
-    cur_data = request_data['data']
+    date = request_data.get('date', '')
+    cur_data = request_data.get('data', '')
+    uuid = request_data.get('uuid', '')
+    if (not date) or (not cur_data) or (not uuid):
+        return {}
     company_data, other_data = dict(), dict()
     company_set = [
         'company_basicinfo',
@@ -67,66 +50,79 @@ def save():
             company_data.update({key: cur_data[key]})
         else:
             other_data.update({key: cur_data[key]})
-    exist_other_data = load_data_by_table_name(date)
+    exist_other_data = load_data_by_table_name(date, uuid)
     exist_other_data.update(other_data)
-    save_data_by_table_name(date, json.dumps(exist_other_data, ensure_ascii=False).replace(' ', ''))
+    save_data_by_table_name(date, json.dumps(exist_other_data, ensure_ascii=False).replace(' ', ''), uuid)
 
-    exist_company_data = load_company_data_by_table_name()
+    exist_company_data = load_company_data_by_table_name(uuid)
     exist_company_data.update(company_data)
-    save_data_by_table_name('', json.dumps(exist_company_data, ensure_ascii=False).replace(' ', ''))
+    save_data_by_table_name('', json.dumps(exist_company_data, ensure_ascii=False).replace(' ', ''), uuid)
     return {
         'status': 'ok'
     }
 
 
-@app.route('/api/save_company_data', methods=['POST'])
+# test done!
+@app.route('/api_test/save_company_data', methods=['POST'])
 def save_company_data():
     request_data = request.get_json()
-    cur_data = request_data['data']
-    exist_data = load_company_data_by_table_name()
+    cur_data = request_data.get('data', '')
+    uuid = request_data.get('uuid', '')
+    if (not cur_data) or (not uuid):
+        return {}
+    exist_data = load_company_data_by_table_name(uuid)
     exist_data.update(cur_data)
-    save_data_by_table_name('', json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
+    save_data_by_table_name('', json.dumps(exist_data, ensure_ascii=False).replace(' ', ''), uuid)
     return {
         'status': 'ok'
     }
 
 
-@app.route('/api/save_from_excel', methods=['POST'])
+@app.route('/api_test/save_from_excel', methods=['POST'])
 def save_from_excel():
     request_data = request.get_json()
     date = request_data['date']
     cur_data = request_data['data']
+    uuid = request_data.get('uuid', '')
     real_data = dict()
     for item in cur_data:
         real_data[item.get('key')] = item.get('new_value')
-    exist_data = load_data_by_table_name(date)
+    exist_data = load_data_by_table_name(date, uuid)
     exist_data.update(real_data)
-    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''))
+    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''), uuid)
     return {
         'status': 'ok'
     }
 
 
-@app.route('/api/load_data', methods=['POST'])
+# test done!
+@app.route('/api_test/load_data', methods=['POST'])
 def load():
     request_data = request.get_json()
-    date = request_data['date']
-    other_data = load_data_by_table_name(date)
-    company_data = load_company_data_by_table_name()
+    date = request_data.get('date', '')
+    uuid = request_data.get('uuid', '')
+    if (not date) or (not uuid):
+        return {}
+    other_data = load_data_by_table_name(date, uuid)
+    company_data = load_company_data_by_table_name(uuid)
     other_data.update(company_data)
     return jsonify(other_data)
 
 
-@app.route('/api/load_company_data', methods=['POST'])
+# test done!
+@app.route('/api_test/load_company_data', methods=['POST'])
 def load_company_data():
     request_data = request.get_json()
-    return jsonify(load_company_data_by_table_name())
+    uuid = request_data.get('uuid', '')
+    return jsonify(load_company_data_by_table_name(uuid))
 
 
-def load_company_data_by_table_name():
+# test done!
+def load_company_data_by_table_name(uuid):
+    # 只获取date为空的公司数据
     db.ping(reconnect=True)
     cursor = db.cursor()
-    sql = f'''select company_data from company_data_tbl where `date` = '' '''
+    sql = f'''select company_data from company_data_tbl where `date` = '' and company_id = '{uuid}' '''
     cursor.execute(sql)
     cur_data = cursor.fetchall()
     if len(cur_data) == 0:
@@ -134,6 +130,7 @@ def load_company_data_by_table_name():
     return json.loads(cur_data[0][0])
 
 
+# test done!
 def load_platform_config():
     db.ping(reconnect=True)
     cursor = db.cursor()
@@ -150,6 +147,7 @@ def load_platform_config():
     return result
 
 
+# test done!
 def get_config_by_table_name(platform_name, table_name):
     db.ping(reconnect=True)
     cursor = db.cursor()
@@ -161,6 +159,7 @@ def get_config_by_table_name(platform_name, table_name):
     return json.loads(cur_data[0][3])
 
 
+# test done!
 def load_config():
     db.ping(reconnect=True)
     cursor = db.cursor()
@@ -179,10 +178,14 @@ def load_config():
     return result
 
 
-def load_data_by_table_name(date):
+# test done!
+def load_data_by_table_name(date, uuid):
+    # 仅获取除基本信息外的信息
+    if date == '':
+        return {}
     db.ping(reconnect=True)
     cursor = db.cursor()
-    sql = f'''select company_data from company_data_tbl where `date` = '{date}' '''
+    sql = f'''select company_data from company_data_tbl where `date` = '{date}' and company_id = '{uuid}' '''
     cursor.execute(sql)
     cur_data = cursor.fetchall()
     if len(cur_data) == 0:
@@ -190,15 +193,26 @@ def load_data_by_table_name(date):
     return json.loads(cur_data[0][0])
 
 
-def save_data_by_table_name(date, cur_data):
+# test done!
+def save_data_by_table_name(date, cur_data, uuid):
+    # 如果没有数据需要添加
     db.ping(reconnect=True)
     cursor = db.cursor()
-    sql = f'''update company_data_tbl set `company_data` = '{cur_data}' where `date` = '{date}' '''
-    cursor.execute(sql)
+    select_sql = f'''select COUNT(*) from company_data_tbl where `date`='{date}' and `company_id`='{uuid}' '''
+    cursor.execute(select_sql)
+    exist_data = cursor.fetchall()
+    has_data = exist_data[0][0] == 1
+    if has_data:
+        sql = f'''update company_data_tbl set `company_data` = '{cur_data}' where `date` = '{date}' and `company_id`='{uuid}' '''
+        cursor.execute(sql)
+    else:
+        sql = f'''INSERT INTO `company_data_tbl` (`company_id`, `date`, `company_data`) VALUES ('{uuid}', '{date}', '{cur_data}') '''
+        cursor.execute(sql)
     cursor.close()
     return
 
 
+# test done!
 @app.route('/get_platform_dropdown')
 def get_platform_dropdown():
     page_config = load_config()
@@ -297,7 +311,8 @@ def image(filename):
     return send_from_directory('images/preview_images/', filename)
 
 
-@app.route('/api/get_ratio_config')
+# test done!
+@app.route('/api_test/get_ratio_config')
 def get_ratio_config():
     table = request.args.get('table')
     cur_map = {
@@ -309,7 +324,7 @@ def get_ratio_config():
     return cur_map.get(table, {})
 
 
-@app.route('/api/parse_table', methods=['POST'])
+@app.route('/api_test/parse_table', methods=['POST'])
 def parse_table():
     request_data = request.get_json()
     parse_data = request_data['parse_data']
