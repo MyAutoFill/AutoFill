@@ -2,7 +2,7 @@ import base64
 import datetime
 import webbrowser
 import requests
-
+import time
 from flask import Flask, render_template, request
 from decimal import Decimal
 from DrissionPage import ChromiumPage, ChromiumOptions
@@ -25,10 +25,11 @@ def button():
 @app.route('/new_api', methods=['POST'])
 def new_api():
     request_data = request.get_json()
-    encode_addr, select_name, uuid = parse_page_name(request_data['url'])
+    encode_addr, select_name, uuid, cover_flag = parse_page_name(request_data['url'])
     print(encode_addr)
     print(select_name)
     print(uuid)
+    print(cover_flag)
     page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
     print(page_config)
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
@@ -50,7 +51,7 @@ def new_api():
     target_page_html = page.latest_tab.html
 
     # 根据不同平台，获取到当前表的map映射关系, 并且填充数据
-    get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool)
+    get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool, cover_flag)
 
     return {
         'status': 'ok'
@@ -69,23 +70,25 @@ def parse_page_name(url):
     encode_addr = params_dict.get('address')
     select_name = params_dict.get('select_name')
     uuid = params_dict.get('uuid')
+    # cover_flag = params_dict.get('cover_flag')
     select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
     uuid = base64.urlsafe_b64decode(uuid).decode('utf-8')
+    # cover_flag = base64.urlsafe_b64decode(cover_flag).decode('utf-8')
     print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    return encode_addr, select_name, uuid
+    return encode_addr, select_name, uuid, "true"
 
 
-def get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool):
+def get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool, cover_flag):
     """Get the current map based on the platform configuration."""
     if cur_platform.get('title_tag') == "":
         # 如果tag为空，说明是非使用frame框架的页面，对该平台所有配置项循环
-        return fill_general_page(cur_config_list, target_page_html, page, data_pool)
+        return fill_general_page(cur_config_list, target_page_html, page, data_pool, cover_flag)
 
     # 使用frame框架的页面（税务局）
     return fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool)
 
 
-def fill_general_page(cur_config_list, target_page_html, page, data_pool):
+def fill_general_page(cur_config_list, target_page_html, page, data_pool, cover_flag):
     start = datetime.datetime.now()
     # 统计局
     schema = None
@@ -93,12 +96,12 @@ def fill_general_page(cur_config_list, target_page_html, page, data_pool):
         if item.get('name') in target_page_html:
             schema = item.get('map')
     if schema is not None and len(schema) > 0:
-        fill_general_data_in_page(page, schema, data_pool)
+        fill_general_data_in_page(page, schema, data_pool, cover_flag)
     end = datetime.datetime.now()
     print("Page fill finished in: {}  seconds", (end - start).seconds)
 
 
-def fill_general_data_in_page(page, schema, data_pool):
+def fill_general_data_in_page(page, schema, data_pool, cover_flag):
     selector_list = [f'@{list(value.keys())[0]}={value[list(value.keys())[0]]}' for value in schema.values()]
     key_list = list(schema.keys())
 
@@ -106,18 +109,24 @@ def fill_general_data_in_page(page, schema, data_pool):
     print(len(selector_list), len(key_list), len(find_res))
 
     for key, selector in zip(key_list, selector_list):
+        # 如果不覆盖的话，保留用户已经填写的数据
+        if cover_flag == 'false':
+            if data_pool[key] == '':
+                continue
         if key in data_pool:
             cur_ele = find_res[selector]
             if cur_ele:
                 if cur_ele.tag in ['input', 'textarea']:
                     cur_ele.clear(by_js=True)
                     cur_ele.input('', clear=True)
+                    cur_ele.clear()
                     cur_ele.input(data_pool[key], clear=True)
                 elif cur_ele.tag == 'select':
-                    try:
+                    try:# TODO太慢了，待优化
                         cur_ele.select.by_text(str(data_pool[key]))
                     except Exception as e:
                         print(e)
+            cur_ele = None
 
 
 def fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool):
