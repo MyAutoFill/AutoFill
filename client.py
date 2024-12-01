@@ -266,7 +266,7 @@ def close_progress():
 @app.route('/find_operate_table', methods=['POST'])
 def find_operate_table():
     request_data = request.get_json()
-    encode_addr, select_name, uuid = parse_page_name(request_data['url'])
+    encode_addr, select_name, uuid, cover_flag = parse_page_name(request_data['url'])
     page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
