@@ -148,20 +148,23 @@ def fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool)
 
 def fill_taxation_data_in_page(page, cur_map, data_pool, cur_config_list):
     frames = page.latest_tab.get_frames()
-
-    print(f"total {len(frames)}")
-    able_frame_list = []
+    print("total" + str(len(frames)))
+    able_frame_list = list()
     for frame in frames:
         for item in cur_config_list:
-            name, keyword = item.get('name'), item.get('keyword')
-            if keyword and (
-                    name in frame.inner_html and keyword in frame.inner_html or name in frame.html and keyword in frame.html):
-                print(f"in {'inner_html' if name in frame.inner_html else 'html'}")
+            print(item.get('name'))
+            print(item.get('keyword'))
+            if item.get('name') in frame.inner_html and item.get('keyword') in frame.inner_html:
+                print("in inner_html")
                 cur_map = item.get('map')
                 able_frame_list.append(frame)
-
+                break
+            if item.get('name') in frame.html and item.get('keyword') in frame.html:
+                print("in html")
+                cur_map = item.get('map')
+                able_frame_list.append(frame)
+                break
     print("find" + str(len(able_frame_list)))
-
     for frame in able_frame_list:
         for key, value in cur_map.items():
             find_key = list(value.keys())[0]
@@ -183,6 +186,8 @@ def fill_taxation_data_in_page(page, cur_map, data_pool, cur_config_list):
                         target_ele.select.by_value(str(data_pool[key]))
                     except Exception as e:
                         print(e)
+            else:
+                continue
 
 
 @app.route('/api/data', methods=['GET'])
