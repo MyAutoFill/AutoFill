@@ -1,8 +1,7 @@
 import base64
 import datetime
-import json
 import webbrowser
-import pymysql
+import requests
 
 from flask import Flask, render_template, request
 from decimal import Decimal
@@ -11,30 +10,27 @@ from DrissionPage import ChromiumPage, ChromiumOptions
 app = Flask(__name__)
 cur_page, cur_page2 = None, None
 
-db = pymysql.connect(
-    host='119.3.122.142',
-    port=3306,
-    user='root',
-    password='root@123',
-    db='data',
-    autocommit=True
-)
 
 @app.route('/button')
 def button():
     addr = request.args.get('address')
     select_name = request.args.get('select_name')
+    uuid = request.args.get('uuid')
     new_addr = base64.urlsafe_b64decode(addr).decode('utf-8')
     new_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
-    return render_template('button.html', address=new_addr, select_name=new_name)
+    new_uuid = base64.urlsafe_b64decode(uuid).decode('utf-8')
+    return render_template('button.html', address=new_addr, select_name=new_name, uuid=new_uuid)
 
 
 @app.route('/new_api', methods=['POST'])
 def new_api():
     request_data = request.get_json()
-    encode_addr, select_name = parse_page_name(request_data['url'])
-
-    page_config = load_config()
+    encode_addr, select_name, uuid = parse_page_name(request_data['url'])
+    print(encode_addr)
+    print(select_name)
+    print(uuid)
+    page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
+    print(page_config)
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
         return {'status': 'error'}
@@ -43,7 +39,7 @@ def new_api():
     cur_config_list = cur_platform.get('config_list')
     # 获取当前平台用户填写的数据，统一放到池子里
     # 即使一个相同的值，出现在了不同平台中，那也只取对应平台的，只是可以配置相同的id，在设置的时候一样
-    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'))
+    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'), uuid)
 
     if select_name not in data_input_config.keys():
         return {'status': 'error'}
@@ -72,9 +68,11 @@ def parse_page_name(url):
     # address为需控制的浏览器页面，select_name为平台名称，用于确定打开哪个平台
     encode_addr = params_dict.get('address')
     select_name = params_dict.get('select_name')
+    uuid = params_dict.get('uuid')
     select_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
+    uuid = base64.urlsafe_b64decode(uuid).decode('utf-8')
     print(base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
-    return encode_addr, select_name
+    return encode_addr, select_name, uuid
 
 
 def get_cur_map(cur_platform, cur_config_list, target_page_html, page, data_pool):
@@ -116,7 +114,10 @@ def fill_general_data_in_page(page, schema, data_pool):
                     cur_ele.input('', clear=True)
                     cur_ele.input(data_pool[key], clear=True)
                 elif cur_ele.tag == 'select':
-                    cur_ele.select.by_text(str(data_pool[key]))
+                    try:
+                        cur_ele.select.by_text(str(data_pool[key]))
+                    except Exception as e:
+                        print(e)
 
 
 def fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool):
@@ -167,15 +168,19 @@ def fill_taxation_data_in_page(page, cur_map, data_pool, cur_config_list):
                 target_ele.input('', clear=True)
                 target_ele.input(data_pool[key], clear=True)
                 if target_ele.tag == 'select':
-                    target_ele.select(str(data_pool[key]))
-                    target_ele.select.by_text(str(data_pool[key]))
-                    target_ele.select.by_value(str(data_pool[key]))
+                    try:
+                        target_ele.select(str(data_pool[key]))
+                        target_ele.select.by_text(str(data_pool[key]))
+                        target_ele.select.by_value(str(data_pool[key]))
+                    except Exception as e:
+                        print(e)
 
 
 @app.route('/api/data', methods=['GET'])
 def data():
     url = base64.urlsafe_b64decode(request.args.get('url')).decode('utf-8')
     select_name = request.args.get('select_name')
+    uuid = request.args.get('uuid')
     co = ChromiumOptions().auto_port()
     global cur_page, cur_page2
     if cur_page is not None:
@@ -189,10 +194,11 @@ def data():
     cur_page2.set.window.size(100, 400)
     cur_page2.set.window.location(500, 0)
     encode_select_name = base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8')
+    encode_uuid = base64.urlsafe_b64encode(uuid.encode('utf-8')).decode('utf-8')
     encode_address = base64.urlsafe_b64encode(cur_page.address.encode('utf-8')).decode('utf-8')
     encode_button_address = base64.urlsafe_b64encode(cur_page2.address.encode('utf-8')).decode('utf-8')
     cur_page2.get(
-        f'http://127.0.0.1:8088/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}')
+        f'http://127.0.0.1:8088/button?select_name={encode_select_name}&address={encode_address}&button_addr={encode_button_address}&uuid={encode_uuid}')
     return '请关闭当前网页'
 
 
@@ -200,8 +206,8 @@ def remove_exponent(num):
     return num.to_integral() if num == num.to_integral() else num.normalize()
 
 
-def raw_load(date):
-    total_config = load_platform_config()
+def raw_load(date, uuid):
+    total_config = requests.get('https://xcyb.weihai.cn/api_test/load_platform_config', verify=False).json()
     input_config = {}
     for config_item in total_config:
         platform = config_item['platform_name']
@@ -210,7 +216,7 @@ def raw_load(date):
         if platform not in input_config.keys():
             input_config[platform] = {}
         input_config[platform].update({table_name: platform_config})
-    pool = load_data_by_table_name(date)
+    pool = requests.post('https://xcyb.weihai.cn/api_test/load_data', json={'date': date, 'uuid': uuid}, verify=False).json()
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -225,22 +231,6 @@ def raw_load(date):
                 else:
                     item.update({'value': ''})
     return input_config
-
-
-def load_platform_config():
-    db.ping(reconnect=True)
-    cursor = db.cursor()
-    sql = '''select * from platform_config_tbl'''
-    cursor.execute(sql)
-    cur_data = cursor.fetchall()
-    result = list()
-    for item in cur_data:
-        result.append({
-            'platform_name': item[1],
-            'table_name': item[2],
-            'platform_config': json.loads(item[3])
-        })
-    return result
 
 
 @app.route('/close_progress', methods=['POST'])
@@ -263,35 +253,6 @@ def close_progress():
     return {}
 
 
-def load_config():
-    db.ping(reconnect=True)
-    cursor = db.cursor()
-    sql = '''select * from platform_info_tbl'''
-    cursor.execute(sql)
-    cur_data = cursor.fetchall()
-    result = list()
-    for item in cur_data:
-        result.append({
-            'name': item[1],
-            'title_tag': item[2],
-            'url': item[3],
-            'img': item[4],
-            'config_list': json.loads(item[5]),
-        })
-    return result
-
-
-def load_data_by_table_name(date):
-    db.ping(reconnect=True)
-    cursor = db.cursor()
-    sql = f'''select company_data from company_data_tbl where `date` = '{date}' '''
-    cursor.execute(sql)
-    cur_data = cursor.fetchall()
-    if len(cur_data) == 0:
-        return {}
-    return json.loads(cur_data[0][0])
-
-
 if __name__ == '__main__':
-    webbrowser.open('http://119.3.122.142')
+    webbrowser.open('https://xcyb.weihai.cn/auto_fill_test')
     app.run(port=8088)
