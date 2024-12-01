@@ -109,19 +109,44 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.7/base64.min.js"></script>
 <script>
   new Vue({
     el: '#app',
     methods: {
+      parseUrlParams(url) {
+        var searchParams = new URLSearchParams(url);
+        var params = {};
+        for (var pair of searchParams.entries()) {
+            var key = pair[0];
+            var value = this.urlsafeB64Decode(decodeURIComponent(pair[1]));
+            params[key] = value
+        }
+        return params;
+      },
+      urlsafeB64Decode(str) {
+        // 将URL安全的Base64编码转换为标准Base64编码
+        str = str.replace(/-/g, '+').replace(/_/g, '/');
+        // 使用atob函数解码
+        return Base64.decode(str);
+      },
       onSubmit() {
-        axios.post('/new_api', {url: window.location.href}).then(res => {
-          if (res.data.status === "ok") {
-            this.$message({
-              message: '填充成功',
-              type: 'success'
-            });
-          }
-        })
+        const parse_dict = this.parseUrlParams(window.location.search);
+        const select_name = parse_dict.select_name;
+        if (select_name === '山东省统计联网直报平台' || select_name === '信息产业运行监测平台' || select_name === '山东公共就业人才服务') {
+          axios.post('/find_operate_table', {url: window.location.href}).then(res => {
+            window.location.href = 'https://xcyb.weihai.cn/api_test/fill_excel' + '?uuid=' + parse_dict.uuid + '&table_name=' + res.data.name
+          })
+        } else {
+          axios.post('/new_api', {url: window.location.href}).then(res => {
+            if (res.data.status === "ok") {
+              this.$message({
+                message: '填充成功',
+                type: 'success'
+              });
+            }
+          })
+        }
       },
       closeProgress() {
         axios.post('/close_progress', {url: window.location.href}).then(res => {

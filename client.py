@@ -253,6 +253,32 @@ def close_progress():
     return {}
 
 
+
+@app.route('/find_operate_table', methods=['POST'])
+def find_operate_table():
+    request_data = request.get_json()
+    encode_addr, select_name, uuid = parse_page_name(request_data['url'])
+    page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
+    cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
+    if not cur_platform:
+        return {'status': 'error'}
+    # 获取到当前平台的配置项，包含多个表
+    cur_config_list = cur_platform.get('config_list')
+    # 获取当前平台用户填写的数据，统一放到池子里
+    # 即使一个相同的值，出现在了不同平台中，那也只取对应平台的，只是可以配置相同的id，在设置的时候一样
+    data_input_config = raw_load(datetime.datetime.now().strftime('%Y-%m'), uuid)
+    if select_name not in data_input_config.keys():
+        return {'status': 'error'}
+    page = ChromiumPage(addr_or_opts=base64.urlsafe_b64decode(encode_addr).decode('utf-8'))
+    target_page_html = page.latest_tab.html
+    table_name = ''
+    for item in cur_config_list:
+        if item.get('name') in target_page_html:
+            table_name = item.get('name')
+    print(table_name)
+    return {'name': table_name}
+
+
 if __name__ == '__main__':
     webbrowser.open('https://xcyb.weihai.cn/auto_fill_test')
     app.run(port=8088)

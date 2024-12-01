@@ -375,20 +375,22 @@ def parse_table():
         })
     return jsonify(result)
 
-@app.route('/api/fill_excel', methods=['POST'])
+
+@app.route('/api_test/fill_excel', methods=['GET'])
 def download_xlsx():
-    data = request.get_json()
-    table_name = data['table_name']
-    excel_path = prepare_excel(table_name)
+    table_name = request.args.get('table_name')
+    uuid = request.args.get('uuid')
+    excel_path = prepare_excel(table_name, uuid)
 
     if not os.path.exists(excel_path):
         return "文件不存在", 404
     return send_file(excel_path, as_attachment=True, download_name=table_name + "上传数据.xlsx")
 
-def prepare_excel(table):
+
+def prepare_excel(table, uuid):
     # Load data
     table_config = load_config_by_table_name(table)
-    data_pool = load_data_by_company_id(datetime.datetime.now().strftime('%Y-%m'), table_config[0])
+    data_pool = load_data_by_company_id(datetime.datetime.now().strftime('%Y-%m'), table_config[0], uuid)
 
     data = {}
     for item in data_pool:
@@ -428,7 +430,8 @@ def load_config_by_table_name(table):
         })
     return result
 
-def load_data_by_company_id(date, table_config):
+
+def load_data_by_company_id(date, table_config, uuid):
     input_config = {}
     # for config_item in table_config:
     platform = table_config['platform_name']
@@ -438,7 +441,7 @@ def load_data_by_company_id(date, table_config):
         input_config[platform] = {}
     input_config[platform].update({table_name: platform_config})
 
-    pool = load_data_by_table_name(date)
+    pool = load_data_by_table_name(date, uuid)
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -454,8 +457,10 @@ def load_data_by_company_id(date, table_config):
                     item.update({'value': ''})
     return input_config[platform][table_name]
 
+
 def remove_exponent(num):
     return num.to_integral() if num == num.to_integral() else num.normalize()
+
 
 def dfs(cur_list, result):
     for item in cur_list:
