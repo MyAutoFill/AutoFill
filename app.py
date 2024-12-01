@@ -405,7 +405,7 @@ def fill_excel_table(table, data_pool):
     # fill excel data | use Excel key get value in data pool
     for key in excel_structure:
         if key in data_pool:
-            excel_structure[key]['data'] = data_pool[key]
+            excel_structure[key]['value'] = data_pool[key]
 
     # Save excel to temporary path
     temp_dir = tempfile.TemporaryDirectory(delete=False)
