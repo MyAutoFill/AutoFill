@@ -408,7 +408,7 @@ def fill_excel_table(table, data_pool):
             excel_structure[key]['value'] = data_pool[key]
 
     # Save excel to temporary path
-    excel_save_path = os.path.join('~/userfile', 'temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
+    excel_save_path = os.path.join('temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
     parse_excel.fill_excel_data('asset/' + table + '_template.xlsx', excel_structure, excel_save_path)
     return excel_save_path
 
@@ -438,8 +438,9 @@ def load_data_by_company_id(date, table_config, uuid):
     if platform not in input_config.keys():
         input_config[platform] = {}
     input_config[platform].update({table_name: platform_config})
-
+    company_data = load_company_data_by_table_name(uuid)
     pool = load_data_by_table_name(date, uuid)
+    pool.update(company_data)
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
