@@ -408,10 +408,8 @@ def fill_excel_table(table, data_pool):
             excel_structure[key]['value'] = data_pool[key]
 
     # Save excel to temporary path
-    temp_dir = tempfile.TemporaryDirectory(delete=False)
-    excel_save_path = os.path.join(temp_dir.name, 'temp_' + table + '_excel.xlsx')
+    excel_save_path = os.path.join('~/userfile', 'temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
     parse_excel.fill_excel_data('asset/' + table + '_template.xlsx', excel_structure, excel_save_path)
-
     return excel_save_path
 
 
