@@ -109,7 +109,7 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.7/base64.min.js"></script>
+<script src="../static/js/base64.min.js"></script>
 <script>
   new Vue({
     el: '#app',
@@ -133,7 +133,7 @@
       onSubmit() {
         const parse_dict = this.parseUrlParams(window.location.search);
         const select_name = parse_dict.select_name;
-        if (select_name === '山东省统计联网直报平台' || select_name === '信息产业运行监测平台' || select_name === '山东公共就业人才服务') {
+        if (select_name === '山东省统计联网直报平台' || select_name === '信息产业运行监测平台') {
           axios.post('/find_operate_table', {url: window.location.href}).then(res => {
             window.location.href = 'https://xcyb.weihai.cn/api_test/fill_excel' + '?uuid=' + parse_dict.uuid + '&table_name=' + res.data.name
           })
