@@ -19,7 +19,7 @@ base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
 db = pymysql.connect(
-    host='localhost',
+    host='119.3.122.142',
     port=3306,
     user='root',
     password='root@123',
@@ -384,7 +384,7 @@ def download_xlsx():
 
     if not os.path.exists(excel_path):
         return "文件不存在", 404
-    return send_file(excel_path, as_attachment=True, download_name=table_name + "上传数据.xlsx")
+    return send_file(excel_path, as_attachment=True, download_name=excel_path)
 
 
 def prepare_excel(table, uuid):
