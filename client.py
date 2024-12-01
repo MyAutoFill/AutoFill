@@ -140,6 +140,9 @@ def fill_bureau_of_taxation_page(cur_platform, cur_config_list, page, data_pool)
         for item in cur_config_list:
             if item.get('name') in table_head:
                 tax_schema = item.get('map')
+    else:
+        # 火炬只有一张表，系统已确认的法人信息
+        tax_schema = cur_config_list[0]
     if tax_schema is not None:
         fill_taxation_data_in_page(page, tax_schema, data_pool, cur_config_list)
     end = datetime.datetime.now()
