@@ -91,9 +91,39 @@
 </div>
 <h2 class="display-1 mb-4">点击启动按钮开始填充</h2>
 
+<style>
+  .loading {
+    pointer-events: none; /* 阻止点击事件 */
+    opacity: 0.5; /* 降低可见性 */
+  }
+  .load {
+    display: inline-block;
+    height: 1rem;
+    width: 1rem;
+    margin-right: 8px;
+    border: 0.1rem solid transparent;
+    border-top-color: white;
+    border-left-color: white;
+    border-bottom-color: white;
+    animation: circle 1s infinite linear;
+    -webkit-animation: circle 1s infinite linear; /* Safari 和 Chrome */
+    border-radius: 50%
+  }
+  @-webkit-keyframes circle {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(-360deg)
+      }
+  }
+</style>
 <div id="app">
     <span>
-      <a class="btn btn-lg btn-primary rounded-pill mx-1" @click="onSubmit()">启动填充</a>
+      <a class="btn btn-lg btn-primary rounded-pill mx-1" @click="onSubmit()" :class="{ loading: isLoading }">
+        <span :class="{ load: isLoading }"></span>
+        <span>启动填充</span>
+      </a>
       <a class="btn btn-lg btn-primary rounded-pill mx-1" @click="closeProgress()">关闭程序</a>
     </span>
 </div>
@@ -113,6 +143,11 @@
 <script>
   new Vue({
     el: '#app',
+    data() {
+      return {
+        isLoading: false
+      };
+    },
     methods: {
       parseUrlParams(url) {
         var searchParams = new URLSearchParams(url);
@@ -131,6 +166,7 @@
         return Base64.decode(str);
       },
       onSubmit() {
+        this.isLoading = true;
         const parse_dict = this.parseUrlParams(window.location.search);
         const select_name = parse_dict.select_name;
         if (select_name === '山东省统计联网直报平台' || select_name === '信息产业运行监测平台') {
@@ -139,6 +175,7 @@
           })
         } else {
           axios.post('/new_api', {url: window.location.href}).then(res => {
+            this.isLoading = false;
             if (res.data.status === "ok") {
               this.$message({
                 message: '填充成功',
