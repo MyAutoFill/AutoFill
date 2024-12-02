@@ -339,6 +339,7 @@ def parse_table():
     request_data = request.get_json()
     parse_data = request_data['parse_data']
     table_type = request_data['type']
+    uuid = request_data['uuid']
     table_name_map = {
         'lr': '利润表',
         'xjll': '现金流量表',
@@ -359,7 +360,7 @@ def parse_table():
                 'name': item,
                 'new_value': parse_result[item],
             }
-    exist_data = load_data_by_table_name(datetime.datetime.now().strftime('%Y-%m'))
+    exist_data = load_data_by_table_name('2026-01', uuid)
     for key in change_dict.keys():
         if key in exist_data.keys():
             change_dict[key]['old_value'] = exist_data[key]
