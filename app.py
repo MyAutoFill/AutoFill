@@ -461,6 +461,12 @@ def load_data_by_company_id(date, table_config, uuid):
 def remove_exponent(num):
     return num.to_integral() if num == num.to_integral() else num.normalize()
 
+@app.route('/api_test/download_exe', methods=['GET'])
+def download_exe():
+    exe_path = "client.exe"
+    if not os.path.exists(exe_path):
+        return "文件不存在", 404
+    return send_file(exe_path, as_attachment=True, download_name="client.exe")
 
 def dfs(cur_list, result):
     for item in cur_list:
