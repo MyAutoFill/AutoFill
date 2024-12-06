@@ -297,5 +297,5 @@ def find_operate_table():
 
 
 if __name__ == '__main__':
-    webbrowser.open('https://xcyb.weihai.cn/auto_fill_test')
+    webbrowser.open('https://xcyb.weihai.cn/auto_fill')
     app.run(port=8088)
