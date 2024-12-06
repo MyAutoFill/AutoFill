@@ -28,7 +28,7 @@ db = pymysql.connect(
 )
 
 
-@app.route('/api_test/save', methods=['POST'])
+@app.route('/api/save', methods=['POST'])
 def save():
     request_data = request.get_json()
     date = request_data.get('date', '')
@@ -66,7 +66,7 @@ def save():
 
 
 # test done!
-@app.route('/api_test/save_company_data', methods=['POST'])
+@app.route('/api/save_company_data', methods=['POST'])
 def save_company_data():
     request_data = request.get_json()
     cur_data = request_data.get('data', '')
@@ -81,7 +81,7 @@ def save_company_data():
     }
 
 
-@app.route('/api_test/save_from_excel', methods=['POST'])
+@app.route('/api/save_from_excel', methods=['POST'])
 def save_from_excel():
     request_data = request.get_json()
     date = request_data['date']
@@ -99,7 +99,7 @@ def save_from_excel():
 
 
 # test done!
-@app.route('/api_test/load_data', methods=['POST'])
+@app.route('/api/load_data', methods=['POST'])
 def load():
     request_data = request.get_json()
     date = request_data.get('date', '')
@@ -113,7 +113,7 @@ def load():
 
 
 # test done!
-@app.route('/api_test/load_company_data', methods=['POST'])
+@app.route('/api/load_company_data', methods=['POST'])
 def load_company_data():
     request_data = request.get_json()
     uuid = request_data.get('uuid', '')
@@ -134,7 +134,7 @@ def load_company_data_by_table_name(uuid):
 
 
 # test done!
-@app.route('/api_test/load_platform_config', methods=['GET'])
+@app.route('/api/load_platform_config', methods=['GET'])
 def load_platform_config():
     db.ping(reconnect=True)
     cursor = db.cursor()
@@ -164,7 +164,7 @@ def get_config_by_table_name(platform_name, table_name):
 
 
 # test done!
-@app.route('/api_test/load_config', methods=['GET'])
+@app.route('/api/load_config', methods=['GET'])
 def real_load_config():
     return jsonify(load_config())
 
@@ -322,7 +322,7 @@ def image(filename):
 
 
 # test done!
-@app.route('/api_test/get_ratio_config')
+@app.route('/api/get_ratio_config')
 def get_ratio_config():
     table = request.args.get('table')
     cur_map = {
@@ -334,7 +334,7 @@ def get_ratio_config():
     return cur_map.get(table, {})
 
 
-@app.route('/api_test/parse_table', methods=['POST'])
+@app.route('/api/parse_table', methods=['POST'])
 def parse_table():
     request_data = request.get_json()
     parse_data = request_data['parse_data']
@@ -377,7 +377,7 @@ def parse_table():
     return jsonify(result)
 
 
-@app.route('/api_test/fill_excel', methods=['GET'])
+@app.route('/api/fill_excel', methods=['GET'])
 def download_xlsx():
     table_name = request.args.get('table_name')
     uuid = request.args.get('uuid')
@@ -461,7 +461,7 @@ def load_data_by_company_id(date, table_config, uuid):
 def remove_exponent(num):
     return num.to_integral() if num == num.to_integral() else num.normalize()
 
-@app.route('/api_test/download_exe', methods=['GET'])
+@app.route('/api/download_exe', methods=['GET'])
 def download_exe():
     exe_path = "client.exe"
     if not os.path.exists(exe_path):

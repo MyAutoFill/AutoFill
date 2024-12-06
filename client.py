@@ -30,7 +30,7 @@ def new_api():
     print(select_name)
     print(uuid)
     print(cover_flag)
-    page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
+    page_config = requests.get('https://xcyb.weihai.cn/api/load_config', verify=False).json()
     print(page_config)
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
@@ -224,7 +224,7 @@ def remove_exponent(num):
 
 
 def raw_load(date, uuid):
-    total_config = requests.get('https://xcyb.weihai.cn/api_test/load_platform_config', verify=False).json()
+    total_config = requests.get('https://xcyb.weihai.cn/api/load_platform_config', verify=False).json()
     input_config = {}
     for config_item in total_config:
         platform = config_item['platform_name']
@@ -233,7 +233,7 @@ def raw_load(date, uuid):
         if platform not in input_config.keys():
             input_config[platform] = {}
         input_config[platform].update({table_name: platform_config})
-    pool = requests.post('https://xcyb.weihai.cn/api_test/load_data', json={'date': date, 'uuid': uuid}, verify=False).json()
+    pool = requests.post('https://xcyb.weihai.cn/api/load_data', json={'date': date, 'uuid': uuid}, verify=False).json()
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -275,7 +275,7 @@ def close_progress():
 def find_operate_table():
     request_data = request.get_json()
     encode_addr, select_name, uuid, cover_flag = parse_page_name(request_data['url'])
-    page_config = requests.get('https://xcyb.weihai.cn/api_test/load_config', verify=False).json()
+    page_config = requests.get('https://xcyb.weihai.cn/api/load_config', verify=False).json()
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
         return {'status': 'error'}
