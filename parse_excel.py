@@ -17,7 +17,7 @@ def fill_excel_data(template_path, row_name_with_data, excel_save_path):
     dataset.save(excel_save_path)
 
 
-def parse_excel_structure(structure_file_path):
+def parse_json_config(structure_file_path):
     with open(structure_file_path, 'r', encoding='utf-8') as file:
         try:
             return json.load(file)

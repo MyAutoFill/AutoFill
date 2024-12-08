@@ -8,6 +8,8 @@ import tempfile
 from decimal import Decimal
 import pymysql
 import xml.etree.ElementTree as ET
+
+import requests
 from PIL import Image, ImageDraw, ImageFont
 from flask import Flask, render_template, request, send_from_directory, jsonify, send_file
 
@@ -36,6 +38,13 @@ def save():
     uuid = request_data.get('uuid', '')
     if (not date) or (not cur_data) or (not uuid):
         return {}
+    save_full_data_by_uuid(date, cur_data, uuid)
+    return {
+        'status': 'ok'
+    }
+
+
+def save_full_data_by_uuid(date, data, uuid):
     company_data, other_data = dict(), dict()
     company_set = [
         'company_basicinfo',
@@ -44,15 +53,15 @@ def save():
         'company_research',
         'company_runningsum'
     ]
-    for key in cur_data:
+    for key in data:
         find = False
         for keyword in company_set:
             if keyword in key.lower():
                 find = True
         if find:
-            company_data.update({key: cur_data[key]})
+            company_data.update({key: data[key]})
         else:
-            other_data.update({key: cur_data[key]})
+            other_data.update({key: data[key]})
     exist_other_data = load_data_by_table_name(date, uuid)
     exist_other_data.update(other_data)
     save_data_by_table_name(date, json.dumps(exist_other_data, ensure_ascii=False).replace(' ', ''), uuid)
@@ -60,9 +69,6 @@ def save():
     exist_company_data = load_company_data_by_table_name(uuid)
     exist_company_data.update(company_data)
     save_data_by_table_name('', json.dumps(exist_company_data, ensure_ascii=False).replace(' ', ''), uuid)
-    return {
-        'status': 'ok'
-    }
 
 
 # test done!
@@ -79,6 +85,69 @@ def save_company_data():
     return {
         'status': 'ok'
     }
+
+
+@app.route('/api/sync_data', methods=['POST'])
+def sync_data():
+    request_data = request.get_json()
+    date = request_data.get('date', '')
+    # 确认用户对当前页面数据是否进行修改，直接从数据库拿会导致用户新修改数据丢失
+    cur_data = request_data.get('data', '')
+    # TODO uuid to company name?
+    uuid = request_data.get('uuid', '')
+    if (not date) or (not cur_data) or (not uuid):
+        return {'status': 'error'}
+
+    # TODO 等第三方实现接口后才能确定token
+    third_party_result = http_get(uuid, '')
+
+    # 处理返回数据
+    if third_party_result['status'] == 'error':
+        return {'status': 'error'}
+    third_party_data = third_party_result['data']
+
+    # 使用excel mapping 将第三方数据转换成标准数据
+    config = parse_excel.parse_json_config('asset/sync_data_api_config.json')
+    mapping_data = dict()
+    for key in config:
+        for item in key['map']:
+            mapping_data[item] = key['map'][item]
+
+    for key in third_party_data:
+        if key in mapping_data:
+            if mapping_data[key] != 'value':
+                third_party_data[mapping_data[key]] = third_party_data.pop(key)
+
+    # 更新已有数据
+    for key in cur_data:
+        if key in third_party_data:
+            cur_data[key] = third_party_data[key]
+
+    # 更新数据库
+    save_full_data_by_uuid(date, cur_data, uuid)
+
+    # 从数据库重新获取数据返回
+    other_data = load_data_by_table_name(date, uuid)
+    company_data = load_company_data_by_table_name(uuid)
+    other_data.update(company_data)
+    return jsonify(other_data)
+
+
+def http_get(company_id, token):
+    # TODO 等第三方提供url
+    url = "https://example.com/api/v1/company_data/" + company_id
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": token
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        response_data = response.json()
+        return jsonify(response_data)
+    else:
+        return {"status": "error", "message": response.text}, response.status_code
 
 
 @app.route('/api/save_from_excel', methods=['POST'])
@@ -401,7 +470,7 @@ def prepare_excel(table, uuid):
 
 
 def fill_excel_table(table, data_pool):
-    excel_structure = parse_excel.parse_excel_structure('asset/' + table + '.json')
+    excel_structure = parse_excel.parse_json_config('asset/' + table + '.json')
 
     # fill excel data | use Excel key get value in data pool
     for key in excel_structure:
@@ -409,7 +478,8 @@ def fill_excel_table(table, data_pool):
             excel_structure[key]['value'] = data_pool[key]
 
     # Save excel to temporary path
-    excel_save_path = os.path.join('temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
+    excel_save_path = os.path.join(
+        'temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
     parse_excel.fill_excel_data('asset/' + table + '_template.xlsx', excel_structure, excel_save_path)
     return excel_save_path
 
@@ -461,12 +531,14 @@ def load_data_by_company_id(date, table_config, uuid):
 def remove_exponent(num):
     return num.to_integral() if num == num.to_integral() else num.normalize()
 
+
 @app.route('/api/download_exe', methods=['GET'])
 def download_exe():
     exe_path = "client.exe"
     if not os.path.exists(exe_path):
         return "文件不存在", 404
     return send_file(exe_path, as_attachment=True, download_name="client.exe")
+
 
 def dfs(cur_list, result):
     for item in cur_list:
