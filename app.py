@@ -110,12 +110,13 @@ def sync_data():
     config = parse_excel.parse_json_config('asset/sync_data_api_config.json')
     mapping_data = dict()
     for key in config:
-        for item in key['map']:
-            mapping_data[item] = key['map'][item]
+        if len(key['map']) > 0:
+            for item in key['map']:
+                mapping_data[item] = key['map'][item]
 
     for key in third_party_data:
         if key in mapping_data:
-            if mapping_data[key] != 'value':
+            if mapping_data[key] is not None:
                 third_party_data[mapping_data[key]] = third_party_data.pop(key)
 
     # 更新已有数据
