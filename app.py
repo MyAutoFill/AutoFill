@@ -21,7 +21,7 @@ base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
 
 db = pymysql.connect(
-    host='119.3.122.142',
+    host='localhost',
     port=3306,
     user='root',
     password='root@123',
@@ -961,11 +961,13 @@ def prepare_excel(table, uuid):
 
 def fill_excel_table(table, data_pool):
     excel_structure = parse_excel.parse_json_config('asset/' + table + '.json')
+    print(excel_structure)
 
     # fill excel data | use Excel key get value in data pool
     for key in excel_structure:
         if key in data_pool:
             excel_structure[key]['value'] = data_pool[key]
+    print(excel_structure)
 
     # Save excel to temporary path
     excel_save_path = os.path.join(
