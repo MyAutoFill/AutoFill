@@ -961,13 +961,11 @@ def prepare_excel(table, uuid):
 
 def fill_excel_table(table, data_pool):
     excel_structure = parse_excel.parse_json_config('asset/' + table + '.json')
-    print(excel_structure)
 
     # fill excel data | use Excel key get value in data pool
     for key in excel_structure:
         if key in data_pool:
             excel_structure[key]['value'] = data_pool[key]
-    print(excel_structure)
 
     # Save excel to temporary path
     excel_save_path = os.path.join(
@@ -1044,4 +1042,5 @@ def dfs(cur_list, result):
 
 
 if __name__ == '__main__':
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
     app.run(host='0.0.0.0', port=8088)
