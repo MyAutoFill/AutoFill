@@ -927,7 +927,7 @@ def download_xlsx():
 
     if not os.path.exists(excel_path):
         return "文件不存在", 404
-    return send_file(excel_path, as_attachment=True, download_name=excel_path)
+    return send_file(excel_path, as_attachment=True)
 
 
 def prepare_excel(table, uuid):
@@ -1010,7 +1010,7 @@ def download_exe():
     exe_path = "client.exe"
     if not os.path.exists(exe_path):
         return "文件不存在", 404
-    return send_file(exe_path, as_attachment=True, download_name="client.exe")
+    return send_file(exe_path, as_attachment=True)
 
 
 def dfs(cur_list, result):
