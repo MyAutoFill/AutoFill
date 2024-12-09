@@ -93,6 +93,7 @@
           axios.post('/new_api', {url: window.location.href}).then(res => {
             this.isLoading = false;
             if (res.data.status === "ok") {
+              alert('填充成功')
               this.$message({
                 message: '填充成功',
                 type: 'success'
