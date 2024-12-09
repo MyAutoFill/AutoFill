@@ -318,7 +318,9 @@ def insert_into_remote_db_260(date, cur_data, uuid):
     remote_cursor.execute(select_sql)
     exist_data = remote_cursor.fetchall()
     has_data = exist_data[0][0] == 1
+    print(has_data)
     insert_data = json.loads(cur_data)
+    print(insert_data)
     cyryqmrs = insert_data.get('company_employee_1', '')
     cjsj = date
     nxrs = insert_data.get('company_employee_3', '')
@@ -331,6 +333,7 @@ def insert_into_remote_db_260(date, cur_data, uuid):
         remote_cursor.execute(update_sql)
     else:
         insert_sql = f'''INSERT INTO `pres302010260` (`cyryqmrs`, `cjsj`, `nxrs`, `zcjysglry`, `zyjsry`, `cyrypjrs`, `cyrygzze`) VALUES ('{cyryqmrs}', '{cjsj}', '{nxrs}', '{zcjysglry}', '{zyjsry}', '{cyrypjrs}', '{cyrygzze}') '''
+        print(insert_sql)
         remote_cursor.execute(insert_sql)
     remote_cursor.close()
     return
