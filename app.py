@@ -298,10 +298,10 @@ def save_data_by_table_name(date, cur_data, uuid):
         sql = f'''INSERT INTO `company_data_tbl` (`company_id`, `date`, `company_data`) VALUES ('{uuid}', '{date}', '{cur_data}') '''
         cursor.execute(sql)
     cursor.close()
-    insert_into_remote_db_257(date, cur_data)
-    insert_into_remote_db_258(date, cur_data)
-    insert_into_remote_db_259(date, cur_data)
-    insert_into_remote_db_260(date, cur_data)
+    insert_into_remote_db_257(date, cur_data, uuid)
+    insert_into_remote_db_258(date, cur_data, uuid)
+    insert_into_remote_db_259(date, cur_data, uuid)
+    insert_into_remote_db_260(date, cur_data, uuid)
     return
 
 
