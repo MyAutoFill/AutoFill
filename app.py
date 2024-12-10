@@ -817,10 +817,7 @@ def get_ratio_config():
             'Gongxin_soft14': 0.0001,
             'company_runningsum_17': 0.0001,
             'Gongxin_soft15': 0.0001,
-            'company_employee_11': 0.0001,
-            'Gongxin_soft10': 0.1376,
-            'Gongxin_soft11': 0.1376,
-            'Gongxin_soft12': 0.1376
+            'company_employee_11': 0.0001
         },
         'ShangwuBasicInfo': {
             'company_runningsum_23': 0.0001
