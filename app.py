@@ -827,6 +827,15 @@ def get_ratio_config():
             'shangwu_investor10': 0.0001,
             'shangwu_investor6': 0.0001
         },
+        'TechCompanyInfo': {
+            'company_basicinfo_45': 0.0001,
+            'Tech_commpanyInfo_52': 0.0001
+        },
+        'HaiguanAnnualReport': {
+            "FinanceStatusInfo_14": 0.0001,
+            "company_runningsum_20": 0.0001,
+            "company_runningsum_32": 0.0001
+        },
         'ShangwuOperationInfo': {
             'company_runningsum_1': 0.0001,
             'company_runningsum_3': 0.0001,
