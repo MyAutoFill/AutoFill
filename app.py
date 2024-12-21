@@ -1,27 +1,28 @@
-import base64
-import datetime
 import json
 import os
 import sys
-import io
-import tempfile
-from decimal import Decimal
-import pymysql
 import xml.etree.ElementTree as ET
+from base64 import b64decode
+from binascii import hexlify, unhexlify
+from datetime import datetime, timedelta
+from decimal import Decimal
 
+import pymysql
 import requests
-from PIL import Image, ImageDraw, ImageFont
-from flask import Flask, render_template, request, send_from_directory, jsonify, send_file
+from Cryptodome.Cipher import AES
+from Cryptodome.Util.Padding import pad, unpad
+from flask import Flask, request, send_from_directory, jsonify, send_file
 
-import Utils
 import parse_excel
 
 app = Flask(__name__)
 base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 cur_page, cur_page2 = None, None
+token = {}
 
 db = pymysql.connect(
-    host='localhost',
+    host='119.3.122.142',
+    # host='localhost',
     port=3306,
     user='root',
     password='root@123',
@@ -30,13 +31,24 @@ db = pymysql.connect(
 )
 
 remote_db = pymysql.connect(
-    host='192.168.242.206',
+    host='119.3.122.142',
+    # host='localhost',
     port=3306,
-    user='dy_6c0E1r3',
-    password='Dy_c1e4Aa3',
-    db='wh_rsj',
+    user='root',
+    password='root@123',
+    db='data',
     autocommit=True
 )
+
+
+# remote_db = pymysql.connect(
+#    host='192.168.242.206',
+#    port=3306,
+#    user='dy_6c0E1r3',
+#    password='Dy_c1e4Aa3',
+#    db='wh_rsj',
+#    autocommit=True
+# )
 
 
 @app.route('/api/save', methods=['POST'])
@@ -102,62 +114,133 @@ def sync_data():
     date = request_data.get('date', '')
     # 确认用户对当前页面数据是否进行修改，直接从数据库拿会导致用户新修改数据丢失
     cur_data = request_data.get('data', '')
-    # TODO uuid to company name?
+    # uuid = 统一社会信用代码
     uuid = request_data.get('uuid', '')
     if (not date) or (not cur_data) or (not uuid):
         return {'status': 'error'}
 
-    # TODO 等第三方实现接口后才能确定token
-    third_party_result = http_get(uuid, '')
+    auth_token = ""
+    date_time = datetime.now()
+    if token:
+        # 30 days
+        if token["date"] - date_time < timedelta(days=30):
+            auth_token = token["token"]
 
-    # 处理返回数据
-    if third_party_result['status'] == 'error':
-        return {'status': 'error'}
-    third_party_data = third_party_result['data']
+    auth_header = {
+        "Content-Type": "application/json"
+    }
 
-    # 使用excel mapping 将第三方数据转换成标准数据
-    config = parse_excel.parse_json_config('asset/sync_data_api_config.json')
-    mapping_data = dict()
-    for key in config:
-        if len(key['map']) > 0:
-            for item in key['map']:
-                mapping_data[item] = key['map'][item]
+    auth_payload = {
+        "username": "admin",
+        "password": "vA2S2pPVzt"
+    }
+    # return from auth_data.json for test
+    # auth_info = parse_excel.parse_json_config('asset/test_doc/auth_data.json')
+    auth_info = http_post_request("http://59.224.25.132:10017/askari/auth/login", payload=auth_payload,
+                                  header=auth_header)
 
-    for key in third_party_data:
-        if key in mapping_data:
-            if mapping_data[key] is not None:
-                third_party_data[mapping_data[key]] = third_party_data.pop(key)
+    if auth_info["data"]["token"] and auth_info["data"]["token"] != auth_token:
+        token["date"] = date_time
+        token['token'] = auth_info["data"]["token"]
 
-    # 更新已有数据
-    for key in cur_data:
-        if key in third_party_data:
-            cur_data[key] = third_party_data[key]
+    plaintext_payload = '{ "companyKey":  ' + uuid + '}'
+    encrypted_payload = encrypt_payload(auth_info["data"]["secretKey"], plaintext_payload)
 
-    # 更新数据库
-    save_full_data_by_uuid(date, cur_data, uuid)
-
-    # 从数据库重新获取数据返回
-    other_data = load_data_by_table_name(date, uuid)
-    company_data = load_company_data_by_table_name(uuid)
-    other_data.update(company_data)
-    return jsonify(other_data)
-
-
-def http_get(company_id, token):
-    # TODO 等第三方提供url
-    url = "https://example.com/api/v1/company_data/" + company_id
-    headers = {
+    data_header = {
         "Content-Type": "application/json",
         "Authorization": token
     }
+    data_payload = {encrypted_payload}
 
-    response = requests.get(url, headers=headers)
+    # return from out.json for test
+    # third_party_result = parse_excel.parse_json_config('asset/test_doc/out.json')
+    third_party_result = http_post_request('http://59.224.25.132:10017/api/v1/company_data', payload=data_header,
+                                           header=data_payload)
+
+    # 处理返回数据
+    if third_party_result['data'] == 'error':
+        return {'status': 'error'}
+
+    third_party_raw_data = third_party_result['data']
+
+    decrypted_response = decrypt_data(auth_info['data']['secretKey'], third_party_raw_data)
+
+    third_party_data = json.loads(decrypted_response)['data']
+    # 使用 mapping_data 将第三方数据转换成标准数据
+    config = parse_excel.parse_json_config('asset/sync_data_api_config.json')
+    mapping_data = dict()
+
+    for item in config:
+        for key in item.keys():
+            if key in third_party_data.keys() and third_party_data[key]:
+                for name in item[key]:
+                    if third_party_data[key][name] and item[key][name]:
+                        if name == "成立日期":
+                            mapping_data[item[key][name]] = parse_date(third_party_data[key][name])
+                            continue
+                        if name == "投资总额折万美元":
+                            mapping_data[item[key][name]] = int(third_party_data[key][name]) * 7
+                            continue
+                        mapping_data[item[key][name]] = third_party_data[key][name]
+
+    return mapping_data
+
+
+def http_post_request(url, payload, header):
+    response = requests.post(url, data=payload, headers=header)
 
     if response.status_code == 200:
         response_data = response.json()
         return jsonify(response_data)
     else:
         return {"status": "error", "message": response.text}, response.status_code
+
+
+def encrypt_payload(secret_key, plaintext_payload):
+    if not secret_key or not plaintext_payload:
+        return ""
+
+    # 将Base64编码的密钥解码为字节
+    secret_key_bytes = b64decode(secret_key)
+
+    # 将JSON参数填充到16字节的倍数，以满足AES的要求
+    padded_json_params = pad(plaintext_payload.encode('utf-8'), AES.block_size)
+
+    # 以ECB模式初始化AES密码
+    cipher = AES.new(secret_key_bytes, AES.MODE_ECB)
+
+    # 加密填充后的JSON参数
+    encrypted_params = cipher.encrypt(padded_json_params)
+
+    # 将加密数据转换为十六进制字符串
+    return hexlify(encrypted_params).decode('utf-8')
+
+
+def decrypt_data(secret_key, data):
+    if not secret_key or not data:
+        return ""
+
+    secret_key_bytes = b64decode(secret_key)
+
+    # 将十六进制字符串转换为字节
+    encrypted_params = unhexlify(data)
+
+    # 初始化 AES 解密器（ECB 模式）
+    cipher = AES.new(secret_key_bytes, AES.MODE_ECB)
+
+    # 解密数据
+    decrypted_padded_params = cipher.decrypt(encrypted_params)
+
+    # 去除填充并还原原始 JSON 参数
+    return unpad(decrypted_padded_params, AES.block_size).decode('utf-8')
+
+
+def parse_date(date):
+    date_string = date
+
+    parsed_date = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%f%z")
+
+    return parsed_date.strftime("%Y-%m-%d")
 
 
 @app.route('/api/save_from_excel', methods=['POST'])
@@ -486,71 +569,6 @@ def load_annotations(annotations):
         h = int(bndbox.find('h').text)
         annotation_table.append((name, x, y, w, h))
     return annotation_table
-
-
-def generate_preview_image(image, annotation_table, preview_data, output_path):
-    draw = ImageDraw.Draw(image)
-    try:
-        font = ImageFont.truetype('/System/Library/Fonts/Supplemental/Times New Roman.ttf', 20)
-    except IOError:
-        font = ImageFont.load_default()
-
-    # Extract base name without extension for data lookup
-    base_name = annotation_table[0][3:-4]
-
-    for obj in annotation_table[1]:
-        bbox = obj['bbox']
-        draw.rectangle(
-            [bbox['xmin'], bbox['ymin'], bbox['xmax'], bbox['ymax']],
-            outline='red',
-            width=1
-        )
-
-        for item in preview_data:
-            if item['key'] == obj['name']:
-                text = item['value']
-                text_width = font.getlength(text)
-                x_center = (bbox['xmin'] + bbox['xmax']) / 2
-                text_x = x_center - text_width / 2
-                draw.text(
-                    (text_x, bbox['ymin']),
-                    text,
-                    fill='blue',
-                    font=font
-                )
-    image.save(output_path)
-    return image
-
-
-@app.route('/preview', methods=['POST'])
-def preview():
-    user_data = request.get_json()
-
-    # 用户期望生成预览的表名
-    preview_table = user_data['name']
-    # 暂时使用固定名字，api完成后替换成上面代码
-    # preview_table = '统计_工业产销总值及主要产品产量'
-    # preview_table = '税务_利润表'
-
-    image_template_path = os.path.join(base_path, os.path.join('images', preview_table + '.png'))
-    image_template = Image.open(image_template_path)
-
-    image_label_path = os.path.join(base_path, os.path.join('labels', preview_table + '.xml'))
-    image_labels = Utils.parse_labelimg_xml(image_label_path)
-
-    # 暂时使用全部表，api完成后可直接替换成 user_data['value']
-    flat_data = user_data['value']
-    preview_image_save_path = os.path.join(base_path, os.path.join('images/preview_images', preview_table + '.png'))
-
-    preview_image = generate_preview_image(image_template, image_labels, flat_data, preview_image_save_path)
-
-    image_byte_arr = io.BytesIO()
-    preview_image.save(image_byte_arr, format='PNG')
-    image_byte_arr.seek(0)
-    return {
-        'status': 1,
-        'path': '/image/' + preview_table + '.png'
-    }
 
 
 @app.route('/image/<path:filename>')
