@@ -21,8 +21,7 @@ cur_page, cur_page2 = None, None
 token = {}
 
 db = pymysql.connect(
-    host='119.3.122.142',
-    # host='localhost',
+    host='localhost',
     port=3306,
     user='root',
     password='root@123',
@@ -31,24 +30,13 @@ db = pymysql.connect(
 )
 
 remote_db = pymysql.connect(
-    host='119.3.122.142',
-    # host='localhost',
-    port=3306,
-    user='root',
-    password='root@123',
-    db='data',
-    autocommit=True
+   host='192.168.242.206',
+   port=3306,
+   user='dy_6c0E1r3',
+   password='Dy_c1e4Aa3',
+   db='wh_rsj',
+   autocommit=True
 )
-
-
-# remote_db = pymysql.connect(
-#    host='192.168.242.206',
-#    port=3306,
-#    user='dy_6c0E1r3',
-#    password='Dy_c1e4Aa3',
-#    db='wh_rsj',
-#    autocommit=True
-# )
 
 
 @app.route('/api/save', methods=['POST'])
