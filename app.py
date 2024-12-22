@@ -177,7 +177,7 @@ def http_post_request(url, payload, header):
     print(header)
     print(url)
     try:
-        response = requests.post(url, json=payload, headers=header)
+        response = requests.post(url, data=payload, headers=header)
         print(response.text)
     except Exception as e:
         print(e)
