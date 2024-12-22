@@ -173,13 +173,16 @@ def sync_data():
 
 
 def http_post_request(url, payload, header):
-    response = requests.post(url, data=payload, headers=header)
-
+    try:
+        response = requests.post(url, data=payload, headers=header)
+        print(response.text)
+    except Exception as e:
+        print(e)
+        return {}
     if response.status_code == 200:
-        response_data = response.json()
-        return jsonify(response_data)
+        return response.json()
     else:
-        return {"status": "error", "message": response.text}, response.status_code
+        return {"status": "error", "message": response.text}
 
 
 def encrypt_payload(secret_key, plaintext_payload):
