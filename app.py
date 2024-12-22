@@ -99,12 +99,10 @@ def save_company_data():
 @app.route('/api/sync_data', methods=['POST'])
 def sync_data():
     request_data = request.get_json()
-    date = request_data.get('date', '')
     # 确认用户对当前页面数据是否进行修改，直接从数据库拿会导致用户新修改数据丢失
-    cur_data = request_data.get('data', '')
     # uuid = 统一社会信用代码
     uuid = request_data.get('uuid', '')
-    if (not date) or (not cur_data) or (not uuid):
+    if not uuid:
         return {'status': 'error'}
 
     auth_token = ""
@@ -131,7 +129,7 @@ def sync_data():
         token["date"] = date_time
         token['token'] = auth_info["data"]["token"]
 
-    plaintext_payload = '{ "companyKey":  ' + uuid + '}'
+    plaintext_payload = '{ "companyKey": "' + uuid + '"}'
     encrypted_payload = encrypt_payload(auth_info["data"]["secretKey"], plaintext_payload)
 
     data_header = {
@@ -604,6 +602,11 @@ def get_ratio_config():
             'company_runningsum_30': 0.001,
             'company_runningsum_31': 0.001,
             'company_runningsum_32': 0.001,
+            'company_runningsum_34': 0.001,
+            'company_runningsum_35': 0.001,
+            'company_runningsum_36': 0.001,
+            'company_runningsum_37': 0.001,
+            'company_runningsum_38': 0.001,
             'Tech_EcoInfo_5': 0.001
         },
         'CompanyResearchInfo': {
