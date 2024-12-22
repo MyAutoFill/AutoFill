@@ -173,9 +173,11 @@ def sync_data():
 
 
 def http_post_request(url, payload, header):
+    print(payload)
+    print(header)
+    print(url)
     try:
         response = requests.post(url, json=payload, headers=header)
-        print(url)
         print(response.text)
     except Exception as e:
         print(e)
