@@ -166,13 +166,13 @@ def sync_data():
                             mapping_data[item[key][name]] = parse_date(third_party_data[key][name])
                             continue
                         if name == "投资总额折万美元":
-                            mapping_data[item[key][name]] = int(third_party_data[key][name]) * 7
+                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 7)
                             continue
                         if name == "注册资本":
-                            mapping_data[item[key][name]] = int(third_party_data[key][name]) * 10000
+                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 10000)
                             continue
                         if name == "实收资本":
-                            mapping_data[item[key][name]] = int(third_party_data[key][name]) * 10000
+                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 10000)
                             continue
                         mapping_data[item[key][name]] = third_party_data[key][name]
     key_name_map = dict()
