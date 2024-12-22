@@ -134,14 +134,14 @@ def sync_data():
 
     data_header = {
         "Content-Type": "application/json",
-        "Authorization": token
+        "Authorization": token['token']
     }
     data_payload = {encrypted_payload}
 
     # return from out.json for test
     # third_party_result = parse_excel.parse_json_config('asset/test_doc/out.json')
-    third_party_result = http_post_request('http://59.224.25.132:10017/api/v1/company_data', payload=data_header,
-                                           header=data_payload)
+    third_party_result = http_post_request('http://59.224.25.132:10017/api/v1/company_data', payload=data_payload,
+                                           header=data_header)
 
     # 处理返回数据
     if third_party_result['data'] == 'error':
@@ -175,6 +175,7 @@ def sync_data():
 def http_post_request(url, payload, header):
     try:
         response = requests.post(url, data=payload, headers=header)
+        print(url)
         print(response.text)
     except Exception as e:
         print(e)
