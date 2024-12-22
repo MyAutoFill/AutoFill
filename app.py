@@ -965,41 +965,20 @@ def get_ratio_config():
 def parse_table():
     request_data = request.get_json()
     parse_data = request_data['parse_data']
-    table_type = request_data['type']
     uuid = request_data['uuid']
-    table_name_map = {
-        'lr': '利润表',
-        'xjll': '现金流量表',
-        'zcfz': '资产负债表'
-    }
-    parse_result = dict()
-    dfs(parse_data.get('内容', []), parse_result)
-    table_name = table_name_map[table_type]
-    config_list = get_config_by_table_name('山东省电子税务局', table_name)
-    key_id_map = dict()
-    for item in config_list:
-        key_id_map[item['key']] = item['id']
-    print(key_id_map)
-    change_dict = dict()
-    for item in parse_result.keys():
-        if item in key_id_map.keys():
-            change_dict[key_id_map[item]] = {
-                'name': item,
-                'new_value': parse_result[item],
-            }
-    exist_data = load_data_by_table_name('2026-01', uuid)
-    for key in change_dict.keys():
-        if key in exist_data.keys():
-            change_dict[key]['old_value'] = exist_data[key]
-        else:
-            change_dict[key]['old_value'] = ""
+    config = parse_excel.parse_json_config('asset/load_from_excel_api_config.json')[0]
+    exist_data = load_data_by_table_name(datetime.now().strftime('%Y-%m'), uuid)
+    exist_company_data = load_company_data_by_table_name(uuid)
+    exist_data.update(exist_company_data)
     result = list()
-    for key in change_dict.keys():
+    for key, new_value in parse_data.items():
+        eng_key = config[key]
+        old_value = exist_data[eng_key]
         result.append({
-            'key': key,
-            'name': change_dict[key]['name'],
-            'new_value': change_dict[key]['new_value'],
-            'old_value': change_dict[key]['old_value']
+            'key': eng_key,
+            'name': key,
+            'new_value': new_value,
+            'old_value': old_value
         })
     return jsonify(result)
 
