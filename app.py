@@ -972,7 +972,11 @@ def parse_table():
     exist_data.update(exist_company_data)
     result = list()
     for key, new_value in parse_data.items():
+        if key not in config.keys():
+            continue
         eng_key = config[key]
+        if eng_key not in exist_data.keys():
+            continue
         old_value = exist_data[eng_key]
         result.append({
             'key': eng_key,
