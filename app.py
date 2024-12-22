@@ -290,7 +290,7 @@ def load_from_excel():
         # 加载数据，同时移除逗号
         data_json = parse_excel.read_excel_data(file_path, parse_excel.parse_json_config('asset/load_from_excel_api_excel_details.json'))
 
-        return jsonify({'message': 'File processed successfully', 'data': data_json})
+        return jsonify(data_json)
     except Exception as e:
         return jsonify({'error': f'Failed to process the file: {str(e)}'})
     finally:
