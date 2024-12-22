@@ -283,7 +283,7 @@ def load_from_excel():
         return jsonify({'error': 'Invalid file format. Please upload an Excel file.'})
 
     # 保存文件到临时目录
-    file_path = os.path.join('./uploads', file.filename)
+    file_path = os.path.join('temp_files', file.filename)
     file.save(file_path)
 
     try:
