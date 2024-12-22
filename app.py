@@ -975,9 +975,7 @@ def parse_table():
         if key not in config.keys():
             continue
         eng_key = config[key]
-        if eng_key not in exist_data.keys():
-            continue
-        old_value = exist_data[eng_key]
+        old_value = exist_data.get(eng_key, '')
         result.append({
             'key': eng_key,
             'name': key,
