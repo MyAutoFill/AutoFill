@@ -255,7 +255,7 @@ def parse_date(date):
 @app.route('/api/save_from_excel', methods=['POST'])
 def save_from_excel():
     request_data = request.get_json()
-    date = request_data['date']
+    date = datetime.now().strftime('%Y-%m')
     cur_data = request_data['data']
     uuid = request_data.get('uuid', '')
     real_data = dict()
@@ -263,7 +263,7 @@ def save_from_excel():
         real_data[item.get('key')] = item.get('new_value')
     exist_data = load_data_by_table_name(date, uuid)
     exist_data.update(real_data)
-    save_data_by_table_name(date, json.dumps(exist_data, ensure_ascii=False).replace(' ', ''), uuid)
+    save_full_data_by_uuid(date, exist_data, uuid)
     return {
         'status': 'ok'
     }
