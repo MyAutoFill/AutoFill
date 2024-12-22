@@ -16,6 +16,18 @@ def fill_excel_data(template_path, row_name_with_data, excel_save_path):
         sheet.merge_cells(str(merged_cell))
     dataset.save(excel_save_path)
 
+def read_excel_data(file_path, excel_config):
+    dataset = load_workbook(file_path)
+    sheet = dataset.active
+    sheet.protection.sheet = False
+    mapping_data = {}
+    for key in excel_config:
+        excel_pos = excel_config[key]
+        data = sheet.cell(excel_pos['row'], excel_pos['col']).internal_value
+        if data is not None:
+            mapping_data[key] = str(data).replace(",", "")
+    return mapping_data
+
 
 def parse_json_config(structure_file_path):
     with open(structure_file_path, 'r', encoding='utf-8') as file:

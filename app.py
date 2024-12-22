@@ -268,6 +268,36 @@ def save_from_excel():
         'status': 'ok'
     }
 
+@app.route('/api/load_from_excel', methods=['POST'])
+def load_from_excel():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part in the request'})
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+
+    # 检查是否是 Excel 文件
+    if not file.filename.endswith(('.xls', '.xlsx')):
+        return jsonify({'error': 'Invalid file format. Please upload an Excel file.'})
+
+    # 保存文件到临时目录
+    file_path = os.path.join('./uploads', file.filename)
+    file.save(file_path)
+
+    try:
+        # 加载数据，同时移除逗号
+        data_json = parse_excel.read_excel_data(file_path, parse_excel.parse_json_config('asset/load_from_excel_api_excel_details.json'))
+
+        return jsonify({'message': 'File processed successfully', 'data': data_json})
+    except Exception as e:
+        return jsonify({'error': f'Failed to process the file: {str(e)}'})
+    finally:
+        # 删除临时文件
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
 
 # test done!
 @app.route('/api/load_data', methods=['POST'])
