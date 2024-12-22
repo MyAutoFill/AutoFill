@@ -102,7 +102,8 @@ def sync_data():
     # 确认用户对当前页面数据是否进行修改，直接从数据库拿会导致用户新修改数据丢失
     # uuid = 统一社会信用代码
     uuid = request_data.get('uuid', '')
-    if not uuid:
+    real_id = request_data.get('real_id', '')
+    if (not uuid) or (not real_id):
         return {'status': 'error'}
 
     auth_token = ""
@@ -168,19 +169,29 @@ def sync_data():
                             mapping_data[item[key][name]] = int(third_party_data[key][name]) * 7
                             continue
                         mapping_data[item[key][name]] = third_party_data[key][name]
+    key_name_map = dict()
+    for key, value in config[0]['企业登记信息表'].items():
+        key_name_map[value] = f'企业信息登记表 - {key}'
 
-    return mapping_data
+    other_data = load_data_by_table_name(datetime.now().strftime("%Y-%m"), real_id)
+    company_data = load_company_data_by_table_name(real_id)
+    other_data.update(company_data)
+    result = list()
+    for key in other_data.keys():
+        if key in mapping_data.keys():
+            result.append({
+                'new_value': mapping_data[key],
+                'old_value': other_data[key],
+                'key': key,
+                'name': key_name_map.get(key, '')
+            })
+    return jsonify(result)
 
 
 def http_post_request(url, payload, header):
-    print(payload)
-    print(header)
-    print(url)
     try:
         response = requests.post(url, data=payload, headers=header)
-        print(response.text)
     except Exception as e:
-        print(e)
         return {}
     if response.status_code == 200:
         return response.json()
