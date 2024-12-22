@@ -136,7 +136,7 @@ def sync_data():
         "Content-Type": "application/json",
         "Authorization": token['token']
     }
-    data_payload = {encrypted_payload}
+    data_payload = encrypted_payload
 
     # return from out.json for test
     # third_party_result = parse_excel.parse_json_config('asset/test_doc/out.json')
