@@ -1081,6 +1081,14 @@ def download_exe():
     return send_file(exe_path, as_attachment=True)
 
 
+@app.route('/api/download_upload_template', methods=['GET'])
+def download_upload_template():
+    excel_path = "asset/报表报送上传同步模板.xlsx"
+    if not os.path.exists(excel_path):
+        return "文件不存在", 404
+    return send_file(excel_path, as_attachment=True)
+
+
 def dfs(cur_list, result):
     for item in cur_list:
         item_id = ""
