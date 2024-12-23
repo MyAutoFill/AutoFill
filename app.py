@@ -96,6 +96,62 @@ def save_company_data():
     }
 
 
+@app.route('/api/raw_sync_data', methods=['POST'])
+def raw_sync_data():
+    request_data = request.get_json()
+    # 确认用户对当前页面数据是否进行修改，直接从数据库拿会导致用户新修改数据丢失
+    # uuid = 统一社会信用代码
+    uuid = request_data.get('uuid', '')
+    auth_token = ""
+    date_time = datetime.now()
+    if token:
+        # 30 days
+        if token["date"] - date_time < timedelta(days=30):
+            auth_token = token["token"]
+
+    auth_header = {
+        "Content-Type": "application/json"
+    }
+
+    auth_payload = {
+        "username": "admin",
+        "password": "vA2S2pPVzt"
+    }
+    # return from auth_data.json for test
+    # auth_info = parse_excel.parse_json_config('asset/test_doc/auth_data.json')
+    auth_info = http_post_request("http://59.224.25.132:10017/askari/auth/login", payload=auth_payload,
+                                  header=auth_header)
+
+    if auth_info["data"]["token"] and auth_info["data"]["token"] != auth_token:
+        token["date"] = date_time
+        token['token'] = auth_info["data"]["token"]
+
+    plaintext_payload = '{ "companyKey": "' + uuid + '"}'
+    encrypted_payload = encrypt_payload(auth_info["data"]["secretKey"], plaintext_payload)
+
+    data_header = {
+        "Content-Type": "application/json",
+        "Authorization": token['token']
+    }
+    data_payload = encrypted_payload
+
+    # return from out.json for test
+    # third_party_result = parse_excel.parse_json_config('asset/test_doc/out.json')
+    third_party_result = http_post_request('http://59.224.25.132:10017/api/v1/company_data', payload=data_payload,
+                                           header=data_header)
+
+    # 处理返回数据
+    if third_party_result['data'] == 'error':
+        return {'status': 'error'}
+
+    third_party_raw_data = third_party_result['data']
+
+    decrypted_response = decrypt_data(auth_info['data']['secretKey'], third_party_raw_data)
+
+    third_party_data = json.loads(decrypted_response)['data']
+    return jsonify(third_party_data)
+
+
 @app.route('/api/sync_data', methods=['POST'])
 def sync_data():
     request_data = request.get_json()
