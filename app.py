@@ -239,14 +239,13 @@ def sync_data():
     company_data = load_company_data_by_table_name(real_id)
     other_data.update(company_data)
     result = list()
-    for key in other_data.keys():
-        if key in mapping_data.keys():
-            result.append({
-                'new_value': mapping_data[key],
-                'old_value': other_data[key],
-                'key': key,
-                'name': key_name_map.get(key, '')
-            })
+    for item in mapping_data.keys():
+        result.append({
+            'new_value': mapping_data[item],
+            'old_value': other_data.get(item, ''),
+            'key': item,
+            'name': key_name_map.get(item, '')
+        })
     return jsonify(result)
 
 
