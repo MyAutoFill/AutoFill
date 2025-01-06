@@ -214,28 +214,36 @@ def sync_data():
     # 使用 mapping_data 将第三方数据转换成标准数据
     config = parse_excel.parse_json_config('asset/sync_data_api_config.json')
     mapping_data = dict()
-
-    for item in config:
-        for key in item.keys():
-            if key in third_party_data.keys() and third_party_data[key]:
-                for name in item[key]:
-                    if third_party_data[key][name] and item[key][name]:
-                        if name == "成立日期":
-                            mapping_data[item[key][name]] = parse_date(third_party_data[key][name])
-                            continue
-                        if name == "投资总额折万美元":
-                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 7)
-                            continue
-                        if name == "注册资本":
-                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 10000)
-                            continue
-                        if name == "实收资本":
-                            mapping_data[item[key][name]] = str(int(third_party_data[key][name]) * 10000)
-                            continue
-                        mapping_data[item[key][name]] = third_party_data[key][name]
+    # key = 企业登记信息表
+    for key in config.keys():
+        if not (key in third_party_data.keys() and third_party_data[key]):
+            continue
+        # config[key] = {"民族,cb32": "company_basicinfo_43"}
+        # name = "民族,cb32"
+        for name in config[key]:
+            if isinstance(third_party_data[key], dict):
+                if third_party_data[key][name] and config[key][name]:
+                    if name == "成立日期":
+                        mapping_data[config[key][name]] = parse_date(third_party_data[key][name])
+                        continue
+                    if name == "投资总额折万美元":
+                        mapping_data[config[key][name]] = str(int(third_party_data[key][name]) * 7)
+                        continue
+                    if name == "注册资本":
+                        mapping_data[config[key][name]] = str(int(third_party_data[key][name]) * 10000)
+                        continue
+                    if name == "实收资本":
+                        mapping_data[config[key][name]] = str(int(third_party_data[key][name]) * 10000)
+                        continue
+                    mapping_data[config[key][name]] = third_party_data[key][name]
+            elif isinstance(third_party_data[key], list):
+                if third_party_data[key][0][name] and config[key][name]:
+                    mapping_data[config[key][name]] = third_party_data[key][0][name]
     key_name_map = dict()
-    for key, value in config[0]['企业登记信息表'].items():
+    for key, value in config['企业登记信息表'].items():
         key_name_map[value] = f'企业信息登记表 - {key}'
+    for key, value in config['投资者信息表'].items():
+        key_name_map[value] = f'投资者信息表 - {key}'
 
     other_data = load_data_by_table_name(datetime.now().strftime("%Y-%m"), real_id)
     company_data = load_company_data_by_table_name(real_id)
