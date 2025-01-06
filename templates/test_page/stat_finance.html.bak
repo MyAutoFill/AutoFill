@@ -1,0 +1,1336 @@
+<html>
+
+<head>
+
+{#    <script type="text/javascript">var ACT_URL = "http://zb.stats-sd.gov.cn/dr/jsp/query/tablestyle.jsp";</script>#}
+    <base href="https://ca.stats-sd.gov.cn/dr/jsp/query/tablestyle.jsp">
+    <!-- dr_160 54rZJn7Ri-eLk2L4lg6p9ymxTQMQ8diL9YtlivtWeAyIWgTHtK4X!24965694!-29341916!1717335129809 -->
+    <style type="text/css">
+        .thl {
+            behavior: url(/dr/js/common/tablehl.htc);
+        }
+
+        .bhl {
+            behavior: url(/dr/js/common/buttonhl.htc);
+        }
+
+        .ichg {
+            behavior: url(/dr/js/common/imagechg.htc);
+        }
+    </style>
+{#    <script type="text/javascript" src="/dr/js/common/common.js?v=1709481600000"></script>#}
+    <script type="text/javascript">var ROOT_PATH = "/dr/";</script>
+{#    <script type="text/javascript" src="/dr/js/common/moduleclose.js?v=1709481600000"></script>#}
+    <title>数据查询</title>
+{#    <link href="../../css/common/tableview.css" rel="stylesheet" type="text/css">#}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+{#    <script type="text/javascript" src="../../js/data/drreport.js"></script>#}
+    <script type="text/javascript">
+        function doPrint() {
+            var tableId = document.getElementById("tableId").value;
+            printPreview(tableId, null, null, null, null, null, null);
+        }
+    </script>
+</head>
+
+<body>
+    <table width="100%">
+        <tr>
+            <td align="center">
+                <div id='divBlind' class='dblind'></div>
+{#                <iframe id='dsaving' src='../../jsp/process.jsp' frameborder='0' class='dsaving'></iframe>#}
+                <form name="surveyentityForm">
+                    <input id="tableId" name="tableId" value='8600000002023112107060431'>
+
+                    <center>
+
+                        <!-- ====================== 引入JS、定义显示框 ====================== -->
+
+                        <!--[if !IE]><!-->
+{#                        <script type="text/javascript" src="../../js/common/clipboard.min.js?v=1709481600000"></script>#}
+                        <!--<![endif]-->
+{#                        <script type="text/javascript" src="../../js/data/extreport.js?v=1709481600000"></script>#}
+{#                        <script type="text/javascript" src="../../js/common/simplemenu.js?v=1709481600000"></script>#}
+{#                        <script type="text/javascript" src="../../js/data/reporttable.js?v=1709481600000"></script>#}
+{#                        <script type="text/javascript" src="../../js/common/commontable.js?v=1709481600000"></script>#}
+{#                        <script type="text/javascript" src="../../js/data/reportcheck.js?v=1709481600000"></script>#}
+                        <div id="dataAnderror" unselectable="on" class="err">
+                            <table width="250" border="0" cellpadding="4" cellspacing="1" align="center"
+                                class="tab-soid">
+                                <tr align="center">
+                                    <td bgcolor="#17A7E4" style="font-size:10pt;cursor:hand;color:#FFFFFF;">错误信息</td>
+                                </tr>
+                                <tr class="tab-bt">
+                                    <td id="errormsg" bgcolor="#17A7E4" style="font-size: 12px; color: #ffff00;"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="clewdata" class="ddp">
+                            <table width="130" border="0" cellpadding="4" cellspacing="0" align="center"
+                                class="tab-soid">
+                                <tr id="lastdata_2" style="display: none;">
+                                    <td bgcolor="#17A7E4"
+                                        style="font-size: 12px; color: #ffffff;border:1;border-bottom: 1px solid #A0D3F5;">
+                                        上三期数据：<span id="spanlp_2"></span></td>
+                                </tr>
+                                <tr id="lastdata_1" style="display: none;">
+                                    <td bgcolor="#17A7E4"
+                                        style="font-size: 12px; color: #ffffff;border:1;border-bottom: 1px solid #A0D3F5;">
+                                        上上期数据：<span id="spanlp_1"></span></td>
+                                </tr>
+                                <tr id="lastdata" style="display: none;">
+                                    <td bgcolor="#17A7E4" style="font-size: 12px; color: #ffffff;">上期数据：<span
+                                            id="spanlp"></span></td>
+                                </tr>
+                                <tr class="tab-bt" id="divRingRate" style="display: none;">
+                                    <td bgcolor="#17A7E4"
+                                        style="font-size: 12px; color: #ffff00;border:1;border-top: 1px solid #A0D3F5;">
+                                        环比：<span id="ringrate"></span><br>差额：<span id="ringData"></span></td>
+                                </tr>
+                                <tr id="samedata" style="display: none;">
+                                    <td bgcolor="#17A7E4"
+                                        style="font-size: 12px; color: #ffffff;border-top: 1px solid #A0D3F5;">
+                                        去年同期：<span id="spansp"></span></td>
+                                </tr>
+                                <tr class="tab-bt" id="divSameRate" style="display: none;">
+                                    <td bgcolor="#17A7E4"
+                                        style="font-size: 12px; color: #ffff00;border-top: 1px solid #A0D3F5;">同比：<span
+                                            id="samerate"></span><br>差额：<span id="sameData"></span></td>
+                                </tr>
+                            </table>
+                        </div>
+{#                        <script type="text/javascript" language="javascript"#}
+{#                            src="../../js/data/definefunction.js?v=1709481600000"></script>#}
+                        <div id="t_error" class="errs" style='left:150px;top:40px;' onmousedown='errorsDown();'>
+                            <table id='t_emove' width='750' border='0' cellspacing='0' cellpadding='1'
+                                style='cursor:pointer;font-size:10pt;color:#FFFFFF;'>
+                                <tr align="center" bgcolor="#0234c8">
+                                    <td width="25" height="30"></td>
+                                    <td width="50" ctype='code'>编号</td>
+                                    <td width="60">&nbsp;审核类型</td>
+                                    <td width="120" ctype='error'>审核错误</td>
+                                    <td width="215" ctype='desc'>错误说明</td>
+                                    <td>错误数据</td>
+{#                                    <td width="17" title="关闭" onClick="showErrors(false);"><img#}
+{#                                            src='../../images/common/close.gif' border='0'></td>#}
+                                </tr>
+                            </table>
+                            <div id="t_serr" style="overflow-y:auto;overflow-x:hidden;width:750px;cursor:default">
+                                <table border="0" align="left" width="731" cellspacing="1" cellpadding="3"
+                                    style='table-layout:fixed;word-wrap: break-word;'>
+                                    <tbody id="t_errtable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+{#                        <script type="text/javascript" src="../../js/data/viewreporttable.js?v=1709481600000"></script>#}
+                        <script type="text/javascript">errsObj = document.getElementById('t_error');</script>
+                        <script type='text/javascript'>keyText = "m_66";</script>
+                        <script type="text/javascript">dataReportCountsInTable = 1</script>
+
+                        <table id="mainTable" rightEdge="719" width=721 border=0 cellspacing=0 cellpadding=0>
+                            <tr>
+                                <td width=1></td>
+                                <td width=719></td>
+                                <td width=1></td>
+                            </tr>
+                            <tr>
+                                <td width=720 colspan=2>
+                                    <TABLE border="0" width="720" cellpadding="0" cellspacing="0" id="comp1">
+                                        <tr>
+                                            <td width=720 colspan=1 rowspan=1>
+                                                <table align=center width=719 border=0 cellspacing=0 cellpadding=0>
+                                                    <tr>
+                                                        <td width=1></td>
+                                                        <td width=73></td>
+                                                        <td width=2></td>
+                                                        <td width=20></td>
+                                                        <td width=8></td>
+                                                        <td width=153></td>
+                                                        <td width=61></td>
+                                                        <td width=2></td>
+                                                        <td width=33></td>
+                                                        <td width=11></td>
+                                                        <td width=1></td>
+                                                        <td width=12></td>
+                                                        <td width=2></td>
+                                                        <td width=31></td>
+                                                        <td width=3></td>
+                                                        <td width=12></td>
+                                                        <td width=120></td>
+                                                        <td width=166></td>
+                                                        <td width=2></td>
+                                                        <td width=6></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=1 colspan=8></td>
+                                                        <td width=93 colspan=7 rowspan=2>
+                                                            <style type='text/css'>
+                                                                .lbl0 {
+                                                                    font-size: 21px;
+                                                                    line-height: 25px;
+                                                                    display: inline-block;
+                                                                }
+                                                            </style>
+                                                            <span class=lbl0 style='width:93px'>
+                                                                财务状况</span>
+                                                        </td>
+                                                        <td colspan=5></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=24 colspan=8></td>
+                                                        <td colspan=5></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=22 colspan=20></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=15 colspan=17></td>
+                                                        <td width=166>
+                                                            <style type='text/css'>
+                                                                .lbl1 {
+                                                                    font-size: 12px;
+                                                                    line-height: 15px;
+                                                                    display: inline-block;
+                                                                }
+                                                            </style>
+                                                            <span class=lbl1 style='width:166px'>
+                                                                表&ensp;&ensp;&ensp;&ensp;号：B&ensp;&ensp;2&ensp;&ensp;0&ensp;&ensp;3&ensp;&ensp;表</span>
+                                                        </td>
+                                                        <td colspan=2></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=15 colspan=17></td>
+                                                        <td width=168 colspan=2>
+                                                            <span class=lbl1 style='width:168px'>
+                                                                制定机关：国&ensp;&ensp;家&ensp;&ensp;统&ensp;&ensp;计&ensp;局</span>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=15 width=96 colspan=4>
+                                                            <span class=lbl1 style='width:96px'>
+                                                                统一社会信用代码</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=249 colspan=4>
+                                                            <input name='m_4_0' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_1' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_2' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_3' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_4' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_5' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_6' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_7' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_8' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_9' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_10' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_11' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_12' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_13' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_14' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_15' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_16' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_4_17' type='text'
+                                                                metaId="8600000002015112402540001" maxlength='1'
+                                                                style='width:11px; height:15px;' class=txt7>
+                                                        </td>
+                                                        <td colspan=8></td>
+                                                        <td width=174 colspan=3>
+                                                            <span class=lbl1 style='width:174px'>
+                                                                文&ensp;&ensp;&ensp;&ensp;号：国统字〔2023〕88号</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=14 width=74 colspan=2 rowspan=2>
+                                                            <span class=lbl1 style='width:74px'>
+                                                                单位详细名称</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=181 colspan=3 rowspan=2>
+                                                            <input name='m_1' type='text'
+                                                                metaId="8600000002009050702001444" style='width:180px;'
+                                                                class='txt0 key_text'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=46 colspan=3 rowspan=2>
+                                                            <input name='m_3' type='text'
+                                                                metaId="8600000002009050702001445" style='width:45px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=12 rowspan=2>
+                                                            <span class=lbl1 style='width:12px'>
+                                                                年</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=31 rowspan=2>
+                                                            <input name='m_2' type='text'
+                                                                metaId="8600000002009050702001446" style='width:30px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=12 rowspan=2>
+                                                            <span class=lbl1 style='width:12px'>
+                                                                月</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=168 colspan=2 rowspan=2>
+                                                            <span class=lbl1 style='width:168px'>
+                                                                有效期至：2&ensp;&ensp;0&ensp;&ensp;2&ensp;&ensp;5&ensp;年&ensp;1&ensp;月</span>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width=720 colspan=1 rowspan=1>
+                                                <table align=center width=719 border=0 cellspacing=0 cellpadding=0>
+                                                    <tr>
+                                                        <td width=1></td>
+                                                        <td width=717></td>
+                                                        <td width=1></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width=718 colspan=2 rowspan=2>
+                                                            <div>
+                                                                <div id="tdiv1" class="tdiv">
+                                                                    <table id='table1' border='0' cellspacing='0'
+                                                                        cellpadding='0' width=718 owidth=718
+                                                                        bcheight=60>
+                                                                        <tr>
+                                                                            <td align='center'
+                                                                                class="b2tcb nftd1 nftd2 ztop"
+                                                                                id="ftd1_2" height=40 rowspan=1
+                                                                                width=258 basewidth=258 colspan=1
+                                                                                index='0'>
+                                                                                指标名称
+                                                                            </td>
+                                                                            <td align='center'
+                                                                                class="b3tcbl nftd1 nftd2 ztop"
+                                                                                id="ftd1_2" height=40 rowspan=1 width=59
+                                                                                basewidth=59 colspan=1 index='1'>
+                                                                                计量单位
+                                                                            </td>
+                                                                            <td align='center'
+                                                                                class="b4tcblr nftd1 nftd2 ztop"
+                                                                                id="ftd1_2" height=40 rowspan=1 width=39
+                                                                                basewidth=39 colspan=1 index='2'>
+                                                                                代码
+                                                                            </td>
+                                                                            <td align='center' class="b2tcb nftd1 ztop"
+                                                                                id="ftd1" height=40 rowspan=1 width=181
+                                                                                basewidth=181 colspan=1 index='3'
+                                                                                metaId="8600000002009050802001471">
+                                                                                1-本月
+                                                                            </td>
+                                                                            <td align='center' class="b3tcbl nftd1 ztop"
+                                                                                id="ftd1" height=40 rowspan=1 width=181
+                                                                                basewidth=181 colspan=1 index='4'
+                                                                                metaId="8600000002009051102001575">
+                                                                                上年同期
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr id=f_dr>
+                                                                            <td id='ftd1_2' height='20'
+                                                                                class='b1b nftd1 nftd2 ztop'
+                                                                                align='center'>甲</td>
+                                                                            <td id='ftd1_2' height='20'
+                                                                                class='b2bl nftd1 nftd2 ztop'
+                                                                                align='center'>乙</td>
+                                                                            <td id='ftd1_2' height='20'
+                                                                                class='b3blr nftd1 nftd2 ztop'
+                                                                                align='center'>丙</td>
+                                                                            <td id='ftd1' height='20' class='b1b nftd1'
+                                                                                align='center'>1</td>
+                                                                            <td id='ftd1' height='20' class='b2bl nftd1'
+                                                                                align='center'>2</td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2' lc='0'
+                                                                                nowrap>
+                                                                                一、期末资产负债
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>-</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>-</td>
+                                                                            <td class='b1b' align='center'
+                                                                                style='width:181px'>-</td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:181px'>-</td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=2 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000561"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;流动资产合计
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>201</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_2_3 maxlength='20'
+                                                                                    modelId="5" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_2_4 maxlength='20'
+                                                                                    modelId="6" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=3 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011062302001472"
+                                                                                lc='6' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;其中：应收账款
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>202</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_3_3 maxlength='20'
+                                                                                    modelId="7" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_3_4 maxlength='20'
+                                                                                    modelId="8" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=4 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000280"
+                                                                                lc='12' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;存货
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>205</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_4_3 maxlength='20'
+                                                                                    modelId="9" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_4_4 maxlength='20'
+                                                                                    modelId="10" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=5 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000191"
+                                                                                lc='14' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;其中：产成品
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>206</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_5_3 maxlength='20'
+                                                                                    modelId="11" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_5_4 maxlength='20'
+                                                                                    modelId="12" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=6 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011102402001788"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;固定资产原价
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>209</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_6_3 maxlength='20'
+                                                                                    modelId="13" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_6_4 maxlength='20'
+                                                                                    modelId="14" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=7 width='258' height='21'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002013031402681742"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;资产总计
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>213</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_7_3 maxlength='20'
+                                                                                    modelId="15" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_7_4 maxlength='20'
+                                                                                    modelId="16" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=8 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002014032002300003"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;负债合计
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>217</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_8_3 maxlength='20'
+                                                                                    modelId="17" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_8_4 maxlength='20'
+                                                                                    modelId="18" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2' lc='0'
+                                                                                nowrap>
+                                                                                二、损益
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>-</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>-</td>
+                                                                            <td class='b1b' align='center'
+                                                                                style='width:181px'>-</td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:181px'>-</td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=10 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002009051102001570"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;营业收入
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>301</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_10_3 maxlength='20'
+                                                                                    modelId="19" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_10_4 maxlength='20'
+                                                                                    modelId="20" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=11 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011053102001437"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;营业成本
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>307</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_11_3 maxlength='20'
+                                                                                    modelId="21" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_11_4 maxlength='20'
+                                                                                    modelId="22" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=12 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002017092902003195"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;税金及附加
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>309</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_12_3 maxlength='20'
+                                                                                    modelId="23" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_12_4 maxlength='20'
+                                                                                    modelId="24" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=13 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032302000864"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;销售费用
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>312</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_13_3 maxlength='20'
+                                                                                    modelId="25" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_13_4 maxlength='20'
+                                                                                    modelId="26" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=14 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000422"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;管理费用
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>313</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_14_3 maxlength='20'
+                                                                                    modelId="27" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_14_4 maxlength='20'
+                                                                                    modelId="28" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=15 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002018121102380001"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;研发费用
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>331</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_15_3 maxlength='20'
+                                                                                    modelId="29" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_15_4 maxlength='20'
+                                                                                    modelId="30" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=16 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000177"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;财务费用
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>317</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_16_3 maxlength='20'
+                                                                                    modelId="31" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_16_4 maxlength='20'
+                                                                                    modelId="32" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=17 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011102402001800"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;资产减值损失(损失以“-”号记)
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>320</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_17_3 maxlength='20'
+                                                                                    modelId="33" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_17_4 maxlength='20'
+                                                                                    modelId="34" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=18 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002018121102380003"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;信用减值损失(损失以“-”号记)
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>333</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_18_3 maxlength='20'
+                                                                                    modelId="35" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_18_4 maxlength='20'
+                                                                                    modelId="36" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=19 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002017112002200003"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;其他收益
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>330</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_19_3 maxlength='20'
+                                                                                    modelId="37" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_19_4 maxlength='20'
+                                                                                    modelId="38" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=20 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032302000809"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;投资收益(损失以“-”号记)
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>322</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_20_3 maxlength='20'
+                                                                                    modelId="39" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_20_4 maxlength='20'
+                                                                                    modelId="40" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=21 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002018121102380002"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;净敞口套期收益(损失以“-”号记)&ensp;
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>334</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_21_3 maxlength='20'
+                                                                                    modelId="41" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_21_4 maxlength='20'
+                                                                                    modelId="42" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=22 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011102402001801"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;公允价值变动收益(损失以“-”号记)
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>321</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_22_3 maxlength='20'
+                                                                                    modelId="43" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_22_4 maxlength='20'
+                                                                                    modelId="44" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=23 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002018040302700001"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;资产处置收益(损失以“-”号记)
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>335</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_23_3 maxlength='20'
+                                                                                    modelId="45" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_23_4 maxlength='20'
+                                                                                    modelId="46" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=24 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032302000954"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;营业利润
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>323</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_24_3 maxlength='20'
+                                                                                    modelId="47" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_24_4 maxlength='20'
+                                                                                    modelId="48" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=25 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011102402001803"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;营业外收入
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>325</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_25_3 maxlength='20'
+                                                                                    modelId="49" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_25_4 maxlength='20'
+                                                                                    modelId="50" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=26 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002011102402001804"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;营业外支出
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>326</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_26_3 maxlength='20'
+                                                                                    modelId="51" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_26_4 maxlength='20'
+                                                                                    modelId="52" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=27 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002008032202000550"
+                                                                                lc='4' nowrap>
+                                                                                &ensp;&ensp;&ensp;&ensp;利润总额
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>327</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_27_3 maxlength='20'
+                                                                                    modelId="53" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_27_4 maxlength='20'
+                                                                                    modelId="54" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=28 width='258' height='20'
+                                                                                class='b1b nftd2' id='ftd2'
+                                                                                metaId="8600000002009051102001647"
+                                                                                lc='0' nowrap>
+                                                                                三、应交增值税（本年累计发生额）
+                                                                            </td>
+                                                                            <td class='b2bl' align='center'
+                                                                                style='width:59px'>千元</td>
+                                                                            <td class='b3blr' align='center'
+                                                                                style='width:39px'>402</td>
+                                                                            <td class='b1b' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_28_3 maxlength='20'
+                                                                                    modelId="55" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_28_4 maxlength='20'
+                                                                                    modelId="56" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+                                                                        <tr id=c1_1>
+                                                                            <td realrIndex=29 width='258' height='20'
+                                                                                class='b1bc nftd2' id='ftd2'
+                                                                                metaId="8600000002014120402460014"
+                                                                                lc='0' nowrap>
+                                                                                四、平均用工人数
+                                                                            </td>
+                                                                            <td class='b2bcl' align='center'
+                                                                                style='width:59px'>人</td>
+                                                                            <td class='b3bclr' align='center'
+                                                                                style='width:39px'>606</td>
+                                                                            <td class='b1bc' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_29_3 maxlength='20'
+                                                                                    modelId="57" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                            <td class='b2bcl' align='right'
+                                                                                style='width:181px'><INPUT
+                                                                                    class="input0" style="width:177px"
+                                                                                    name=c1_29_4 maxlength='20'
+                                                                                    modelId="58" p="0"
+                                                                                    tabindex="-1"></td>
+                                                                        </tr>
+
+                                                                    </table>
+
+                                                                </div>
+
+                                                            </div>
+                                                            <script type="text/javascript" language="javascript">
+                                                                maxRows["1"] = 29;
+                                                                maxCols["1"] = 4;
+                                                                maxRecordCounts["1"] = -1
+                                                                tableProperObj.drColCount['1'] = 5;
+                                                                dr_catIds["1"] = "";
+                                                                dr_catType["1"] = 0;
+                                                                binTop["1"] = 222; zhuLeft["1"] = 278; dr_startRow["1"] = 2;
+                                                                dr_startCol["1"] = 3;
+                                                            </script>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=1 colspan=3></td>
+                                                    </tr>
+                                                </table>
+                                                <script type="text/javascript">drHeight = 108;</script>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width=720 colspan=1 rowspan=1>
+                                                <table align=center width=719 border=0 cellspacing=0 cellpadding=0>
+                                                    <tr>
+                                                        <td width=1></td>
+                                                        <td width=1></td>
+                                                        <td width=69></td>
+                                                        <td width=61></td>
+                                                        <td width=6></td>
+                                                        <td width=67></td>
+                                                        <td width=61></td>
+                                                        <td width=7></td>
+                                                        <td width=47></td>
+                                                        <td width=1></td>
+                                                        <td width=61></td>
+                                                        <td width=7></td>
+                                                        <td width=56></td>
+                                                        <td width=1></td>
+                                                        <td width=61></td>
+                                                        <td width=7></td>
+                                                        <td width=58></td>
+                                                        <td width=46></td>
+                                                        <td width=12></td>
+                                                        <td width=3></td>
+                                                        <td width=31></td>
+                                                        <td width=12></td>
+                                                        <td width=31></td>
+                                                        <td width=11></td>
+                                                        <td width=1></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=1 width=71 colspan=3 rowspan=2>
+                                                            <span class=lbl1 style='width:71px'>
+                                                                单位负责人:</span>
+                                                        </td>
+                                                        <td width=61 rowspan=2>
+                                                            <input name='m_65' type='text'
+                                                                metaId="8600000002008102402001382" style='width:60px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=67 rowspan=2>
+                                                            <span class=lbl1 style='width:67px'>
+                                                                统计负责人:</span>
+                                                        </td>
+                                                        <td width=61 rowspan=2>
+                                                            <input name='m_64' type='text'
+                                                                metaId="8600000002008032302000803" style='width:60px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=47 rowspan=2>
+                                                            <span class=lbl1 style='width:47px'>
+                                                                填表人:</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=61 rowspan=2>
+                                                            <input name='m_63' type='text'
+                                                                metaId="8600000002008030602000056" style='width:60px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=56 rowspan=2>
+                                                            <span class=lbl1 style='width:56px'>
+                                                                联系电话:</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=61 rowspan=2>
+                                                            <input name='m_62' type='text'
+                                                                metaId="8600000002008030602000057" style='width:60px;'
+                                                                class='txt0'>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=58 rowspan=2>
+                                                            <span class=lbl1 style='width:58px'>
+                                                                报出日期:</span>
+                                                        </td>
+                                                        <td width=46 rowspan=2>
+                                                            <input name='m_61' type='text'
+                                                                metaId="8600000002008030602000062"
+                                                                style='width:45px;ime-mode:disabled;' class='txt0'
+                                                                maxlength='4'>
+                                                        </td>
+                                                        <td width=12 rowspan=2>
+                                                            <span class=lbl1 style='width:12px'>
+                                                                年</span>
+                                                        </td>
+                                                        <td></td>
+                                                        <td width=31 rowspan=2>
+                                                            <input name='m_60' type='text'
+                                                                metaId="8600000002008030602000063"
+                                                                style='width:30px;ime-mode:disabled;' class='txt0'
+                                                                maxlength='2'>
+                                                        </td>
+                                                        <td width=12 rowspan=2>
+                                                            <span class=lbl1 style='width:12px'>
+                                                                月</span>
+                                                        </td>
+                                                        <td width=31 rowspan=2>
+                                                            <input name='m_59' type='text'
+                                                                metaId="8600000002008030602000065"
+                                                                style='width:30px;ime-mode:disabled;' class='txt0'
+                                                                maxlength='2'>
+                                                        </td>
+                                                        <td width=12 colspan=2 rowspan=2>
+                                                            <span class=lbl1 style='width:12px'>
+                                                                日</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=2 colspan=25></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=210 colspan=2></td>
+                                                        <td width=716 colspan=22>
+                                                            <span class=lbl1 style='width:716px'>
+                                                                说明：1.统计范围：辖区内规模以上工业法人单位和规模以上工业个体经营户。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2.报送日期及方式：调查单位月后18日18：00前独立自行网上填报，1月份免报；省级统计机构月后22日12:00前完成数据审<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;核、验收、上报，1月份免报。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;3.本表“上年同期”数据统一由国家统计局在数据处理软件中复制，调查单位和各级统计机构原则上不得修改；本年新增的<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;调查单位自行填报“上年同期”数据；涉及拆分、兼并、重组等情况的企业，经国家统计局批准后，调查单位可调整上年<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;同期数；本年新增指标的上年同期数由调查单位自行填报。<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;4.审核关系：<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(1)流动资产合计(201)≥其中：应收账款(202)+其中：存货(205)<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(2)存货(205)≥其中：产成品(206)<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(3)资产总计(213)＞流动资产合计(201)<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(4)营业利润(323)=营业收入(301)-营业成本(307)-税金及附加(309)-销售费用(312)-管理费用(313)-研发费用(331)-<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;财务费用(317)+资产减值损失(320)+信用减值损失(333)+其他收益(330)+投资收益(322)+净敞口套期收益(334)+公<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;允价值变动收益(321)+资产处置收益(335)<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;(5)利润总额(327)=营业利润(323)+营业外收入(325)-营业外支出(326)</span>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=14 colspan=25></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </TABLE>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td height=12 colspan=3></td>
+                            </tr>
+                            <tr>
+                                <td width=721 colspan=3 rowspan=2>
+                                    <TABLE border="0" width="721" cellpadding="0" cellspacing="0" id="comp32">
+                                        <tr>
+                                            <td width=721 colspan=1 rowspan=1 class="t15">
+                                                <table align=center width=719 border=0 cellspacing=0 cellpadding=0>
+                                                    <tr>
+                                                        <td width=29></td>
+                                                        <td width=272></td>
+                                                        <td width=137></td>
+                                                        <td width=281></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=29 colspan=4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td height=15 width=272>
+                                                            <span class=lbl1 style='width:272px'>
+                                                                尚未领取统一社会信用代码的填写原组织机构代码</span>
+                                                        </td>
+                                                        <td width=137>
+                                                            <input name='m_66_0' type='text' tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_1' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_2' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_3' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_4' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_5' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_6' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_7' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;margin-right:3px'
+                                                                class=txt7><input name='m_66_8' type='text'
+                                                                value='-' tabindex='-1'
+                                                                style='width:11px; height:15px; margin-right:3px'
+                                                                class=txt2><input type='hidden' name='dash'
+                                                                value='m_66_8'><input name='m_66_9' type='text'
+                                                                tabIndex='-1'
+                                                                metaId="8600000002008030602000001" maxlength='1'
+                                                                style='width:11px; height:15px;' class=txt7>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height=18 colspan=4></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </TABLE>
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </table>
+                        <script type="text/javascript">
+                            var formulaShowDataRepotIndex = true;
+                        </script>
+
+                        <script type='text/javascript'>addInputEventsView();</script><br>
+                        <span class='btn_s01'><span class="btn_s0"><input type="button" onclick="doPrint()" value="打印"
+                                    style="width:50px;" class="btn0 bhl"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class='btn_s01'><span class="btn_s0"><input type="button" onclick="parent.window.close();"
+                                    value="关闭" style="width:50px;"
+                                    class="btn0 bhl"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
