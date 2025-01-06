@@ -60,7 +60,9 @@ def save_full_data_by_uuid(date, data, uuid):
         'company_employee',
         'company_insurance',
         'company_research',
-        'company_runningsum'
+        'company_runningsum',
+        'company_sign',
+        'company_investor'
     ]
     for key in data:
         find = False
@@ -316,8 +318,11 @@ def save_from_excel():
     real_data = dict()
     for item in cur_data:
         real_data[item.get('key')] = item.get('new_value')
+    # 获取已有的全部数据
     exist_data = load_data_by_table_name(date, uuid)
     exist_data.update(real_data)
+
+
     save_full_data_by_uuid(date, exist_data, uuid)
     return {
         'status': 'ok'
