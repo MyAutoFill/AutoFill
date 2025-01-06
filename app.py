@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import time
 import xml.etree.ElementTree as ET
 from base64 import b64decode
 from binascii import hexlify, unhexlify
@@ -238,6 +239,11 @@ def sync_data():
                     mapping_data[config[key][name]] = third_party_data[key][name]
             elif isinstance(third_party_data[key], list):
                 if third_party_data[key][0][name] and config[key][name]:
+                    if name == "出资日期(认缴)":
+                        time_str = third_party_data[key][0][name][:10]
+                        flag = time_str[4] == '-' and time_str[7] == '-' and time_str[:4].isdigit() and time_str[5:7].isdigit() and time_str[8:10].isdigit()
+                        mapping_data[config[key][name]] = time_str if flag else '2025-01-01'
+                        continue
                     mapping_data[config[key][name]] = third_party_data[key][0][name]
     key_name_map = dict()
     for key, value in config['企业登记信息表'].items():
