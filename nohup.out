@@ -11399,3 +11399,8 @@ WARNING: yacc table file version is out of date
 192.168.235.151 - - [06/Jan/2025 23:44:21] "[37mGET /api/get_ratio_config?table=BasicInfoHumanResource HTTP/1.0[0m" 200 -
 192.168.235.151 - - [06/Jan/2025 23:44:25] "[37mPOST /api/load_data HTTP/1.0[0m" 200 -
 192.168.235.151 - - [06/Jan/2025 23:44:25] "[37mGET /api/get_ratio_config?table=ShangwuBasicInfo HTTP/1.0[0m" 200 -
+192.168.235.151 - - [07/Jan/2025 00:40:43] "[37mPOST /api/load_company_data HTTP/1.0[0m" 200 -
+192.168.235.151 - - [07/Jan/2025 00:40:43] "[37mPOST /api/load_company_data HTTP/1.0[0m" 200 -
+192.168.235.151 - - [07/Jan/2025 00:40:43] "[37mGET /api/get_ratio_config?table=BasicCompanyInfo HTTP/1.0[0m" 200 -
+192.168.235.151 - - [07/Jan/2025 00:40:44] "[37mPOST /api/load_company_data HTTP/1.0[0m" 200 -
+192.168.235.151 - - [07/Jan/2025 00:40:44] "[37mGET /api/get_ratio_config?table=InvestmentInfo HTTP/1.0[0m" 200 -
