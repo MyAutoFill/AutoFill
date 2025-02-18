@@ -30,14 +30,14 @@ db = pymysql.connect(
     autocommit=True
 )
 
-remote_db = pymysql.connect(
-   host='192.168.242.206',
-   port=3306,
-   user='dy_6c0E1r3',
-   password='Dy_c1e4Aa3',
-   db='wh_rsj',
-   autocommit=True
-)
+# remote_db = pymysql.connect(
+#    host='192.168.242.206',
+#    port=3306,
+#    user='dy_6c0E1r3',
+#    password='Dy_c1e4Aa3',
+#    db='wh_rsj',
+#    autocommit=True
+# )
 
 
 @app.route('/api/save', methods=['POST'])
@@ -491,165 +491,165 @@ def save_data_by_table_name(date, cur_data, uuid):
         sql = f'''INSERT INTO `company_data_tbl` (`company_id`, `date`, `company_data`) VALUES ('{uuid}', '{date}', '{cur_data}') '''
         cursor.execute(sql)
     cursor.close()
-    insert_into_remote_db_257(date, cur_data, uuid)
-    insert_into_remote_db_258(date, cur_data, uuid)
-    insert_into_remote_db_259(date, cur_data, uuid)
-    insert_into_remote_db_260(date, cur_data, uuid)
+    # insert_into_remote_db_257(date, cur_data, uuid)
+    # insert_into_remote_db_258(date, cur_data, uuid)
+    # insert_into_remote_db_259(date, cur_data, uuid)
+    # insert_into_remote_db_260(date, cur_data, uuid)
     return
 
 
-def insert_into_remote_db_260(date, cur_data, uuid):
-    """
-    企业从业人员信息
-    """
-    try:
-        remote_db.ping(reconnect=True)
-        remote_cursor = remote_db.cursor()
-        print(remote_cursor)
-        select_sql = f'''select COUNT(*) from pres302010260 where `cjsj`='{date}'; '''
-        remote_cursor.execute(select_sql)
-        exist_data = remote_cursor.fetchall()
-        has_data = exist_data[0][0] == 1
-        print(has_data)
-        insert_data = json.loads(cur_data)
-        print(insert_data)
-        cyryqmrs = insert_data.get('company_employee_1', '')
-        cjsj = date
-        nxrs = insert_data.get('company_employee_3', '')
-        zcjysglry = insert_data.get('company_employee_5', '')
-        zyjsry = insert_data.get('company_employee_7', '')
-        cyrypjrs = insert_data.get('company_employee_9', '')
-        cyrygzze = insert_data.get('company_employee_11', '')
-        if has_data:
-            update_sql = f'''update pres302010260 set `cyryqmrs` = '{cyryqmrs}', `nxrs` = '{nxrs}', `zcjysglry` = '{zcjysglry}', `zyjsry` = '{zyjsry}', `cyrypjrs` = '{cyrypjrs}', `cyrygzze` = '{cyrygzze}' where `cjsj` = '{cjsj}' '''
-            remote_cursor.execute(update_sql)
-        else:
-            insert_sql = f'''INSERT INTO `pres302010260` (`cyryqmrs`, `cjsj`, `nxrs`, `zcjysglry`, `zyjsry`, `cyrypjrs`, `cyrygzze`) VALUES ('{cyryqmrs}', '{cjsj}', '{nxrs}', '{zcjysglry}', '{zyjsry}', '{cyrypjrs}', '{cyrygzze}') '''
-            print(insert_sql)
-            remote_cursor.execute(insert_sql)
-        remote_cursor.close()
-    except Exception as e:
-        print(e)
-        return
-    return
+# def insert_into_remote_db_260(date, cur_data, uuid):
+#     """
+#     企业从业人员信息
+#     """
+#     try:
+#         remote_db.ping(reconnect=True)
+#         remote_cursor = remote_db.cursor()
+#         print(remote_cursor)
+#         select_sql = f'''select COUNT(*) from pres302010260 where `cjsj`='{date}'; '''
+#         remote_cursor.execute(select_sql)
+#         exist_data = remote_cursor.fetchall()
+#         has_data = exist_data[0][0] == 1
+#         print(has_data)
+#         insert_data = json.loads(cur_data)
+#         print(insert_data)
+#         cyryqmrs = insert_data.get('company_employee_1', '')
+#         cjsj = date
+#         nxrs = insert_data.get('company_employee_3', '')
+#         zcjysglry = insert_data.get('company_employee_5', '')
+#         zyjsry = insert_data.get('company_employee_7', '')
+#         cyrypjrs = insert_data.get('company_employee_9', '')
+#         cyrygzze = insert_data.get('company_employee_11', '')
+#         if has_data:
+#             update_sql = f'''update pres302010260 set `cyryqmrs` = '{cyryqmrs}', `nxrs` = '{nxrs}', `zcjysglry` = '{zcjysglry}', `zyjsry` = '{zyjsry}', `cyrypjrs` = '{cyrypjrs}', `cyrygzze` = '{cyrygzze}' where `cjsj` = '{cjsj}' '''
+#             remote_cursor.execute(update_sql)
+#         else:
+#             insert_sql = f'''INSERT INTO `pres302010260` (`cyryqmrs`, `cjsj`, `nxrs`, `zcjysglry`, `zyjsry`, `cyrypjrs`, `cyrygzze`) VALUES ('{cyryqmrs}', '{cjsj}', '{nxrs}', '{zcjysglry}', '{zyjsry}', '{cyrypjrs}', '{cyrygzze}') '''
+#             print(insert_sql)
+#             remote_cursor.execute(insert_sql)
+#         remote_cursor.close()
+#     except Exception as e:
+#         print(e)
+#         return
+#     return
 
 
-def insert_into_remote_db_259(date, cur_data, uuid):
-    """
-    企业从业人员信息
-    """
-    try:
-        remote_db.ping(reconnect=True)
-        remote_cursor = remote_db.cursor()
-        select_sql = f'''select COUNT(*) from pres302010259 where `cjsj`='{date}'; '''
-        remote_cursor.execute(select_sql)
-        exist_data = remote_cursor.fetchall()
-        has_data = exist_data[0][0] == 1
-        insert_data = json.loads(cur_data)
-        cjsj = date
-        mdtbfckxse = insert_data.get('Tax_companyInfo_37', '')
-        msxse = insert_data.get('Tax_companyInfo_43', '')
-        xxse = insert_data.get('Tax_companyInfo_61', '')
-        jxse = insert_data.get('Tax_companyInfo_67', '')
-        sqldse = insert_data.get('Tax_companyInfo_73', '')
-        mdtytse = insert_data.get('Tax_companyInfo_85', '')
-        ydksehj = insert_data.get('Tax_companyInfo_97', '')
-        sjdkse = insert_data.get('Tax_companyInfo_103', '')
-        ynse = insert_data.get('Tax_companyInfo_109', '')
-        if has_data:
-            update_sql = f'''update pres302010259 set `mdtbfckxse` = '{mdtbfckxse}', `msxse` = '{msxse}', `xxse` = '{xxse}', `jxse` = '{jxse}', `sqldse` = '{sqldse}', `mdtytse` = '{mdtytse}', `ydksehj` = '{ydksehj}', `sjdkse` = '{sjdkse}', `ynse` = '{ynse}' where `cjsj` = '{cjsj}' '''
-            remote_cursor.execute(update_sql)
-        else:
-            insert_sql = f'''INSERT INTO `pres302010259` (`cjsj`, `mdtbfckxse`, `msxse`, `xxse`, `jxse`, `sqldse`, `mdtytse`, `ydksehj`, `sjdkse`, `ynse`) VALUES ('{cjsj}', '{mdtbfckxse}', '{msxse}', '{xxse}', '{jxse}', '{sqldse}', '{mdtytse}', '{ydksehj}', '{sjdkse}', '{ynse}') '''
-            remote_cursor.execute(insert_sql)
-        remote_cursor.close()
-    except Exception as e:
-        print(e)
-        return
-    return
+# def insert_into_remote_db_259(date, cur_data, uuid):
+#     """
+#     企业从业人员信息
+#     """
+#     try:
+#         remote_db.ping(reconnect=True)
+#         remote_cursor = remote_db.cursor()
+#         select_sql = f'''select COUNT(*) from pres302010259 where `cjsj`='{date}'; '''
+#         remote_cursor.execute(select_sql)
+#         exist_data = remote_cursor.fetchall()
+#         has_data = exist_data[0][0] == 1
+#         insert_data = json.loads(cur_data)
+#         cjsj = date
+#         mdtbfckxse = insert_data.get('Tax_companyInfo_37', '')
+#         msxse = insert_data.get('Tax_companyInfo_43', '')
+#         xxse = insert_data.get('Tax_companyInfo_61', '')
+#         jxse = insert_data.get('Tax_companyInfo_67', '')
+#         sqldse = insert_data.get('Tax_companyInfo_73', '')
+#         mdtytse = insert_data.get('Tax_companyInfo_85', '')
+#         ydksehj = insert_data.get('Tax_companyInfo_97', '')
+#         sjdkse = insert_data.get('Tax_companyInfo_103', '')
+#         ynse = insert_data.get('Tax_companyInfo_109', '')
+#         if has_data:
+#             update_sql = f'''update pres302010259 set `mdtbfckxse` = '{mdtbfckxse}', `msxse` = '{msxse}', `xxse` = '{xxse}', `jxse` = '{jxse}', `sqldse` = '{sqldse}', `mdtytse` = '{mdtytse}', `ydksehj` = '{ydksehj}', `sjdkse` = '{sjdkse}', `ynse` = '{ynse}' where `cjsj` = '{cjsj}' '''
+#             remote_cursor.execute(update_sql)
+#         else:
+#             insert_sql = f'''INSERT INTO `pres302010259` (`cjsj`, `mdtbfckxse`, `msxse`, `xxse`, `jxse`, `sqldse`, `mdtytse`, `ydksehj`, `sjdkse`, `ynse`) VALUES ('{cjsj}', '{mdtbfckxse}', '{msxse}', '{xxse}', '{jxse}', '{sqldse}', '{mdtytse}', '{ydksehj}', '{sjdkse}', '{ynse}') '''
+#             remote_cursor.execute(insert_sql)
+#         remote_cursor.close()
+#     except Exception as e:
+#         print(e)
+#         return
+#     return
 
 
-def insert_into_remote_db_258(date, cur_data, uuid):
-    """
-    企业从业人员信息
-    """
-    try:
-        remote_db.ping(reconnect=True)
-        remote_cursor = remote_db.cursor()
-        select_sql = f'''select COUNT(*) from pres302010258 where `cjsj`='{date}'; '''
-        remote_cursor.execute(select_sql)
-        exist_data = remote_cursor.fetchall()
-        has_data = exist_data[0][0] == 1
-        insert_data = json.loads(cur_data)
-        cjsj = date
-        cyryqors = insert_data.get('company_employee_1', '')
-        nx = insert_data.get('company_employee_3', '')
-        zgzg = insert_data.get('Statisitc_salary_13', '')
-        lwpqry = insert_data.get('Statisitc_salary_17', '')
-        qtcyry = insert_data.get('Statisitc_salary_21', '')
-        zcjysglry = insert_data.get('company_employee_5', '')
-        zyjsry = insert_data.get('company_employee_7', '')
-        bsryhygry = insert_data.get('Statisitc_salary_33', '')
-        shscfwhshfwry = insert_data.get('Statisitc_salary_37', '')
-        sczzjygry = insert_data.get('Statisitc_salary_41', '')
-        cyrypjrs = insert_data.get('company_employee_9', '')
-        cyryypjgz = insert_data.get('Statisitc_salary_47', '')
-        if has_data:
-            update_sql = f'''update pres302010258 set `cyryqors` = '{cyryqors}', `nx` = '{nx}', `zgzg` = '{zgzg}', `lwpqry` = '{lwpqry}', `qtcyry` = '{qtcyry}', `zcjysglry` = '{zcjysglry}', `zyjsry` = '{zyjsry}', `bsryhygry` = '{bsryhygry}', `shscfwhshfwry` = '{shscfwhshfwry}', `sczzjygry` = '{sczzjygry}', `cyrypjrs` = '{cyrypjrs}', `cyryypjgz` = '{cyryypjgz}' where `cjsj` = '{cjsj}' '''
-            remote_cursor.execute(update_sql)
-        else:
-            insert_sql = f'''INSERT INTO `pres302010258` (`cjsj`, `cyryqors`, `nx`, `zgzg`, `lwpqry`, `qtcyry`, `zcjysglry`, `zyjsry`, `bsryhygry`, `shscfwhshfwry`, `sczzjygry`, `cyrypjrs`, `cyryypjgz`) VALUES ('{cjsj}', '{cyryqors}', '{nx}', '{zgzg}', '{lwpqry}', '{qtcyry}', '{zcjysglry}', '{zyjsry}', '{bsryhygry}', '{shscfwhshfwry}', '{sczzjygry}', '{cyrypjrs}', '{cyryypjgz}') '''
-            remote_cursor.execute(insert_sql)
-        remote_cursor.close()
-    except Exception as e:
-        print(e)
-        return
-    return
+# def insert_into_remote_db_258(date, cur_data, uuid):
+#     """
+#     企业从业人员信息
+#     """
+#     try:
+#         remote_db.ping(reconnect=True)
+#         remote_cursor = remote_db.cursor()
+#         select_sql = f'''select COUNT(*) from pres302010258 where `cjsj`='{date}'; '''
+#         remote_cursor.execute(select_sql)
+#         exist_data = remote_cursor.fetchall()
+#         has_data = exist_data[0][0] == 1
+#         insert_data = json.loads(cur_data)
+#         cjsj = date
+#         cyryqors = insert_data.get('company_employee_1', '')
+#         nx = insert_data.get('company_employee_3', '')
+#         zgzg = insert_data.get('Statisitc_salary_13', '')
+#         lwpqry = insert_data.get('Statisitc_salary_17', '')
+#         qtcyry = insert_data.get('Statisitc_salary_21', '')
+#         zcjysglry = insert_data.get('company_employee_5', '')
+#         zyjsry = insert_data.get('company_employee_7', '')
+#         bsryhygry = insert_data.get('Statisitc_salary_33', '')
+#         shscfwhshfwry = insert_data.get('Statisitc_salary_37', '')
+#         sczzjygry = insert_data.get('Statisitc_salary_41', '')
+#         cyrypjrs = insert_data.get('company_employee_9', '')
+#         cyryypjgz = insert_data.get('Statisitc_salary_47', '')
+#         if has_data:
+#             update_sql = f'''update pres302010258 set `cyryqors` = '{cyryqors}', `nx` = '{nx}', `zgzg` = '{zgzg}', `lwpqry` = '{lwpqry}', `qtcyry` = '{qtcyry}', `zcjysglry` = '{zcjysglry}', `zyjsry` = '{zyjsry}', `bsryhygry` = '{bsryhygry}', `shscfwhshfwry` = '{shscfwhshfwry}', `sczzjygry` = '{sczzjygry}', `cyrypjrs` = '{cyrypjrs}', `cyryypjgz` = '{cyryypjgz}' where `cjsj` = '{cjsj}' '''
+#             remote_cursor.execute(update_sql)
+#         else:
+#             insert_sql = f'''INSERT INTO `pres302010258` (`cjsj`, `cyryqors`, `nx`, `zgzg`, `lwpqry`, `qtcyry`, `zcjysglry`, `zyjsry`, `bsryhygry`, `shscfwhshfwry`, `sczzjygry`, `cyrypjrs`, `cyryypjgz`) VALUES ('{cjsj}', '{cyryqors}', '{nx}', '{zgzg}', '{lwpqry}', '{qtcyry}', '{zcjysglry}', '{zyjsry}', '{bsryhygry}', '{shscfwhshfwry}', '{sczzjygry}', '{cyrypjrs}', '{cyryypjgz}') '''
+#             remote_cursor.execute(insert_sql)
+#         remote_cursor.close()
+#     except Exception as e:
+#         print(e)
+#         return
+#     return
 
 
-def insert_into_remote_db_257(date, cur_data, uuid):
-    """
-    企业从业人员信息
-    """
-    try:
-        remote_db.ping(reconnect=True)
-        remote_cursor = remote_db.cursor()
-        select_sql = f'''select COUNT(*) from pres302010257 where `cjsj`='{date}'; '''
-        remote_cursor.execute(select_sql)
-        exist_data = remote_cursor.fetchall()
-        has_data = exist_data[0][0] == 1
-        insert_data = json.loads(cur_data)
-        cjsj = date
-        czzgjbylbx = insert_data.get('GongShang_sercurity_3', '')
-        sybx = insert_data.get('GongShang_sercurity_4', '')
-        zgjbylbx = insert_data.get('GongShang_sercurity_5', '')
-        gsbx = insert_data.get('GongShang_sercurity_6', '')
-        sybxs = insert_data.get('GongShang_sercurity_7', '')
-        dwcjczzgjbylbxjfjs = insert_data.get('GongShang_sercurity_8', '')
-        dwcjsybxjfjss = insert_data.get('GongShang_sercurity_9', '')
-        dwcjzgjbylbxjfjs = insert_data.get('GongShang_sercurity_10', '')
-        dwcjsybxjfjs = insert_data.get('GongShang_sercurity_11', '')
-        cjczzgjbylbxbqsjjfjee = insert_data.get('GongShang_sercurity_12', '')
-        cjsybxbqsjjfje = insert_data.get('GongShang_sercurity_13', '')
-        cjzgjbylbxbqsjjfje = insert_data.get('GongShang_sercurity_14', '')
-        cjgsbxbqsjjfjee = insert_data.get('GongShang_sercurity_15', '')
-        cjsybxbqsjjfjeer = insert_data.get('GongShang_sercurity_16', '')
-        dwcjczzgjbylbxljqjje = insert_data.get('GongShang_sercurity_17', '')
-        dwcjsybxljqjjeee = insert_data.get('GongShang_sercurity_18', '')
-        dwcjzgjbylbxljqjje = insert_data.get('GongShang_sercurity_19', '')
-        dwecjgsbxljqjjes = insert_data.get('GongShang_sercurity_20', '')
-        dwecjsybxljqjje = insert_data.get('GongShang_sercurity_21', '')
-        if has_data:
-            update_sql = f'''update pres302010257 set `cyryqors` = '{czzgjbylbx}', `nx` = '{sybx}', `zgzg` = '{zgjbylbx}', `lwpqry` = '{gsbx}', `qtcyry` = '{sybxs}', `zcjysglry` = '{dwcjczzgjbylbxjfjs}', `zyjsry` = '{dwcjsybxjfjss}', `bsryhygry` = '{dwcjzgjbylbxjfjs}', `shscfwhshfwry` = '{dwcjsybxjfjs}', `sczzjygry` = '{cjczzgjbylbxbqsjjfjee}', `cyrypjrs` = '{cjsybxbqsjjfje}', `cyryypjgz` = '{cjzgjbylbxbqsjjfje}', `zcjysglry` = '{cjgsbxbqsjjfjee}', `zyjsry` = '{cjsybxbqsjjfjeer}', `bsryhygry` = '{dwcjczzgjbylbxljqjje}', `shscfwhshfwry` = '{dwcjsybxljqjjeee}', `sczzjygry` = '{dwcjzgjbylbxljqjje}', `cyrypjrs` = '{dwecjgsbxljqjjes}', `cyryypjgz` = '{dwecjsybxljqjje}' where `cjsj` = '{cjsj}' '''
-            remote_cursor.execute(update_sql)
-        else:
-            insert_sql = f'''INSERT INTO `pres302010257` (`cjsj`, `czzgjbylbx`, `sybx`, `zgjbylbx`, `gsbx`, `sybxs`, `dwcjczzgjbylbxjfjs`, `dwcjsybxjfjss`, `dwcjzgjbylbxjfjs`, `dwcjsybxjfjs`, `cjczzgjbylbxbqsjjfjee`, `cjsybxbqsjjfje`, `cjzgjbylbxbqsjjfje`, `cjgsbxbqsjjfjee`, `cjsybxbqsjjfjeer`, `dwcjczzgjbylbxljqjje`, `dwcjsybxljqjjeee`, `dwcjzgjbylbxljqjje`, `dwecjgsbxljqjjes`, `dwecjsybxljqjje`) VALUES ('{cjsj}', '{czzgjbylbx}', '{sybx}', '{zgjbylbx}', '{gsbx}', '{sybxs}', '{dwcjczzgjbylbxjfjs}', '{dwcjsybxjfjss}', '{dwcjzgjbylbxjfjs}', '{dwcjsybxjfjs}', '{cjczzgjbylbxbqsjjfjee}', '{cjsybxbqsjjfje}', '{cjzgjbylbxbqsjjfje}', '{cjgsbxbqsjjfjee}', '{cjsybxbqsjjfjeer}', '{dwcjczzgjbylbxljqjje}', '{dwcjsybxljqjjeee}', '{dwcjzgjbylbxljqjje}', '{dwecjgsbxljqjjes}', '{dwecjsybxljqjje}') '''
-            remote_cursor.execute(insert_sql)
-        remote_cursor.close()
-    except Exception as e:
-        print(e)
-        return
-    return
+# def insert_into_remote_db_257(date, cur_data, uuid):
+#     """
+#     企业从业人员信息
+#     """
+#     try:
+#         remote_db.ping(reconnect=True)
+#         remote_cursor = remote_db.cursor()
+#         select_sql = f'''select COUNT(*) from pres302010257 where `cjsj`='{date}'; '''
+#         remote_cursor.execute(select_sql)
+#         exist_data = remote_cursor.fetchall()
+#         has_data = exist_data[0][0] == 1
+#         insert_data = json.loads(cur_data)
+#         cjsj = date
+#         czzgjbylbx = insert_data.get('GongShang_sercurity_3', '')
+#         sybx = insert_data.get('GongShang_sercurity_4', '')
+#         zgjbylbx = insert_data.get('GongShang_sercurity_5', '')
+#         gsbx = insert_data.get('GongShang_sercurity_6', '')
+#         sybxs = insert_data.get('GongShang_sercurity_7', '')
+#         dwcjczzgjbylbxjfjs = insert_data.get('GongShang_sercurity_8', '')
+#         dwcjsybxjfjss = insert_data.get('GongShang_sercurity_9', '')
+#         dwcjzgjbylbxjfjs = insert_data.get('GongShang_sercurity_10', '')
+#         dwcjsybxjfjs = insert_data.get('GongShang_sercurity_11', '')
+#         cjczzgjbylbxbqsjjfjee = insert_data.get('GongShang_sercurity_12', '')
+#         cjsybxbqsjjfje = insert_data.get('GongShang_sercurity_13', '')
+#         cjzgjbylbxbqsjjfje = insert_data.get('GongShang_sercurity_14', '')
+#         cjgsbxbqsjjfjee = insert_data.get('GongShang_sercurity_15', '')
+#         cjsybxbqsjjfjeer = insert_data.get('GongShang_sercurity_16', '')
+#         dwcjczzgjbylbxljqjje = insert_data.get('GongShang_sercurity_17', '')
+#         dwcjsybxljqjjeee = insert_data.get('GongShang_sercurity_18', '')
+#         dwcjzgjbylbxljqjje = insert_data.get('GongShang_sercurity_19', '')
+#         dwecjgsbxljqjjes = insert_data.get('GongShang_sercurity_20', '')
+#         dwecjsybxljqjje = insert_data.get('GongShang_sercurity_21', '')
+#         if has_data:
+#             update_sql = f'''update pres302010257 set `cyryqors` = '{czzgjbylbx}', `nx` = '{sybx}', `zgzg` = '{zgjbylbx}', `lwpqry` = '{gsbx}', `qtcyry` = '{sybxs}', `zcjysglry` = '{dwcjczzgjbylbxjfjs}', `zyjsry` = '{dwcjsybxjfjss}', `bsryhygry` = '{dwcjzgjbylbxjfjs}', `shscfwhshfwry` = '{dwcjsybxjfjs}', `sczzjygry` = '{cjczzgjbylbxbqsjjfjee}', `cyrypjrs` = '{cjsybxbqsjjfje}', `cyryypjgz` = '{cjzgjbylbxbqsjjfje}', `zcjysglry` = '{cjgsbxbqsjjfjee}', `zyjsry` = '{cjsybxbqsjjfjeer}', `bsryhygry` = '{dwcjczzgjbylbxljqjje}', `shscfwhshfwry` = '{dwcjsybxljqjjeee}', `sczzjygry` = '{dwcjzgjbylbxljqjje}', `cyrypjrs` = '{dwecjgsbxljqjjes}', `cyryypjgz` = '{dwecjsybxljqjje}' where `cjsj` = '{cjsj}' '''
+#             remote_cursor.execute(update_sql)
+#         else:
+#             insert_sql = f'''INSERT INTO `pres302010257` (`cjsj`, `czzgjbylbx`, `sybx`, `zgjbylbx`, `gsbx`, `sybxs`, `dwcjczzgjbylbxjfjs`, `dwcjsybxjfjss`, `dwcjzgjbylbxjfjs`, `dwcjsybxjfjs`, `cjczzgjbylbxbqsjjfjee`, `cjsybxbqsjjfje`, `cjzgjbylbxbqsjjfje`, `cjgsbxbqsjjfjee`, `cjsybxbqsjjfjeer`, `dwcjczzgjbylbxljqjje`, `dwcjsybxljqjjeee`, `dwcjzgjbylbxljqjje`, `dwecjgsbxljqjjes`, `dwecjsybxljqjje`) VALUES ('{cjsj}', '{czzgjbylbx}', '{sybx}', '{zgjbylbx}', '{gsbx}', '{sybxs}', '{dwcjczzgjbylbxjfjs}', '{dwcjsybxjfjss}', '{dwcjzgjbylbxjfjs}', '{dwcjsybxjfjs}', '{cjczzgjbylbxbqsjjfjee}', '{cjsybxbqsjjfje}', '{cjzgjbylbxbqsjjfje}', '{cjgsbxbqsjjfjee}', '{cjsybxbqsjjfjeer}', '{dwcjczzgjbylbxljqjje}', '{dwcjsybxljqjjeee}', '{dwcjzgjbylbxljqjje}', '{dwecjgsbxljqjjes}', '{dwecjsybxljqjje}') '''
+#             remote_cursor.execute(insert_sql)
+#         remote_cursor.close()
+#     except Exception as e:
+#         print(e)
+#         return
+#     return
 
 
 # test done!
