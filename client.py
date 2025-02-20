@@ -30,7 +30,7 @@ def new_api():
     print(select_name)
     print(uuid)
     print(cover_flag)
-    page_config = requests.get('http://192.168.1.5:8088/api/load_config', verify=False).json()
+    page_config = requests.get('https://xcyb.weihai.cn/api/load_config', verify=False).json()
     print(page_config)
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
@@ -118,9 +118,9 @@ def fill_general_data_in_page(page, schema, data_pool, cover_flag):
             cur_ele = find_res[selector]
             if cur_ele:
                 if cur_ele.tag in ['input', 'textarea']:
-                    # cur_ele.clear(by_js=True)
-                    # cur_ele.input('', clear=True)
-                    # cur_ele.clear()
+                    cur_ele.clear(by_js=True)
+                    cur_ele.input('', clear=True)
+                    cur_ele.clear()
                     cur_ele.input(data_pool[key], clear=True)
                 elif cur_ele.tag == 'select':
                     try:# TODO太慢了，待优化
@@ -209,7 +209,7 @@ def data():
     cur_page.get(url)
     cur_page.set.window.max()
     cur_page2 = ChromiumPage(co)
-    cur_page2.set.window.size(150, 450)
+    cur_page2.set.window.size(300, 450)
     cur_page2.set.window.location(500, 0)
     encode_select_name = base64.urlsafe_b64encode(select_name.encode('utf-8')).decode('utf-8')
     encode_uuid = base64.urlsafe_b64encode(uuid.encode('utf-8')).decode('utf-8')
@@ -225,7 +225,7 @@ def remove_exponent(num):
 
 
 def raw_load(date, uuid):
-    total_config = requests.get('http://192.168.1.5:8088/api/load_platform_config', verify=False).json()
+    total_config = requests.get('https://xcyb.weihai.cn/api/load_platform_config', verify=False).json()
     input_config = {}
     for config_item in total_config:
         platform = config_item['platform_name']
@@ -234,7 +234,7 @@ def raw_load(date, uuid):
         if platform not in input_config.keys():
             input_config[platform] = {}
         input_config[platform].update({table_name: platform_config})
-    pool = requests.post('http://192.168.1.5:8088/api/load_data', json={'date': date, 'uuid': uuid}, verify=False).json()
+    pool = requests.post('https://xcyb.weihai.cn/api/load_data', json={'date': date, 'uuid': uuid}, verify=False).json()
     for platform in input_config.keys():
         for table in input_config[platform]:
             for item in input_config[platform][table]:
@@ -276,7 +276,7 @@ def close_progress():
 def find_operate_table():
     request_data = request.get_json()
     encode_addr, select_name, uuid, cover_flag = parse_page_name(request_data['url'])
-    page_config = requests.get('http://192.168.1.5:8088/api/load_config', verify=False).json()
+    page_config = requests.get('https://xcyb.weihai.cn/api/load_config', verify=False).json()
     cur_platform = next((item for item in page_config if item.get('name') == select_name), None)
     if not cur_platform:
         return {'status': 'error'}
@@ -298,5 +298,5 @@ def find_operate_table():
 
 
 if __name__ == '__main__':
-    webbrowser.open('http://192.168.1.5:8088/auto_fill')
+    webbrowser.open('https://xcyb.weihai.cn/auto_fill')
     app.run(port=8088)
