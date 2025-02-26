@@ -1,5 +1,6 @@
 import base64
 import datetime
+import sys
 import webbrowser
 import requests
 import time
@@ -249,6 +250,11 @@ def raw_load(date, uuid):
                 else:
                     item.update({'value': ''})
     return input_config
+
+
+@app.route('/shutdown')
+def shutdown():
+    sys.exit(0)
 
 
 @app.route('/close_progress', methods=['POST'])
