@@ -1,5 +1,6 @@
 import base64
 import datetime
+import os
 import sys
 import webbrowser
 import requests
@@ -254,7 +255,7 @@ def raw_load(date, uuid):
 
 @app.route('/shutdown')
 def shutdown():
-    sys.exit(0)
+    os._exit(1)
 
 
 @app.route('/close_progress', methods=['POST'])
