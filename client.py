@@ -8,8 +8,10 @@ import time
 from flask import Flask, render_template, request
 from decimal import Decimal
 from DrissionPage import ChromiumPage, ChromiumOptions
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 cur_page, cur_page2 = None, None
 
 
@@ -305,5 +307,4 @@ def find_operate_table():
 
 
 if __name__ == '__main__':
-    webbrowser.open('https://xcyb.weihai.cn/auto_fill')
     app.run(port=8088)
