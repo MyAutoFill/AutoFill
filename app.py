@@ -58,10 +58,7 @@ def save_full_data_by_uuid(date, data, uuid):
     company_data, other_data = dict(), dict()
     company_set = [
         'company_basicinfo',
-        'company_employee',
         'company_insurance',
-        'company_research',
-        'company_runningsum',
         'company_sign',
         'company_investor'
     ]
