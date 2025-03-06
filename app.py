@@ -415,6 +415,8 @@ def copy_last_month_data():
     for item in last_month_data.keys():
         if item not in cur_month_data.keys():
             cur_month_data[item] = last_month_data[item]
+        if item in cur_month_data.keys() and not cur_month_data[item]:
+            cur_month_data[item] = last_month_data[item]
     final_data = json.dumps(cur_month_data)
     save_data_by_table_name(date, final_data, uuid)
     return {'result': 1}
