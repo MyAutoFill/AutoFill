@@ -1161,7 +1161,7 @@ def remove_exponent(num):
 
 @app.route('/api/download_exe', methods=['GET'])
 def download_exe():
-    exe_path = "client.exe"
+    exe_path = "填报助手安装包.exe"
     if not os.path.exists(exe_path):
         return "文件不存在", 404
     return send_file(exe_path, as_attachment=True)
