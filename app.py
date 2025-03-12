@@ -7,12 +7,14 @@ from base64 import b64decode
 from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta
 from decimal import Decimal
+import re
+from typing import Tuple
 
 import pymysql
 import requests
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad, unpad
-from flask import Flask, request, send_from_directory, jsonify, send_file
+from flask import Flask, request, send_from_directory, jsonify, send_file, abort
 
 import parse_excel
 
@@ -39,6 +41,14 @@ remote_db = pymysql.connect(
    autocommit=True
 )
 
+# Configuration constants
+class Config:
+    """Application configuration constants."""
+    LATEST_VERSION = "1.0.0"
+    FILE_NAME = "client.exe"
+    VERSION_PATTERN = r'^\d+\.\d+\.\d+$'  # Semantic Versioning regex pattern
+
+app.config.from_object(Config)
 
 @app.route('/api/save', methods=['POST'])
 def save():
@@ -1166,6 +1176,69 @@ def download_exe():
         return "文件不存在", 404
     return send_file(exe_path, as_attachment=True)
 
+# check app require update
+@app.route('/api/check_update', methods=['GET'])
+def check_client_exe_update():
+    current_version = request.args.get('current_version')
+    if not current_version:
+        abort(400, description="Missing required parameter: current_version")
+
+    try:
+        needs_update = compare_versions(current_version, app.config['LATEST_VERSION'])
+    except ValueError as e:
+        app.logger.error(f"Version validation failed: {str(e)}")
+        abort(400, description=str(e))
+
+    response_data = {
+        "current_version": current_version,
+        "latest_version": app.config['LATEST_VERSION'],
+        "needs_update": needs_update
+    }
+
+    return jsonify(response_data)
+
+@app.errorhandler(400)
+def handle_bad_request(error):
+    """Handle 400 Bad Request errors."""
+    return jsonify({
+        "error": error.description,
+        "expected_format": "SemVer (e.g. 1.0.0)"
+    }), 400
+
+@app.errorhandler(500)
+def handle_internal_error(error):
+    """Handle 500 Internal Server Errors."""
+    app.logger.error(f"Server error: {str(error)}")
+    return jsonify({
+        "error": "Internal server error",
+        "request_id": request.headers.get('X-Request-ID', '')
+    }), 500
+
+
+def parse_version(version_str: str) -> Tuple[int, int, int]:
+    if not re.match(app.config['VERSION_PATTERN'], version_str):
+        print(f"Invalid version format: {version_str}")
+
+    try:
+        major, minor, patch = map(int, version_str.split('.'))
+        return major, minor, patch
+    except ValueError as e:
+        print(f"Version components must be integers: {version_str}")
+    return -1,-1,-1
+
+def compare_versions(client_version: str, server_version: str) -> bool:
+    client = parse_version(client_version)
+    server = parse_version(server_version)
+    return not (client == server)
+
+@app.route('/api/download_client_by_version', methods=['GET'])
+def download_client_by_version():
+    version = request.args.get('request_version')
+    exe_path = version + '\\' + app.config['FILE_NAME']
+
+    if not os.path.exists(exe_path):
+        return "文件不存在", 404
+    return send_file(exe_path, as_attachment=True)
 
 @app.route('/api/download_upload_template', methods=['GET'])
 def download_upload_template():
