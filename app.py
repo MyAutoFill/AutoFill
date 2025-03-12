@@ -58,10 +58,7 @@ def save_full_data_by_uuid(date, data, uuid):
     company_data, other_data = dict(), dict()
     company_set = [
         'company_basicinfo',
-        'company_employee',
         'company_insurance',
-        'company_research',
-        'company_runningsum',
         'company_sign',
         'company_investor'
     ]
@@ -417,6 +414,8 @@ def copy_last_month_data():
     last_month_data = load_data_by_table_name(last_month, uuid)
     for item in last_month_data.keys():
         if item not in cur_month_data.keys():
+            cur_month_data[item] = last_month_data[item]
+        if item in cur_month_data.keys() and not cur_month_data[item]:
             cur_month_data[item] = last_month_data[item]
     final_data = json.dumps(cur_month_data)
     save_data_by_table_name(date, final_data, uuid)
@@ -1162,7 +1161,7 @@ def remove_exponent(num):
 
 @app.route('/api/download_exe', methods=['GET'])
 def download_exe():
-    exe_path = "client.exe"
+    exe_path = "填报助手安装包.exe"
     if not os.path.exists(exe_path):
         return "文件不存在", 404
     return send_file(exe_path, as_attachment=True)
