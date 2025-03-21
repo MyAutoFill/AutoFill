@@ -13,6 +13,10 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 cur_page, cur_page2 = None, None
+cookies = dict()
+main_co = ChromiumOptions().auto_port()
+main_page = ChromiumPage(main_co)
+main_page.get('https://xcyb.weihai.cn/auto_fill')
 
 
 @app.route('/button')
@@ -212,6 +216,8 @@ def data():
     cur_page = ChromiumPage(co)
     cur_page.get(url)
     cur_page.set.window.max()
+    cur_cookie = main_page.cookies(all_info=True, all_domains=True)
+    cur_page.set.cookies(cur_cookie)
     cur_page2 = ChromiumPage(co)
     cur_page2.set.window.size(1100, 500)
     cur_page2.set.window.location(500, 0)
