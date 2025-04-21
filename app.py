@@ -1087,7 +1087,7 @@ def download_xlsx():
 def prepare_excel(table, uuid):
     # Load data
     table_config = load_config_by_table_name(table)
-    data_pool = load_data_by_company_id(datetime.datetime.now().strftime('%Y-%m'), table_config[0], uuid)
+    data_pool = load_data_by_company_id(datetime.now().strftime('%Y-%m'), table_config[0], uuid)
 
     data = {}
     for item in data_pool:
@@ -1106,7 +1106,7 @@ def fill_excel_table(table, data_pool):
 
     # Save excel to temporary path
     excel_save_path = os.path.join(
-        'temp_' + table + '_excel_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
+        'temp_' + table + '_excel_' + datetime.now().strftime('%Y%m%d%H%M%S') + '.xlsx')
     parse_excel.fill_excel_data('asset/' + table + '_template.xlsx', excel_structure, excel_save_path)
     return excel_save_path
 

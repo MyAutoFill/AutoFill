@@ -16,6 +16,7 @@ cur_page, cur_page2 = None, None
 cookies = dict()
 main_co = ChromiumOptions().auto_port()
 main_page = ChromiumPage(main_co)
+main_page.set.window.max()
 main_page.get('https://xcyb.weihai.cn/auto_fill')
 
 
@@ -28,6 +29,15 @@ def button():
     new_name = base64.urlsafe_b64decode(select_name).decode('utf-8')
     new_uuid = base64.urlsafe_b64decode(uuid).decode('utf-8')
     return render_template('button.html', address=new_addr, select_name=new_name, uuid=new_uuid)
+
+
+@app.route('/run_browser')
+def run():
+    global main_co, main_page
+    main_page = ChromiumPage(addr_or_opts=main_co)
+    main_page.set.window.max()
+    main_page.get('https://xcyb.weihai.cn/auto_fill')
+    return {}
 
 
 @app.route('/new_api', methods=['POST'])
