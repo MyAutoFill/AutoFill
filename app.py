@@ -50,6 +50,11 @@ class Config:
 
 app.config.from_object(Config)
 
+
+@app.route('/api/get_newest_version', methods=['GET'])
+def get_newest_version():
+    return "1.0.0"
+
 @app.route('/api/save', methods=['POST'])
 def save():
     request_data = request.get_json()
