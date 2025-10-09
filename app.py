@@ -1098,6 +1098,83 @@ def parse_table():
     return jsonify(result)
 
 
+@app.route('/api/list_all_job', methods=['POST'])
+def list_all_job():
+    request_data = request.get_json()
+    uuid = request_data['uuid']
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    select_sql = f'''select job_id, jobDemand1, jobDemand2, jobDemand3, jobDemand4, jobDeman5, jobDeman6, jobDeman7,
+     jobDeman8, jobDeman9, jobDeman10, jobDeman11, jobDemand12 from recruit_info_tbl where `company_id` = '{uuid}' '''
+    cursor.execute(select_sql)
+    exist_data = cursor.fetchall()
+    result = list()
+    for item in exist_data:
+        result.append({
+            'job_id': item[0],
+            'jobDemand1': item[1],
+            'jobDemand2': item[2],
+            'jobDemand3': item[3],
+            'jobDemand4': item[4],
+            'jobDeman5': item[5],
+            'jobDeman6': item[6],
+            'jobDeman7': item[7],
+            'jobDeman8': item[8],
+            'jobDeman9': item[9],
+            'jobDeman10': item[10],
+            'jobDeman11': item[11],
+            'jobDemand12': item[12],
+        })
+    return jsonify(result)
+
+
+@app.route('/api/del_cur_job_info', methods=['POST'])
+def del_cur_job_info():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    job_id = request_data["job_id"]
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = f'''delete from recruit_info_tbl where job_id = '{job_id}' and company_id = '{company_id}' '''
+    cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
+@app.route('/api/save_single_job', methods=['POST'])
+def save_single_job():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    # job_id为空时则为新增，否则为修改
+    job_id = request_data["job_id"]
+    jobDemand1 = request_data["values"]["jobDemand1"]
+    jobDemand2 = request_data["values"]["jobDemand2"]
+    jobDemand3 = request_data["values"]["jobDemand3"]
+    jobDemand4 = request_data["values"]["jobDemand4"]
+    jobDeman5 = request_data["values"]["jobDeman5"]
+    jobDeman6 = request_data["values"]["jobDeman6"]
+    jobDeman7 = request_data["values"]["jobDeman7"]
+    jobDeman8 = request_data["values"]["jobDeman8"]
+    jobDeman9 = request_data["values"]["jobDeman9"]
+    jobDeman10 = request_data["values"]["jobDeman10"]
+    jobDeman11 = request_data["values"]["jobDeman11"]
+    jobDemand12 = request_data["values"]["jobDemand12"]
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    if job_id:
+        sql = f'''update recruit_info_tbl set `jobDemand1` = '{jobDemand1}', `jobDemand2` = '{jobDemand2}',
+         `jobDemand3` = '{jobDemand3}', `jobDemand4` = '{jobDemand4}', `jobDeman5` = '{jobDeman5}',
+          `jobDeman6` = '{jobDeman6}', `jobDeman7` = '{jobDeman7}', `jobDeman8` = '{jobDeman8}',
+           `jobDeman9` = '{jobDeman9}', `jobDeman10` = '{jobDeman10}', `jobDeman11` = '{jobDeman11}',
+            `jobDemand12` = '{jobDemand12}' where `job_id` = '{job_id}' and `company_id`='{company_id}' '''
+        cursor.execute(sql)
+    else:
+        sql = f'''INSERT INTO recruit_info_tbl VALUES (NULL, '{jobDemand1}', '{jobDemand2}', '{jobDemand3}', '{jobDemand4}', '{jobDeman5}', '{jobDeman6}', '{jobDeman7}', '{jobDeman8}', '{jobDeman9}', '{jobDeman10}', '{jobDeman11}', '{jobDemand12}', '{company_id}') '''
+        cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
 @app.route('/api/fill_excel', methods=['GET'])
 def download_xlsx():
     table_name = request.args.get('table_name')
