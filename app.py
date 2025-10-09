@@ -1123,8 +1123,6 @@ def prepare_excel(table, uuid):
 
 def fill_excel_table(table, data_pool):
     excel_structure = parse_excel.parse_json_config('asset/' + table + '.json')
-
-    # fill excel data | use Excel key get value in data pool
     for key in excel_structure:
         if key in data_pool:
             excel_structure[key]['value'] = data_pool[key]
