@@ -206,6 +206,10 @@ def sync_data():
     auth_info = http_post_request("http://59.224.25.132:10017/askari/auth/login", payload=auth_payload,
                                   header=auth_header)
 
+    if auth_info["data"]["token"] == '' or auth_info["data"]["token"] is None:
+        app.logger.warning(f"third party authentication failed，uuid={uuid}")
+        return {'status': 'error'}
+
     if auth_info["data"]["token"] and auth_info["data"]["token"] != auth_token:
         token["date"] = date_time
         token['token'] = auth_info["data"]["token"]
@@ -223,8 +227,10 @@ def sync_data():
     # third_party_result = parse_excel.parse_json_config('asset/test_doc/out.json')
     third_party_result = http_post_request('http://59.224.25.132:10017/api/v1/company_data', payload=data_payload,
                                            header=data_header)
-    if 'data' not in third_party_result.keys():
+    if third_party_result['data'] is None or third_party_result['data'] == '' or third_party_result['data'] == {} or 'data' not in third_party_result.keys():
+        app.logger.warning(f"third party return empty result，uuid={uuid}")
         return {'status': 'error'}
+
     # 处理返回数据
     if third_party_result['data'] == 'error':
         return {'status': 'error'}
