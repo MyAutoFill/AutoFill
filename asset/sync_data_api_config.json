@@ -90,5 +90,23 @@
         "币种,ca04": "company_investor20",
         "投资人": "company_investor1",
         "纳税人识别号": "company_investor28"
+    },
+    "企业参保信息": {
+        "单位登记ID": "company_insurance_1",
+        "单位缴费额": "HumanSocial_NewSheBao_40",
+        "缴费基数（企业总和）": "HumanSocial_NewSheBao_41",
+        "联系人姓名": "company_insurance_4",
+        "统计年月": "HumanSocial_NewSheBao_30",
+        "缴费人数": "HumanSocial_NewSheBao_40",
+        "个人缴费额": "HumanSocial_NewSheBao_40",
+        "工商登记执照号码": "HumanSocial_NewSheBao_68",
+        "统一社会信用代码": "company_basicinfo_1",
+        "法定代表人姓名": "company_basicinfo_26",
+        "联系人电话": "company_basicinfo_33",
+        "领取金额": "HumanSocial_NewSheBao_40",
+        "单位地址": "company_basicinfo_17",
+        "组织机构代码": "company_insurance_1",
+        "参保单位名称": "company_basicinfo_2",
+        "领取人数": "HumanSocial_NewSheBao_40"
     }
 }
