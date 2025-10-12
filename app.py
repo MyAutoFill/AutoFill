@@ -398,6 +398,75 @@ def load_from_excel():
             os.remove(file_path)
 
 
+@app.route('/api/load_basic_info_from_excel', methods=['POST'])
+def load_basic_info_from_excel():
+    # Validate file presence
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part in the request'}), 400
+
+    file = request.files['file']
+
+    # Validate file selection
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    # Validate file format
+    if not _is_valid_excel_file(file.filename):
+        return jsonify({'error': 'Invalid file format. Please upload an Excel file.'}), 400
+
+    # Process the Excel file
+    file_path = _save_temp_file(file)
+    
+    try:
+        extracted_data = _extract_basic_info_data(file_path)
+        return jsonify(extracted_data), 200
+    except FileNotFoundError as e:
+        app.logger.error(f"Config file not found: {str(e)}")
+        return jsonify({'error': 'Config Fild Not Found'}), 500
+    except Exception as e:
+        app.logger.error(f"Failed to process the file: {str(e)}")
+        return jsonify({'error': f'Failed to process the file: {str(e)}'}), 500
+    finally:
+        _cleanup_temp_file(file_path)
+
+
+def _is_valid_excel_file(filename):
+    return filename.endswith(('.xls', '.xlsx'))
+
+
+def _save_temp_file(file):
+    temp_dir = 'temp_files'
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    
+    file_path = os.path.join(temp_dir, file.filename)
+    file.save(file_path)
+    return file_path
+
+
+def _extract_basic_info_data(file_path):
+
+    config_file_path = 'asset/基本信息表.json'
+    
+    # Load position configuration
+    excel_config = parse_excel.parse_json_config(config_file_path)
+    if excel_config is None:
+        raise FileNotFoundError(f'Config file not found: {config_file_path}')
+    
+    # Extract data from Excel using configuration
+    extracted_data = parse_excel.read_excel_data(file_path, excel_config)
+    
+    return extracted_data
+
+
+def _cleanup_temp_file(file_path):
+    try:
+        if file_path and os.path.exists(file_path):
+            os.remove(file_path)
+    except Exception as e:
+        app.logger.warning(f"Failed to clean up temp file: {str(e)}")
+
+
 # test done!
 @app.route('/api/load_data', methods=['POST'])
 def load():
