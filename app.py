@@ -1108,10 +1108,13 @@ def parse_table():
 def list_all_job():
     request_data = request.get_json()
     uuid = request_data['uuid']
+    job_id = request_data.get('job_id', '')
     db.ping(reconnect=True)
     cursor = db.cursor()
     select_sql = f'''select job_id, jobDemand1, jobDemand2, jobDemand3, jobDemand4, jobDeman5, jobDeman6, jobDeman7,
-     jobDeman8, jobDeman9, jobDeman10, jobDeman11, jobDemand12 from recruit_info_tbl where `company_id` = '{uuid}' '''
+     jobDeman8, jobDeman9, jobDeman10, jobDeman11, jobDemand12, jobDemand13, jobDemand14, jobDemand15, jobDemand16, jobDemand17, jobDemand18 from recruit_info_tbl where `company_id` = '{uuid}' '''
+    if job_id:
+        select_sql += f' AND job_id = {job_id}'
     cursor.execute(select_sql)
     exist_data = cursor.fetchall()
     result = list()
@@ -1130,6 +1133,12 @@ def list_all_job():
             'jobDeman10': item[10],
             'jobDeman11': item[11],
             'jobDemand12': item[12],
+            'jobDemand13': item[13],
+            'jobDemand14': item[14],
+            'jobDemand15': item[15],
+            'jobDemand16': item[16],
+            'jobDemand17': item[17],
+            'jobDemand18': item[18],
         })
     return jsonify(result)
 
@@ -1165,6 +1174,12 @@ def save_single_job():
     jobDeman10 = request_data["values"]["jobDeman10"]
     jobDeman11 = request_data["values"]["jobDeman11"]
     jobDemand12 = request_data["values"]["jobDemand12"]
+    jobDemand13 = request_data["values"]["jobDemand13"]
+    jobDemand14 = request_data["values"]["jobDemand14"]
+    jobDemand15 = request_data["values"]["jobDemand15"]
+    jobDemand16 = request_data["values"]["jobDemand16"]
+    jobDemand17 = request_data["values"]["jobDemand17"]
+    jobDemand18 = request_data["values"]["jobDemand18"]
     db.ping(reconnect=True)
     cursor = db.cursor()
     if job_id:
@@ -1172,14 +1187,150 @@ def save_single_job():
          `jobDemand3` = '{jobDemand3}', `jobDemand4` = '{jobDemand4}', `jobDeman5` = '{jobDeman5}',
           `jobDeman6` = '{jobDeman6}', `jobDeman7` = '{jobDeman7}', `jobDeman8` = '{jobDeman8}',
            `jobDeman9` = '{jobDeman9}', `jobDeman10` = '{jobDeman10}', `jobDeman11` = '{jobDeman11}',
-            `jobDemand12` = '{jobDemand12}' where `job_id` = '{job_id}' and `company_id`='{company_id}' '''
+            `jobDemand12` = '{jobDemand12}', `jobDemand13` = '{jobDemand13}', `jobDemand14` = '{jobDemand14}', `jobDemand15` = '{jobDemand15}', `jobDemand16` = '{jobDemand16}', `jobDemand17` = '{jobDemand17}', `jobDemand18` = '{jobDemand18}' where `job_id` = '{job_id}' and `company_id`='{company_id}' '''
         cursor.execute(sql)
     else:
-        sql = f'''INSERT INTO recruit_info_tbl VALUES (NULL, '{jobDemand1}', '{jobDemand2}', '{jobDemand3}', '{jobDemand4}', '{jobDeman5}', '{jobDeman6}', '{jobDeman7}', '{jobDeman8}', '{jobDeman9}', '{jobDeman10}', '{jobDeman11}', '{jobDemand12}', '{company_id}') '''
+        sql = f'''INSERT INTO recruit_info_tbl VALUES (NULL, '{jobDemand1}', '{jobDemand2}', '{jobDemand3}', '{jobDemand4}', '{jobDeman5}', '{jobDeman6}', '{jobDeman7}', '{jobDeman8}', '{jobDeman9}', '{jobDeman10}', '{jobDeman11}', '{jobDemand12}', '{jobDemand13}', '{jobDemand14}', '{jobDemand15}', '{jobDemand16}', '{jobDemand17}', '{jobDemand18}', '{company_id}') '''
         cursor.execute(sql)
     cursor.close()
     return {}
 
+
+
+@app.route('/api/list_all_person', methods=['POST'])
+def list_all_person():
+    request_data = request.get_json()
+    uuid = request_data['uuid']
+    is_can_bao = request_data['is_can_bao']
+    user_id = request_data.get('user_id', '')
+    result = get_all_person(uuid, user_id, is_can_bao)
+    return jsonify(result)
+
+
+@app.route('/api/del_cur_person_info', methods=['POST'])
+def del_cur_person_info():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    user_id = request_data["user_id"]
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = f'''delete from employee_info_tbl where user_id = '{user_id}' and company_id = '{company_id}' '''
+    cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
+@app.route('/api/save_single_person', methods=['POST'])
+def save_single_person():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    # user_id为空时则为新增，否则为修改
+    user_id = request_data["user_id"]
+    data = request_data['values']
+    update_list, insert_list = list(), list()
+    for key, value in data.items():
+        update_list.append(f"`{key}` = '{value}'")
+        insert_list.append(f"'{value}'")
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    if user_id:
+        update_str = ', '.join(update_list)
+        sql = f'''update employee_info_tbl set {update_str} where `user_id` = '{user_id}' and `company_id`='{company_id}' '''
+        cursor.execute(sql)
+    else:
+        insert_str = ', '.join(insert_list)
+        sql = f'''INSERT INTO employee_info_tbl VALUES (NULL, {insert_str}, '{company_id}') '''
+        print(sql)
+        cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
+def get_all_person(uuid, user_id, is_can_bao):
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    if is_can_bao:
+        tbl_name = 'person_canbao_tbl'
+        name_list = [f'personCanBao{i}' for i in range(1, 29+1)]
+    else:
+        tbl_name = 'employee_info_tbl'
+        name_list = [f'addHumanInfo{i}' for i in range(1, 35+1)]
+    select_str = ', '.join(name_list)
+    select_sql = f'''select user_id, {select_str} from {tbl_name} where `company_id` = '{uuid}' '''
+    if user_id:
+        select_sql += f' AND user_id = {user_id}'
+    cursor.execute(select_sql)
+    exist_data = cursor.fetchall()
+    result = list()
+    for item in exist_data:
+        temp = dict()
+        for i in range(1, len(name_list)+1):
+            temp.update({name_list[i - 1]: item[i]})
+        temp.update({'user_id': item[0]})
+        result.append(temp)
+    return result
+
+
+@app.route('/api/del_cur_person_canbao_info', methods=['POST'])
+def del_cur_person_canbao_info():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    user_id = request_data["user_id"]
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = f'''delete from person_canbao_tbl where user_id = '{user_id}' and company_id = '{company_id}' '''
+    cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
+@app.route('/api/save_single_person_canbao', methods=['POST'])
+def save_single_person_canbao():
+    request_data = request.get_json()
+    company_id = request_data["uuid"]
+    # user_id为空时则为新增，否则为修改
+    user_id = request_data["user_id"]
+    data = request_data['values']
+    update_list, insert_list = list(), list()
+    for key, value in data.items():
+        update_list.append(f"`{key}` = '{value}'")
+        insert_list.append(f"'{value}'")
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    if user_id:
+        update_str = ', '.join(update_list)
+        sql = f'''update person_canbao_tbl set {update_str} where `user_id` = '{user_id}' and `company_id`='{company_id}' '''
+        cursor.execute(sql)
+    else:
+        insert_str = ', '.join(insert_list)
+        sql = f'''INSERT INTO person_canbao_tbl VALUES (NULL, {insert_str}, '{company_id}') '''
+        cursor.execute(sql)
+    cursor.close()
+    return {}
+
+
+@app.route('/api/list_all_renshe_person', methods=['POST'])
+def list_all_renshe_person():
+    request_data = request.get_json()
+    uuid = request_data['uuid']
+    canbao_data = get_all_person(uuid, '', True)
+    person_data = get_all_person(uuid, '', False)
+    canbao_option, person_option = list(), list()
+    for item in canbao_data:
+        canbao_option.append({
+            'label': item.get('personCanBao2'),
+            'value': item.get('user_id')
+        })
+    for item in person_data:
+        person_option.append({
+            'label': item.get('addHumanInfo1'),
+            'value': item.get('user_id')
+        })
+    res = {
+        'canbao_data': canbao_option,
+        'person_data': person_option
+    }
+    return jsonify(res)
 
 @app.route('/api/fill_excel', methods=['GET'])
 def download_xlsx():
