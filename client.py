@@ -5,10 +5,12 @@ import sys
 import webbrowser
 import requests
 import time
-from flask import Flask, render_template, request
+import json
+from flask import Flask, render_template, request, jsonify
 from decimal import Decimal
 from DrissionPage import ChromiumPage, ChromiumOptions
 from flask_cors import CORS
+from gmssl import sm3, func
 
 app = Flask(__name__)
 CORS(app)
@@ -18,6 +20,41 @@ main_co = ChromiumOptions().auto_port()
 main_page = ChromiumPage(main_co)
 main_page.set.window.max()
 main_page.get('https://xcyb.weihai.cn/auto_fill')
+
+JOB_RECEIVE_API_URL = "https://rsjjyfw.weihai.cn/whrcr/api"
+SECRET_KEY = "D5FC55F5B79D34FCDA2C60064F52B8EC"
+AUTH_CODE = "wqt@20251011"
+
+
+def sm3_hash(data):
+    data_bytes = data.encode('utf-8')
+    hash_result = sm3.sm3_hash(func.bytes_to_list(data_bytes))
+    return hash_result.upper()
+
+
+def generate_sign(json_params):
+    json_str = json.dumps(json_params, separators=(',', ':'), ensure_ascii=False)
+    sign_data = json_str + SECRET_KEY
+    sign = sm3_hash(sign_data)
+    return sign
+
+
+def validate_job_params(params):
+    required_fields = [
+        'tyshxydm', 'corpName', 'zwwybs', 'jobName', 'areaCode',
+        'zwld', 'salaryMin', 'salaryMax', 'ageLimit', 'descr',
+        'jobAddr', 'zprs', 'jobTypeCode', 'sfjscjr'
+    ]
+    
+    for field in required_fields:
+        if field not in params or params[field] is None or params[field] == '':
+            return False, f"缺少必填字段: {field}"
+    
+    if params.get('ageLimit') == 1:
+        if 'ageMin' not in params or 'ageMax' not in params:
+            return False, "当ageLimit为1时，ageMin和ageMax为必填字段"
+    
+    return True, "验证通过"
 
 
 @app.route('/button')
@@ -320,6 +357,91 @@ def find_operate_table():
             table_name = item.get('name')
     print(table_name)
     return {'name': table_name}
+
+
+@app.route('/api/job/receive', methods=['POST'])
+def receive_job():
+    try:
+        # TODO: 如何从页面获取数据？
+        request_data = request.get_json()
+        if not request_data:
+            return jsonify({
+                'code': 400,
+                'message': '请求数据不能为空'
+            }), 400
+        
+        req_params = {
+            'reqBase': {
+                'authCode': AUTH_CODE
+            },
+            'reqCont': {}
+        }
+        
+        job_params = request_data.get('jobData', {})
+        
+        is_valid, error_msg = validate_job_params(job_params)
+        if not is_valid:
+            return jsonify({
+                'code': 400,
+                'message': error_msg
+            }), 400
+        
+        job_params.setdefault('gzxzCode', 1)  # 工作性质编码，默认1
+        job_params.setdefault('xlyqCode', 0)  # 学历要求编码，默认0
+        job_params.setdefault('gzjyCode', 0)  # 工作年限要求编码，默认0
+        job_params.setdefault('jobLabelCode', 1)  # 职位标签编码，默认1
+        
+        req_params['reqCont'] = job_params
+        
+        sign = generate_sign(req_params)
+        
+        api_url = f"{JOB_RECEIVE_API_URL}?method=rcr.gw.open.api.job.receive&sign={sign}"
+        
+        headers = {
+            'Content-Type': 'application/json',
+            'User-Agent': 'AutoFill-Client/1.0'
+        }
+        
+        response = requests.post(
+            api_url,
+            json=req_params,
+            headers=headers,
+            timeout=30,
+            verify=False
+        )
+        
+        if response.status_code == 200:
+            try:
+                result = response.json()
+                return jsonify(result)
+            except json.JSONDecodeError:
+                return jsonify({
+                    'code': 500,
+                    'message': '服务器返回数据格式错误'
+                }), 500
+        else:
+            return jsonify({
+                'code': response.status_code,
+                'message': f'请求失败，状态码: {response.status_code}'
+            }), response.status_code
+            
+    except requests.exceptions.Timeout:
+        return jsonify({
+            'code': 408,
+            'message': '请求超时'
+        }), 408
+    except requests.exceptions.ConnectionError:
+        return jsonify({
+            'code': 503,
+            'message': '无法连接到服务器'
+        }), 503
+    except Exception as e:
+        app.logger.error(f"接收职位接口错误: {str(e)}")
+        return jsonify({
+            'code': 500,
+            'message': f'服务器内部错误: {str(e)}'
+        }), 500
+
 
 
 if __name__ == '__main__':
