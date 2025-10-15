@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import time
+import uuid
 import xml.etree.ElementTree as ET
 from base64 import b64decode
 from binascii import hexlify, unhexlify
@@ -15,6 +16,7 @@ import requests
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad, unpad
 from flask import Flask, request, send_from_directory, jsonify, send_file, abort
+from gmssl import sm3
 
 import parse_excel
 
@@ -1184,7 +1186,9 @@ def list_all_job():
     db.ping(reconnect=True)
     cursor = db.cursor()
     select_sql = f'''select job_id, jobDemand1, jobDemand2, jobDemand3, jobDemand4, jobDeman5, jobDeman6, jobDeman7,
-     jobDeman8, jobDeman9, jobDeman10, jobDeman11, jobDemand12, jobDemand13, jobDemand14, jobDemand15, jobDemand16, jobDemand17, jobDemand18 from recruit_info_tbl where `company_id` = '{uuid}' '''
+     jobDeman8, jobDeman9, jobDeman10, jobDeman11, jobDemand12, jobDemand13, jobDemand14, jobDemand15, jobDemand16,
+      jobDemand17, jobDemand18, jobDemand19, jobDemand20, jobDemand21, jobDemand22 from recruit_info_tbl
+       where `company_id` = '{uuid}' '''
     if job_id:
         select_sql += f' AND job_id = {job_id}'
     cursor.execute(select_sql)
@@ -1197,7 +1201,7 @@ def list_all_job():
             'jobDemand2': item[2],
             'jobDemand3': item[3],
             'jobDemand4': item[4],
-            'jobDeman5': item[5],
+            'jobDeman5': item[5].split(','),
             'jobDeman6': item[6],
             'jobDeman7': item[7],
             'jobDeman8': item[8],
@@ -1211,6 +1215,10 @@ def list_all_job():
             'jobDemand16': item[16],
             'jobDemand17': item[17],
             'jobDemand18': item[18],
+            'jobDemand19': item[19],
+            'jobDemand20': item[20],
+            'jobDemand21': item[21],
+            'jobDemand22': item[22].split(',') if item[22] else [],
         })
     return jsonify(result)
 
@@ -1238,7 +1246,7 @@ def save_single_job():
     jobDemand2 = request_data["values"]["jobDemand2"]
     jobDemand3 = request_data["values"]["jobDemand3"]
     jobDemand4 = request_data["values"]["jobDemand4"]
-    jobDeman5 = request_data["values"]["jobDeman5"]
+    jobDeman5 = ','.join(request_data["values"]["jobDeman5"])
     jobDeman6 = request_data["values"]["jobDeman6"]
     jobDeman7 = request_data["values"]["jobDeman7"]
     jobDeman8 = request_data["values"]["jobDeman8"]
@@ -1252,6 +1260,10 @@ def save_single_job():
     jobDemand16 = request_data["values"]["jobDemand16"]
     jobDemand17 = request_data["values"]["jobDemand17"]
     jobDemand18 = request_data["values"]["jobDemand18"]
+    jobDemand19 = request_data["values"]["jobDemand19"]
+    jobDemand20 = request_data["values"]["jobDemand20"]
+    jobDemand21 = request_data["values"]["jobDemand21"]
+    jobDemand22 = ','.join(request_data["values"]["jobDemand22"])
     db.ping(reconnect=True)
     cursor = db.cursor()
     if job_id:
@@ -1259,14 +1271,86 @@ def save_single_job():
          `jobDemand3` = '{jobDemand3}', `jobDemand4` = '{jobDemand4}', `jobDeman5` = '{jobDeman5}',
           `jobDeman6` = '{jobDeman6}', `jobDeman7` = '{jobDeman7}', `jobDeman8` = '{jobDeman8}',
            `jobDeman9` = '{jobDeman9}', `jobDeman10` = '{jobDeman10}', `jobDeman11` = '{jobDeman11}',
-            `jobDemand12` = '{jobDemand12}', `jobDemand13` = '{jobDemand13}', `jobDemand14` = '{jobDemand14}', `jobDemand15` = '{jobDemand15}', `jobDemand16` = '{jobDemand16}', `jobDemand17` = '{jobDemand17}', `jobDemand18` = '{jobDemand18}' where `job_id` = '{job_id}' and `company_id`='{company_id}' '''
+            `jobDemand12` = '{jobDemand12}', `jobDemand13` = '{jobDemand13}', `jobDemand14` = '{jobDemand14}',
+             `jobDemand15` = '{jobDemand15}', `jobDemand16` = '{jobDemand16}', `jobDemand17` = '{jobDemand17}',
+              `jobDemand18` = '{jobDemand18}',`jobDemand19` = '{jobDemand19}',`jobDemand20` = '{jobDemand20}',
+              `jobDemand21` = '{jobDemand21}',`jobDemand22` = '{jobDemand22}' where `job_id` = '{job_id}' and `company_id`='{company_id}' '''
         cursor.execute(sql)
     else:
-        sql = f'''INSERT INTO recruit_info_tbl VALUES (NULL, '{jobDemand1}', '{jobDemand2}', '{jobDemand3}', '{jobDemand4}', '{jobDeman5}', '{jobDeman6}', '{jobDeman7}', '{jobDeman8}', '{jobDeman9}', '{jobDeman10}', '{jobDeman11}', '{jobDemand12}', '{jobDemand13}', '{jobDemand14}', '{jobDemand15}', '{jobDemand16}', '{jobDemand17}', '{jobDemand18}', '{company_id}') '''
+        sql = f'''INSERT INTO recruit_info_tbl VALUES (NULL, '{jobDemand1}', '{jobDemand2}', '{jobDemand3}', 
+        '{jobDemand4}', '{jobDeman5}', '{jobDeman6}', '{jobDeman7}', '{jobDeman8}', '{jobDeman9}', '{jobDeman10}',
+         '{jobDeman11}', '{jobDemand12}', '{jobDemand13}', '{jobDemand14}', '{jobDemand15}', '{jobDemand16}', 
+         '{jobDemand17}', '{jobDemand18}', '{jobDemand19}', '{jobDemand20}', '{jobDemand21}', '{jobDemand22}', '{company_id}') '''
         cursor.execute(sql)
+        company_data = load_company_data_by_table_name(company_id)
+        tyshxydm = company_data["company_basicinfo_1"]
+        corpName = company_data["company_basicinfo_2"]
+        zwwybs = str(uuid.uuid4())
+        jobName = jobDemand2
+        area_dict = {"环翠区": 371002,"文登区": 371081,"荣成市": 371082,"乳山市": 371083,"高新区": 371084,"经济区": 371085,"临港区": 371086}
+        areaCode = str(area_dict.get(jobDemand3, ''))
+        gzxz_dict = {"全职": 1,"实习": 4,"大规模急用工": 6}
+        gzxzCode = str(gzxz_dict.get(jobDemand1, 1))
+        xlyq_dict = {"不限": 0,"中专/中技": 14,"高中": 17,"大专": 20,"本科": 30,"硕士": 40,"博士": 50}
+        xlyqCode = str(xlyq_dict.get(jobDeman8, ''))
+        zwld = jobDemand22
+        gzjy_dict = {"不限": 0,"应届生": 1,"1年以下": 2,"1-3年": 3,"3-5年": 4,"5-10年": 5,"10年以上": 6}
+        gzjyCode = str(gzjy_dict.get(jobDeman7, ''))
+        salaryMin = str(jobDeman9)
+        salaryMax = str(jobDeman10)
+        ageLimit = 1 if jobDemand12 == '有年龄限制' else 0
+        ageMin = jobDemand17
+        ageMax = jobDemand18
+        descr = jobDeman11
+        jobAddr = jobDemand4
+        zprs = jobDeman6
+        jobTypeCode = get_job_code(request_data["values"]["jobDeman5"])
+        sfjscjr = 1 if jobDemand21 else 0
+        jobLabelCode = 1 if jobDemand19 else 0
+        body_json = {
+            "reqBase": {
+                "authCode": "wqt@20251011"
+            },
+            "reqCont": {
+                "tyshxydm": tyshxydm,
+                "corpName": corpName,
+                "zwwybs": zwwybs,
+                "jobName": jobName,
+                "areaCode": areaCode,
+                "zwld": zwld,
+                "gzxzCode": gzxzCode,
+                "salaryMin": salaryMin,
+                "salaryMax": salaryMax,
+                "ageLimit": ageLimit,
+                "ageMin": ageMin,
+                "ageMax": ageMax,
+                "descr": descr,
+                "jobAddr": jobAddr,
+                "zprs": zprs,
+                "jobTypeCode": jobTypeCode,
+                "sfjscjr": sfjscjr,
+                "jobLabelCode": jobLabelCode,
+                "gzjyCode": gzjyCode,
+                "xlyqCode": xlyqCode,
+            }
+        }
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        json_str = json.dumps(body_json, ensure_ascii=False).replace(": ", ":").replace(", ", ",")
+        sign = sm3.sm3_hash(sm3.bytes_to_list(f'{json_str}D5FC55F5B79D34FCDA2C60064F52B8EC'.encode('utf-8')))
+        requests.post('https://rsjjyfw.weihai.cn/whrcr/api?method=rcr.gw.open.api.job.receive&sign=' + sign, headers=headers, data=json_str)
     cursor.close()
     return {}
 
+
+def get_job_code(job_list):
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    select_sql = f'''select id from job_list where classa = '{job_list[0]}' and classb = '{job_list[1]}' and item = '{job_list[2]}' '''
+    cursor.execute(select_sql)
+    exist_data = cursor.fetchall()
+    return exist_data[0][0] if exist_data else 1000
 
 
 @app.route('/api/list_all_person', methods=['POST'])
@@ -1579,6 +1663,43 @@ def dfs(cur_list, result):
             item_id = item.get('本期数')
         result[item.get('项目')] = str(item_id).strip()
         dfs(item.get("children", []), result)
+
+
+@app.route('/api/get_job_cas', methods=['GET'])
+def get_job_cas():
+    db.ping(reconnect=True)
+    cursor = db.cursor()
+    sql = "select * from job_list"
+    cursor.execute(sql)
+    cur_data = cursor.fetchall()
+    result = dict()
+    for item in cur_data:
+        if item[0] not in result:
+            result[item[0]] = {}
+        if item[1] not in result[item[0]]:
+            result[item[0]][item[1]] = []
+        result[item[0]][item[1]].append(item[2])
+    cur_res = list()
+    for key in result.keys():
+        children = list()
+        for item in result[key]:
+            child = list()
+            for node in result[key][item]:
+                child.append({
+                    'label': node,
+                    'value': node,
+                })
+            children.append({
+                'children': child,
+                'label': item,
+                'value': item
+            })
+        cur_res.append({
+            'children': children,
+            'label': key,
+            'value': key,
+        })
+    return jsonify(cur_res)
 
 
 if __name__ == '__main__':
