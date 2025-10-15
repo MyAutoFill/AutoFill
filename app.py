@@ -506,20 +506,23 @@ def load_company_data_by_table_name(uuid):
 def copy_last_month_data():
     request_data = request.get_json()
     date = request_data['date']
-    if len(date) != len('2000-01'):
-        return {'result': -1}
-    uuid = request_data['uuid']
-    cur_month_data = load_data_by_table_name(date, uuid)
-    last_month = (datetime.strptime(date, '%Y-%m') - timedelta(days=1)).strftime('%Y-%m')
-    last_month_data = load_data_by_table_name(last_month, uuid)
-    for item in last_month_data.keys():
-        if item not in cur_month_data.keys():
-            cur_month_data[item] = last_month_data[item]
-        if item in cur_month_data.keys() and not cur_month_data[item]:
-            cur_month_data[item] = last_month_data[item]
-    final_data = json.dumps(cur_month_data)
-    save_data_by_table_name(date, final_data, uuid)
-    return {'result': 1}
+    if len(date) == len('2000-01') or len(date) == len('2000'):
+        uuid = request_data['uuid']
+        cur_month_data = load_data_by_table_name(date, uuid)
+        if len(date) == len('2000-01'):
+            last_month = (datetime.strptime(date, '%Y-%m') - timedelta(days=1)).strftime('%Y-%m')
+        else:
+            last_month = (datetime.strptime(date, '%Y') - timedelta(days=365)).strftime('%Y')
+        last_month_data = load_data_by_table_name(last_month, uuid)
+        for item in last_month_data.keys():
+            if item not in cur_month_data.keys():
+                cur_month_data[item] = last_month_data[item]
+            if item in cur_month_data.keys() and not cur_month_data[item]:
+                cur_month_data[item] = last_month_data[item]
+        final_data = json.dumps(cur_month_data)
+        save_data_by_table_name(date, final_data, uuid)
+    else:
+        return {'result': 1}
 
 
 # test done!
@@ -1580,4 +1583,4 @@ def dfs(cur_list, result):
 
 if __name__ == '__main__':
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
-    app.run(host='0.0.0.0', port=8088)
+    app.run(host='0.0.0.0', port=8091)
